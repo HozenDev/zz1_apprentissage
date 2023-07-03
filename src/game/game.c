@@ -33,6 +33,7 @@ void game_keyboard_state_update(game_state_t * g_state)
         break;
     default:
         /* todo */
+	break;
     }
 }
 
