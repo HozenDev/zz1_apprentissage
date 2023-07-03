@@ -32,7 +32,8 @@ void game_keyboard_state_update(game_state_t * g_state)
         if (g_state->entities[0]->state != WALK) entity_change_state(g_state->entities[0], WALK);
         break;
     default:
-        /* todo */
+        /* todo*/
+        break;
     }
 }
 
