@@ -24,16 +24,16 @@ enum entity_status_e {
 struct entity_s {
     char * name;
     
-    struct sprite_s ** sprites;
-    int n_of_sprites;
-    int is_in_animation;
+    struct sprite_s ** sprites; /* tableau de sprites */
+    int n_of_sprites;           /* taille du tableau de sprites */
+    int is_in_animation;        /* 1 si entité en animation 0 sinon */
 
-    float speed;
-    int life;
+    float speed;                /* vitesse du sprite */
+    int life;                   /* vie de l'entité   */
 
-    SDL_Rect r;
+    SDL_Rect r;                 /* dimension & position */
 
-    enum entity_type_e type;
+    enum entity_type_e type;    /* type */
     enum entity_state_e state;
     enum entity_status_e status;
 };

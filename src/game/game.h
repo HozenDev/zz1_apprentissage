@@ -12,15 +12,16 @@
 
 #define GAME_DELAY 20
 
-#define NB_GAME_ENTITIES 5
+#define NB_PREDATOR 8
+#define NB_PREY 1
 #define NB_GAME_BACKGROUNDS 3
 
-#define HERO_SPEED 8
-#define ENNEMY_SPEED 2
+#define PREDATOR_SPEED 2
+#define PREY_SPEED 0
 
 struct sprites_available_s {
     char * fish;
-    char * turtle;
+    char * jellyfish;
 };
 
 extern const struct sprites_available_s sprites_available;
@@ -37,8 +38,10 @@ struct game_state_s {
     struct background_s ** back;
     int nb_background;
 
-    struct entity_s ** entities;
-    int nb_entities;
+    struct entity_s ** predators;
+    int nb_predator;
+
+    struct entity_s * prey;
 
     const Uint8 *keystate;
     
