@@ -53,21 +53,13 @@ void game_loop_state_update(game_state_t * g_state)
     /* update entity animations */
     entity_update_animation(g_state->prey, 0.1);
     for (i = 0; i < g_state->nb_predator; ++i)
-        entity_update_animation(g_state->predators[i], 0.2);
+        entity_update_animation(g_state->predators[i], 0.3);
 
     if (!g_state->end) {
         for (i = 0; i < g_state->nb_predator; ++i)
         {
             g_state->predators[i]->r.x += (rand()%PREDATOR_SPEED+1) * (((float) (rand()%2))-0.5) * 2;
             g_state->predators[i]->r.y += (rand()%PREDATOR_SPEED+1) * (((float) (rand()%2))-0.5) * 2;
-        }
-
-        for (i = 0; i < g_state->nb_predator; ++i)
-        {
-            if (!g_state->predators[i]->is_in_animation)
-            {
-                entity_change_state(g_state->predators[i], IDLE);
-            }
         }
         if (!g_state->prey->is_in_animation) entity_change_state(g_state->prey, IDLE);
 
@@ -153,6 +145,7 @@ void game_graphic_update(game_t game)
                             game.state.prey->sprites[game.state.prey->state],
                             game.state.prey->r);
     
+    
     /* render predators */
     for (i = 0; i < game.state.nb_predator; ++i)
     {
@@ -176,9 +169,9 @@ void game_graphic_update(game_t game)
     }
     
     /* print score */
-    sprintf(buf, "Score: %d", (int) game.state.score);
-    sdl_print_text(game.window, game.renderer, game.font, buf,
-                   (SDL_Point) {.x = 10, .y = 10}, colors_available.BLACK);
+    /* sprintf(buf, "Score: %d", (int) game.state.score); */
+    /* sdl_print_text(game.window, game.renderer, game.font, buf, */
+    /*                (SDL_Point) {.x = 10, .y = 10}, colors_available.BLACK); */
 }
 
 /**
@@ -198,15 +191,15 @@ void game_state_reset(game_state_t * g_state)
     g_state->delay = GAME_DELAY;
     
     /* reset all sprites */
-    for (i = 0; i < g_state->nb_predator; ++i)
-    {
-        /* new_a = animation_create_animation(g_state->predators[i]->sprites[i]->a->n, 1); */
-        /* g_state->sprites[i]->a->current_animation = 0.0; */
-        /* g_state->sprites[i]->d.x = 0; */
-        /* g_state->sprites[i]->d.y = 0; */
-        /* animation_change_animation(g_state->sprites[i], new_a); */
-        /* free(new_a); */
-    }
+    /* for (i = 0; i < g_state->nb_predator; ++i) */
+    /* { */
+    /*     /\* new_a = animation_create_animation(g_state->predators[i]->sprites[i]->a->n, 1); *\/ */
+    /*     /\* g_state->sprites[i]->a->current_animation = 0.0; *\/ */
+    /*     /\* g_state->sprites[i]->d.x = 0; *\/ */
+    /*     /\* g_state->sprites[i]->d.y = 0; *\/ */
+    /*     /\* animation_change_animation(g_state->sprites[i], new_a); *\/ */
+    /*     /\* free(new_a); *\/ */
+    /* } */
 }
 
 /**
@@ -344,11 +337,12 @@ int game_initialisation(game_t ** game)
     strncpy(e_fnames[3], "../data/sprites/jellyfish/Hurt.png", 99);
     strncpy(e_fnames[4], "../data/sprites/jellyfish/Death.png", 99);
 
-    
     (*game)->state.prey
         = entity_create((*game)->renderer, e_fnames, n_sp,
                         tab, "fish", PLAYER, GOOD, 3, (float) PREY_SPEED);
     entity_scale((*game)->state.prey, 0.004*SCREEN_HEIGHT);
+    (*game)->state.prey->r.x = rand()%(SCREEN_WIDTH-(*game)->state.prey->r.w);
+    (*game)->state.prey->r.y = rand()%(SCREEN_HEIGHT-(*game)->state.prey->r.h);
 
     /* initialize predators */
 
@@ -368,6 +362,7 @@ int game_initialisation(game_t ** game)
         entity_scale((*game)->state.predators[i], 0.004*SCREEN_HEIGHT);
         (*game)->state.predators[i]->r.x = rand()%(SCREEN_WIDTH-(*game)->state.predators[i]->r.w);
         (*game)->state.predators[i]->r.y = rand()%(SCREEN_HEIGHT-(*game)->state.predators[i]->r.h);
+        entity_change_state((*game)->state.predators[i], WALK);
     }
     
     
