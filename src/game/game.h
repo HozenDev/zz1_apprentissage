@@ -43,17 +43,9 @@ struct game_state_s {
 
     struct entity_s * prey;
 
-    const Uint8 *keystate;
-    
     float score;
     float time;
     float delay;
-
-    SDL_bool is_keydown;
-
-    float fps;
-    int old_frame_time;
-    int new_frame_time;
 
     SDL_Rect game_rect;
 };
