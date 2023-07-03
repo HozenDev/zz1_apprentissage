@@ -106,7 +106,8 @@ struct entity_s * entity_create(SDL_Renderer * renderer,
                                 char * e_name,
                                 enum entity_type_e e_t,
                                 enum entity_status_e e_s,
-                                int life)
+                                int life,
+                                float speed)
 {
     /* get entity name length */
     int n_name = strlen(e_name);
@@ -139,6 +140,7 @@ struct entity_s * entity_create(SDL_Renderer * renderer,
     e->state = IDLE;
     e->is_in_animation = 0;
     e->life = life;
+    e->speed = speed;
 
     /* initialize rect */
     e->r = (SDL_Rect) {.x = 0, .y = 0, .w = e->sprites[0]->r[0].w, .h = e->sprites[0]->r[0].h};

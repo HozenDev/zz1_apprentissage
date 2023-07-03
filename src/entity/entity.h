@@ -24,15 +24,16 @@ enum entity_status_e {
 struct entity_s {
     char * name;
     
-    struct sprite_s ** sprites;
-    int n_of_sprites;
-    int is_in_animation;
+    struct sprite_s ** sprites; /* tableau de sprites */
+    int n_of_sprites;           /* taille du tableau de sprites */
+    int is_in_animation;        /* 1 si entité en animation 0 sinon */
 
-    int life;
+    float speed;                /* vitesse du sprite */
+    int life;                   /* vie de l'entité   */
 
-    SDL_Rect r;
+    SDL_Rect r;                 /* dimension & position */
 
-    enum entity_type_e type;
+    enum entity_type_e type;    /* type */
     enum entity_state_e state;
     enum entity_status_e status;
 };
@@ -46,7 +47,8 @@ struct entity_s * entity_create(SDL_Renderer * renderer,
                                 char * e_name,
                                 enum entity_type_e e_t,
                                 enum entity_status_e e_s,
-                                int life);
+                                int life,
+                                float speed);
 
 int entity_collide(struct entity_s * e1, struct entity_s * e2);
 void entity_update_animation(struct entity_s * e, float speed);
