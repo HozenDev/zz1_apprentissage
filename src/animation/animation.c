@@ -9,12 +9,6 @@ void animation_change_loop(struct animation_s ** a, int is_looping)
     (*a)->loop = is_looping;
 }
 
-void animation_scale_sprite(struct sprite_s * s, int scale_factor)
-{
-    s->d.w *= scale_factor;
-    s->d.h *= scale_factor;
-}
-
 void animation_change_animation(struct sprite_s * s, struct animation_s * a)
 {
     int i;
@@ -52,23 +46,28 @@ void animation_free_sprite(struct sprite_s * s)
 }
 
 void animation_render_sprite(SDL_Renderer * renderer,
-                             struct sprite_s * s)
+                             struct sprite_s * s, SDL_Rect dest)
 {
     /* sdl_render_image(renderer, s->t, s->r[s->a->array[(int) s->a->current_animation]]); */
     SDL_RenderCopy(renderer,
                    s->t,
                    &s->r[s->a->array[(int) s->a->current_animation]],
-                   &s->d);
+                   &dest);
 }
 
-void animation_update_sprite(struct sprite_s ** s, float speed)
+int animation_update_sprite(struct sprite_s ** s, float speed)
 {
+    int is_in_animation = 1;
     (*s)->a->current_animation += speed;
     if ((int) (*s)->a->current_animation >= (*s)->a->n)
     {
         if ((*s)->a->loop == 1) (*s)->a->current_animation = 0.0;
-        else (*s)->a->current_animation = (*s)->a->n - 1;
+        else {
+            (*s)->a->current_animation = (*s)->a->n - 1;
+        }
+        is_in_animation = 0;
     }
+    return is_in_animation;
 }
 
 animation_t * animation_create_animation_reverse(int n, int is_looping)
@@ -121,6 +120,12 @@ struct sprite_s * animation_spritesheet_from_file(SDL_Renderer * renderer, char 
     
     s->t = sdl_load_image(renderer, fname);
 
+    if (!s->t)
+    {
+        zlog(stderr, ERROR, "'%s' cannot be loaded", fname);
+        exit(-1);
+    }
+    
     /* initialisation des rectangles du spritesheet */
     
     SDL_QueryTexture(s->t, NULL, NULL, &width, &height);
@@ -143,8 +148,6 @@ struct sprite_s * animation_spritesheet_from_file(SDL_Renderer * renderer, char 
       }
     }
 
-    s->d = (SDL_Rect) {.x = 0, .y = 0, .w = offset_x, .h = offset_y};
-
     /* initialisation de l'animation */
     s->a = animation_create_animation(nb_frame, 1);
 
@@ -158,7 +161,7 @@ struct background_s * animation_background_from_file(SDL_Renderer * renderer,
 
     b = (struct background_s *) malloc(sizeof(struct background_s));
     b->name = (char *) malloc(sizeof(char)*strlen(fname));
-    strcpy(b->name, fname);
+    strncpy(b->name, fname, strlen(fname)-1);
 
     b->t = sdl_load_image(renderer, fname);
 

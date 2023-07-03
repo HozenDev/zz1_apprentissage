@@ -5,14 +5,24 @@
 #include "../log/log.h"
 #include "../utils/utils.h"
 #include "../animation/animation.h"
+#include "../entity/entity.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
 #define GAME_DELAY 20
 
-#define NB_GAME_SPRITES 1
+#define NB_GAME_ENTITIES 5
 #define NB_GAME_BACKGROUNDS 3
+
+#define HERO_SPEED 5
+
+struct sprites_available_s {
+    char * fish;
+    char * turtle;
+};
+
+extern const struct sprites_available_s sprites_available;
 
 struct game_state_s {
     int mx;
@@ -26,8 +36,8 @@ struct game_state_s {
     struct background_s ** back;
     int nb_background;
 
-    struct sprite_s ** sprites;
-    int nb_sprite;
+    struct entity_s ** entities;
+    int nb_entities;
 
     const Uint8 *keystate;
     

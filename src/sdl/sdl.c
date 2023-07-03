@@ -121,7 +121,7 @@ SDL_Texture * sdl_load_image(SDL_Renderer * renderer, char * name)
     }
     else
     {
-	zlog(stdout, INFO, "IMG_Load: %s", "Surface has been loaded");
+	zlog(stdout, INFO, "IMG_Load: %s : %s", name, "Surface has been loaded");
     }
 
     texture = SDL_CreateTextureFromSurface(renderer, image);
