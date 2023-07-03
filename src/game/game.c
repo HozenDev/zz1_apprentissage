@@ -33,6 +33,7 @@ void game_keyboard_state_update(game_state_t * g_state)
         break;
     default:
         /* todo */
+        break;
     }
 }
 
@@ -45,34 +46,33 @@ void game_loop_state_update(game_state_t * g_state)
 {
     int i;
     /* animation_t * new_a = NULL; */
-    
-    for (i = 0; i < g_state->nb_background; ++i)
-    {
-        g_state->back[i]->r.x -= (i+1);
-    }
 
+    /* mise à jour parallax background */
+    for (i = 0; i < g_state->nb_background; ++i)
+        g_state->back[i]->r.x -= (i+1);
+    
     for (i = 1; i < g_state->nb_entities; ++i)
     {
         if (entity_collide(g_state->entities[0], g_state->entities[i]))
         {
-            if (g_state->entities[0]->state == ATTACK)
+            if (g_state->entities[0]->state != ATTACK)
             {
-                if (g_state->entities[i]->state != HURT)
-                {
-                    g_state->entities[i]->is_in_animation = 0;
-                    entity_change_state(g_state->entities[i], HURT);
-                    g_state->score += 1;
-                    g_state->entities[i]->life -= 1;
-                    if (g_state->entities[i]->life < 0) g_state->entities[i]->life = 0;
-                }
-            }
-            else {
                 g_state->entities[0]->is_in_animation = 0;
                 entity_change_state(g_state->entities[0], HURT);
                 g_state->entities[0]->life -= 1;
                 if (g_state->entities[0]->life < 0) g_state->entities[0]->life = 0;
                 break;
             }
+            /* else { */
+            /*     if (g_state->entities[i]->state != HURT) */
+            /*     { */
+            /*         g_state->entities[i]->is_in_animation = 0; */
+            /*         entity_change_state(g_state->entities[i], HURT); */
+            /*         g_state->score += 1; */
+            /*         g_state->entities[i]->life -= 1; */
+            /*         if (g_state->entities[i]->life < 0) g_state->entities[i]->life = 0; */
+            /*     } */
+            /* } */
         }
     }
     
@@ -86,25 +86,37 @@ void game_loop_state_update(game_state_t * g_state)
         }
         else {
             entity_update_animation(g_state->entities[i], 0.2);
+            if (i > 0)
+            {
+                g_state->entities[i]->r.x -= (int) g_state->entities[i]->speed;
+                /* gestion en dehors de l'écran */
+                if (g_state->entities[i]->r.x < -g_state->entities[i]->r.w)
+                {
+                    g_state->entities[i]->r.x = SCREEN_WIDTH + g_state->entities[i]->r.w;
+                }
+            }
         }
     }
 
-    g_state->old_frame_time = g_state->new_frame_time;
-    g_state->new_frame_time = SDL_GetTicks();
-    if(g_state->new_frame_time > 0)
-    {
-        g_state->fps = 1 / ((float) (g_state->new_frame_time-g_state->old_frame_time)/1000);
-    }
+    /* g_state->old_frame_time = g_state->new_frame_time; */
+    /* g_state->new_frame_time = SDL_GetTicks(); */
+    /* if(g_state->new_frame_time > 0) */
+    /* { */
+    /*     g_state->fps = 1 / ((float) (g_state->new_frame_time-g_state->old_frame_time)/1000); */
+    /* } */
 
     if (!g_state->end) {
-        if ( g_state->keystate[SDL_SCANCODE_RIGHT] && g_state->entities[0]->r.x < SCREEN_WIDTH-g_state->entities[0]->r.w)
-            g_state->entities[0]->r.x += HERO_SPEED;
-        if ( g_state->keystate[SDL_SCANCODE_LEFT] && g_state->entities[0]->r.x > 0)
-            g_state->entities[0]->r.x -= HERO_SPEED; 
-        if ( g_state->keystate[SDL_SCANCODE_UP] && g_state->entities[0]->r.y > 0)
-            g_state->entities[0]->r.y -= HERO_SPEED;
-        if ( g_state->keystate[SDL_SCANCODE_DOWN] && g_state->entities[0]->r.y < SCREEN_HEIGHT-g_state->entities[0]->r.h)
-            g_state->entities[0]->r.y += HERO_SPEED;
+        if ( g_state->keystate[SDL_SCANCODE_RIGHT] && g_state->entities[0]->r.x < g_state->game_rect.w-g_state->entities[0]->r.w)
+            g_state->entities[0]->r.x += (int) g_state->entities[0]->speed;
+        if ( g_state->keystate[SDL_SCANCODE_LEFT]
+             && g_state->entities[0]->r.x > g_state->game_rect.x )
+            g_state->entities[0]->r.x -= (int) g_state->entities[0]->speed; 
+        if ( g_state->keystate[SDL_SCANCODE_UP]
+             && g_state->entities[0]->r.y > g_state->game_rect.y )
+            g_state->entities[0]->r.y -= (int) g_state->entities[0]->speed;
+        if ( g_state->keystate[SDL_SCANCODE_DOWN]
+             && g_state->entities[0]->r.y < g_state->game_rect.h-g_state->entities[0]->r.h)
+            g_state->entities[0]->r.y += (int) g_state->entities[0]->speed;
 
         for (i = 0; i < g_state->nb_entities; ++i)
         {
@@ -124,8 +136,8 @@ void game_loop_state_update(game_state_t * g_state)
             g_state->end = 1;
         }
     }
-    else {
-        /* gestion fin de jeu */
+    else { /* gestion fin de jeu */
+        g_state->running = 0;
     }
 }
 
@@ -309,7 +321,7 @@ int game_initialisation(game_t ** game)
     zlog(stdout, INFO, "OK '%s'", "SDL is initialized.");
 
     /* création de la fenetre principale */
-    (*game)->window = sdl_create_window("JEU DE LA TAUPE", (*game)->sw, (*game)->sh);
+    (*game)->window = sdl_create_window("Shooter Marine", (*game)->sw, (*game)->sh);
     if (!(*game)->window) exit(-1);
     zlog(stdout, INFO, "OK '%s'", "Window is initialized.");
 
@@ -329,10 +341,10 @@ int game_initialisation(game_t ** game)
 
     (*game)->state.keystate = SDL_GetKeyboardState(NULL);
     
-    (*game)->game_rect.x = 0;
-    (*game)->game_rect.y = 0;
-    (*game)->game_rect.w = SCREEN_WIDTH;
-    (*game)->game_rect.h = SCREEN_HEIGHT;
+    (*game)->state.game_rect.x = 0;
+    (*game)->state.game_rect.y = 0;
+    (*game)->state.game_rect.w = SCREEN_WIDTH/5;
+    (*game)->state.game_rect.h = SCREEN_HEIGHT;
 
     (*game)->state.delay = GAME_DELAY;
 
@@ -381,7 +393,7 @@ int game_initialisation(game_t ** game)
     
     (*game)->state.entities[0]
         = entity_create((*game)->renderer, e_fnames, n_sp,
-                        tab, "fish", PLAYER, GOOD, 3);
+                        tab, "fish", PLAYER, GOOD, 3, (float) HERO_SPEED);
     entity_scale((*game)->state.entities[0], 0.004*SCREEN_HEIGHT);
 
     /* second entities */
@@ -395,9 +407,9 @@ int game_initialisation(game_t ** game)
     for (i = 1; i < (*game)->state.nb_entities; ++i) {
         (*game)->state.entities[i]
             = entity_create((*game)->renderer, e_fnames, n_sp,
-                            tab, "jellyfish", IA, BAD, 2);
+                            tab, "jellyfish", IA, BAD, 2, (float) ENNEMY_SPEED);
         entity_scale((*game)->state.entities[i], 0.004*SCREEN_HEIGHT);
-        (*game)->state.entities[i]->r.x = rand()%(SCREEN_WIDTH-(*game)->state.entities[i]->r.w);
+        (*game)->state.entities[i]->r.x = 5*SCREEN_WIDTH/8 + rand()%(5*SCREEN_WIDTH/8+(*game)->state.entities[i]->r.w);
         (*game)->state.entities[i]->r.y = rand()%(SCREEN_HEIGHT-(*game)->state.entities[i]->r.h);
     }
     

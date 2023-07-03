@@ -15,7 +15,8 @@
 #define NB_GAME_ENTITIES 5
 #define NB_GAME_BACKGROUNDS 3
 
-#define HERO_SPEED 5
+#define HERO_SPEED 8
+#define ENNEMY_SPEED 2
 
 struct sprites_available_s {
     char * fish;
@@ -50,6 +51,8 @@ struct game_state_s {
     float fps;
     int old_frame_time;
     int new_frame_time;
+
+    SDL_Rect game_rect;
 };
 
 typedef struct game_state_s game_state_t;  
@@ -58,7 +61,6 @@ struct game_s {
     int sw;
     int sh;
 
-    SDL_Rect game_rect;
     SDL_Renderer * renderer;
     SDL_Window * window;
     TTF_Font * font;

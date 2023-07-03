@@ -28,6 +28,7 @@ struct entity_s {
     int n_of_sprites;
     int is_in_animation;
 
+    float speed;
     int life;
 
     SDL_Rect r;
@@ -46,7 +47,8 @@ struct entity_s * entity_create(SDL_Renderer * renderer,
                                 char * e_name,
                                 enum entity_type_e e_t,
                                 enum entity_status_e e_s,
-                                int life);
+                                int life,
+                                float speed);
 
 int entity_collide(struct entity_s * e1, struct entity_s * e2);
 void entity_update_animation(struct entity_s * e, float speed);
