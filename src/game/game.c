@@ -131,7 +131,7 @@ void game_free_game(game_t * game)
 void game_graphic_update(game_t game)
 {
     /* todo : update graphic */
-    char buf[2048];
+    /* char buf[2048]; */
     int i;
 
     /* parallax background */
@@ -181,7 +181,7 @@ void game_graphic_update(game_t game)
  */
 void game_state_reset(game_state_t * g_state)
 {
-    int i;
+    /* int i; */
     /* animation_t * new_a = NULL; */
     
     g_state->running = 1;
