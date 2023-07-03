@@ -1,12 +1,11 @@
 #include "../log/log.h"
 #include "../game/game.h"
 #include "../seed/seed.h"
-
+#include "../rules/rules.h"
 int main(int argc, char *argv[])
 {
     int save = 1;
     long int seed;
-
     create_seed(&seed);
     
     enable_log(argc, argv);
@@ -26,6 +25,6 @@ int main(int argc, char *argv[])
     srand(seed);
     
     game_loop();
-    
+
     return 0;
 }
