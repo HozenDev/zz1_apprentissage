@@ -10,7 +10,7 @@ TARGET = app
 VERBOSE = FALSE
 
 # Create the list of directories
-DIRS = log seed color main game sdl utils animation entity rules
+DIRS = log seed color main game sdl utils animation entity rules genetic
 SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix $(SOURCEDIR)/, $(dir)))
 TARGETDIRS = $(foreach dir, $(DIRS), $(addprefix $(BUILDDIR)/, $(dir)))
 

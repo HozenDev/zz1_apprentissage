@@ -2,7 +2,7 @@
 #define _rules_h_
 
 #define NB_MEASURE 3   // size of measures
-#define NB_RULES   10  // number rules in brain (size of array_rles)
+#define NB_RULES   10  // number rules in brain (size of array_rules)
 
 
 #include <stdio.h>

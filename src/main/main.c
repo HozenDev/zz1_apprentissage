@@ -2,8 +2,11 @@
 #include "../game/game.h"
 #include "../seed/seed.h"
 #include "../rules/rules.h"
+#include "../genetic/genetic.h"
+
 int main(int argc, char *argv[])
 {
+    
     int save = 1;
     long int seed;
     create_seed(&seed);
