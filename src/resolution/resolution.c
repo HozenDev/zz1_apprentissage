@@ -1,26 +1,24 @@
 #include "../seed/seed.h"
+#include "../rules/rules.h"
 
-float resolution_recuis_simule(float (*pf)(float),regle_t ** solution)
+float resolution_recuis_simule(float (*pf)(float),rules_t ** brain)
 {
     /* paramètres */
-    float temps_min=50000;
+    float temps_min=50000,temps=0,temperature = 1000,espsilon = 0.001;
+    int score_max=0,score=0;
     float distance=0;
-    float temperature = 1000, //la distance maximale possible entre 2 points i.e. la diagonale de la fenetre
-          espsilon = 0.001;
-    int indicerand=0;
-    int indicerand2=0;
+
+   
     generate_seed(0);
 
 
-    /* allocation des tableaux de solutions et solutions + 1 */
-    int * new = (int *) malloc(sizeof(int)*taille);
+    /* allocation des cerveaux initial et suivant*/
+    *brain = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
+    rules_t *new = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
 
-    *solution = (int *) malloc(sizeof(int)*taille);
 
-
-    //to do lire la solution initiale dans un fichier
-
-    
+    //lit la solution initiale
+        
     
     //to do test init 
     
@@ -29,17 +27,19 @@ float resolution_recuis_simule(float (*pf)(float),regle_t ** solution)
     {
         // to do copy brain
         
-        
-        //to do swap two values in the new brain
+        resolution_random_change(&new);
 
         //to do test new
         
-        //to do check if new and solution killed every jellyfishes 
-        
-        if( rand()/RAND_MAX<exp(-(distance-distmin)/temperature)) // to do compare results
+        if(score_max<score)// compare score 
         {
-            // to do update solution with new values
-
+            *solution=new;
+            score_max=score;
+        }
+        if(temps_min>temps ) // to do compare time and test if score is maximal
+        {
+            *solution=new;
+            temps_min=temps;
         }
         temperature=pf(temperature);
     }
@@ -50,26 +50,27 @@ float resolution_recuis_simule(float (*pf)(float),regle_t ** solution)
 }   
 
 
-void resolution_random_change(regle_t ** solution)
+void resolution_random_change(rules_t ** brain)
 {
     //selecting modified rules
     int random_rule=rand()%10;
     //selecting modified attributes
     int random_attribute=rand()%5;
-    
+    int possibility[5]={4,4,3,3,3}
     
     //apllying modification
     switch (random_attribute)
     {
     case 1:
-        // to do replace 1st value within measures
+        brain[random_rule]->measures[random_attribute]=rand()%possibility[random_attribute];
     case 2:
-        // to do replace 2nd value within measures
+        brain[random_rule]->measures[random_attribute]=rand()%possibility[random_attribute];
     case 3: 
-        //to  do replace 3rd value within measures
+        brain[random_rule]->measures[random_attribute]=rand()%possibility[random_attribute];
     case 4:
-        //to do replace value of action
+        brain[random_rule]->action=rand()%possibility[random_attribute];
     case 5:
-        //to do replace value of priority
+        brain[random_rule]->priority=rand()%possibility[random_attribute];
+        
     }
 }
