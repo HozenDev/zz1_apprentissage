@@ -1,14 +1,13 @@
 #include "../seed/seed.h"
 #include "../rules/rules.h"
 
-float resolution_recuis_simule(float (*pf)(float),rules_t ** brain)
+void resolution_recuis_simule(float (*pf)(float),rules_t ** brain,float * temps_min,int * score_max)
 {
     /* paramètres */
-    float temps_min=50000,temps=0,temperature = 1000,espsilon = 0.001;
-    int score_max=0,score=0;
-    float distance=0;
-
-   
+    float temps=0,temperature = 1000,espsilon = 0.001;
+    int score=0;
+    temps_min=50000;
+    score_max=0;
     generate_seed(0);
 
 
@@ -21,11 +20,11 @@ float resolution_recuis_simule(float (*pf)(float),rules_t ** brain)
         
     
     //to do test init 
-    
+    !
 
     while (temperature > espsilon)
     {
-        // to do copy brain
+        rules_copy_brain(brain,new);
         
         resolution_random_change(&new);
 
@@ -44,9 +43,8 @@ float resolution_recuis_simule(float (*pf)(float),rules_t ** brain)
         temperature=pf(temperature);
     }
 
+     //to do liberer new
     
-    free(new);
-    return distmin;
 }   
 
 
@@ -74,3 +72,21 @@ void resolution_random_change(rules_t ** brain)
         
     }
 }
+/*
+void resolution_gloutone_locale(rules_t ** brain,float * temps_min,int * score_max)
+{
+    //paramètres     
+    float temps=0,temperature = 1000,espsilon = 0.001;
+    int score=0;
+    temps_min=50000;
+    score_max=0;
+    generate_seed(0);
+
+
+    // allocation des cerveaux initial et suivant
+    *brain = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
+    rules_t *new = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
+
+    //lit la solution initiale
+}
+*/
