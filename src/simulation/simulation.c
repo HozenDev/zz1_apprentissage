@@ -1,6 +1,11 @@
 #include "simulation.h"
+
+int target_x = WORLD_WIDTH/2;
+int target_y = WORLD_HEIGHT/2;
+
 #include "rules.h"
 #include "const.h"
+
 void simulation_create(void)
 {
     /* todo */
@@ -23,9 +28,35 @@ void simulation_get_perception(simulation_entity_t * predators){
     }
 }
 
+int simulation_communicate(void)
+{
+    /* todo */
+}
+
+void simulation_move_entity(simulation_entity_t predators, enum cardinality c)
+{
+    switch (c)
+    {
+    case NORTH:
+        predators.y -= PREDATOR_SPEED;
+        if (predators.y < 0) predators.y = 0;
+        break;
+    case SOUTH:
+        predators.y += PREDATOR_SPEED;
+        if (predators.y > WORLD_HEIGHT) predators.y = WORLD_HEIGHT;
+        break;
+    case EAST:
+        predators.x += PREDATOR_SPEED;
+        if (predators.x > WORLD_WIDTH) predators.y = WORLD_WIDTH;
+        break;
+    case WEST:
+        predators.x -= PREDATOR_SPEED;
+        if (predators.y < 0) predators.y = 0;
+        break;
+    }
+}
 
 void simulation_get_closest_friend(simulation_entity_t * predators,rules_t ** rules){
-    
     float distmin=FLOAT_MAX,dist=0;
     int friend=0;
     for (int i=0;i<NB_PREDATOR;i++){
