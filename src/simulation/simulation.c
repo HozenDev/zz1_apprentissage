@@ -1,5 +1,5 @@
 #include "simulation.h"
-
+#include <stdlib.h>
 int target_x = WORLD_WIDTH/2;
 int target_y = WORLD_HEIGHT/2;
 
@@ -15,15 +15,15 @@ void simulation_free(void)
 {
     /* todo */
 }
-void simulation_get_perception(simulation_entity_t * predators ){
+void simulation_get_perception(simulation_entity_t * predators){
     enum distance dist;
     enum cardinality card;
-    simulation_get_closest_friend(predators,rules);
+    simulation_get_closest_friend(predators);
     for(int i=0;i<NB_PREDATOR,i++)
     {
-        if((*rules)[i]->measure[2]!=0){
-            (*rules)[i]->measure[2]=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
-            (*rules)[i]->measure[3]=simulation_get_distance((predators[i].x - target.x + predators[i].y - target.y))
+        if(predators[i].p.direction_target!=NOT_FOUND){
+            predators[i].p.direction_target=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
+            predators[i].p.distance_target=simulation_get_distance((abs(predators[i].x - target.x) + abs(predators[i].y - target.y)))
         }
     }
 }
@@ -72,7 +72,7 @@ void simulation_move_entity(simulation_entity_t predator, enum cardinality c)
     }
 }
 
-void simulation_get_closest_friend(simulation_entity_t * predators,rules_t ** rules){
+void simulation_get_closest_friend(simulation_entity_t * predators){
     float distmin=FLOAT_MAX,dist=0;
     int friend=0;
     for (int i=0;i<NB_PREDATOR;i++){
@@ -85,8 +85,8 @@ void simulation_get_closest_friend(simulation_entity_t * predators,rules_t ** ru
                 }
             }
         }
-        (*rules)[i]->measure[1]=simulation_get_cardinals(predators[i].x,predators[friend].x,predators[i].y,predators[friend].y)
-        (*rules)[i]->measure[0]=simulation_get_distance(distmin);
+        predators[i].p.cardinality_friend=simulation_get_cardinals(predators[i].x,predators[friend].x,predators[i].y,predators[friend].y)
+        predators[i].p.distance_friend=simulation_get_distance(distmin);
     }
 }
 

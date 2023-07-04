@@ -1,13 +1,12 @@
 #include "../seed/seed.h"
 #include "../rules/rules.h"
 
-void resolution_recuis_simule(float (*pf)(float),rules_t ** brain,float * temps_min,int * score_max)
+void resolution_recuis_simule(float (*pf)(float),rules_t ** brain,float * temps_min)
 {
     /* paramètres */
     float temps=0,temperature = 1000,espsilon = 0.001;
-    int score=0;
     temps_min=50000;
-    score_max=0;
+    /* genere l'aleatoire*/
     generate_seed(0);
 
 
@@ -15,34 +14,33 @@ void resolution_recuis_simule(float (*pf)(float),rules_t ** brain,float * temps_
     *brain = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
     rules_t *new = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
 
-
+    /* init solution */
     //lit la solution initiale
         
-    
+    /* fait jouer solution */
     //to do test init 
-    !
-
+    
+    /* recuit simulé */
     while (temperature > espsilon)
     {
+        /* generation voisin*/
         rules_copy_brain(brain,new);
-        
         resolution_random_change(&new);
 
+        /* fait jouer new*/
         //to do test new
-        
-        if(score_max<score)// compare score 
+      
+        /* comparaison ou proba*/
+        if(temps_min>temps || rand()/RAND_MAX<exp(-abs((temps-temps_min))/temperature)) // to do compare time and test if score is maximal
         {
-            *solution=new;
-            score_max=score;
-        }
-        if(temps_min>temps ) // to do compare time and test if score is maximal
-        {
-            *solution=new;
+            rules_copy_brain(new,brain);
             temps_min=temps;
         }
+
+        /*modification temperature*/
         temperature=pf(temperature);
     }
-
+    /* liberation new */
      //to do liberer new
     
 }   
