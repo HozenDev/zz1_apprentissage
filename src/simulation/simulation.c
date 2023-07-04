@@ -29,15 +29,12 @@ void simulation_get_perception(simulation_entity_t * predators)
     }
 }
 
-void simulation_destroy_target(simulation_entity_t predators[NB_PREDATOR])
+void simulation_destroy_target(simulation_entity_t predators)
 {
-    int i;
-    for (i = 0; i < NB_PREDATOR; ++i)
-    {
-        if (predators.perception.distance_target == CLOSE) {
-            target.pv -= PREDATOR_DAMAGE;
-        }
+    if (predators.perception.distance_target == CLOSE) {
+        target.pv -= PREDATOR_DAMAGE;
     }
+
 }
 
 int simulation_get_distance_between_2_predator(simulation_entity_t p2, simulation_entity_t p2)
@@ -179,4 +176,22 @@ int simulation_choose_action(int * filtered_rules,rules_t * brain)
         }
     }
     return(action);
+}
+
+void simulation_execute_action(simulation_entity_t predator,int action,simulation_entity_t * predators){
+    switch(action)
+    {
+    case 0:
+        simulation_move_entity(predator,NORTH);
+    case 1:
+        simulation_move_entity(predator,SOUTH);
+    case 2:
+        simulation_move_entity(predator,EAST);
+    case 3:
+        simulation_move_entity(predator,WEST);
+    case 4:
+        simulation_communicate(predator,predators);
+    case 5:
+        simulation_destroy_target(predator);
+    }
 }
