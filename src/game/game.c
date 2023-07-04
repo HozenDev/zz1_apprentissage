@@ -3,9 +3,27 @@
 const struct sprites_available_s sprites_available = 
 {
     .fish = "fish",
-    .jellyfish = "jellyfish"
+    .jellyfish = "jellyfish"d
 };
+void game_get_closest_friend(){
+    float distmin=INT_MAX,dist=0;
+    int friend=0;
+    for (int i=0;i<NB_PREDATOR;i++){
+        for(int j=0;i<NB_PREDATOR;j++){
+            if(i!=j){
+                //to do calcul dist
+                if(dist<distmin){
+                    dist=distmin;
+                    friend=j;
+                }
+            }
+        }
+        //to do put in perceptions 
 
+    }
+}
+
+void 
 /**
  * @brief update game state when keyboard pressed
  *

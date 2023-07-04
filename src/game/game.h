@@ -23,7 +23,24 @@ struct sprites_available_s {
     char * fish;
     char * jellyfish;
 };
+enum distance{
+    close,
+    far
+};
+enum direction_friend{
+    north,
+    south,
+    east,
+    west
+};
+enum direction_target{
+    not_found,
+    north,
+    south,
+    east,
+    west,
 
+}
 extern const struct sprites_available_s sprites_available;
 
 struct game_state_s {
