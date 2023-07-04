@@ -7,6 +7,8 @@
 #include "../animation/animation.h"
 #include "../entity/entity.h"
 #include "../const/const.h"
+#include "../simulation/simulation.h"
+#include "../rules/rules.h"
 
 struct sprites_available_s {
     char * fish;
@@ -27,16 +29,21 @@ struct game_state_s {
     struct background_s ** back;
     int nb_background;
 
-    struct entity_s ** predators;
+    /* game simulation state */
     int nb_predator;
+    struct entity_s predators[NB_PREDATOR];
+    int action[NB_RULES];
+    int filtered_rules[NB_RULES];
+    rules_t brain[NB_RULES];
 
-    struct entity_s * prey;
+    struct target_s prey;
 
+    /* game parameters */
     float score;
     float time;
     float delay;
 
-    SDL_Rect game_rect;
+    SDL_Rect game_rect; /* surface of the game */
 };
 
 typedef struct game_state_s game_state_t;  
@@ -58,6 +65,6 @@ SDL_bool game_kill_mole(int x,int y,SDL_Rect mole);
 void game_graphic_update(game_t game);
 void game_mouse_state_update(game_state_t * g_state);
 int game_initialisation(game_t ** game);
-int game_loop(void);
+int game_loop(rules_t brain[NB_RULES]);
 
 #endif

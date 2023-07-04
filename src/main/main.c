@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     int save = 1;
     long int seed;
-    int iter=0;
+    /* int iter=0; */
     struct rules_s brain[NB_RULES];
 
     create_seed(&seed);
@@ -30,14 +30,12 @@ int main(int argc, char *argv[])
 
     srand(seed);
     
-    /* game_loop(); */
     rules_read_path_file("../data/rules_test.txt", brain);
     rules_save_file(stdout, brain);
-    simulation_loop(brain, &iter);
 
-    zlog(stdout, INFO, "simulation fini: iter %d", iter);
-
-    rules_save_file(stdout, brain);
+    game_loop(brain);
+    /* simulation_loop(brain, &iter); */
+    /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
 
     //genetic_solve_optimized("test.txt", NULL);
 
