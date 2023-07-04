@@ -13,9 +13,10 @@
 #define NB_GAME_BACKGROUNDS 3
 
 #define PREDATOR_SPEED 2
+#define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
-#define com_radius=50
+#define COM_RADIUS 50
 
 /* animation const */
 
@@ -27,5 +28,7 @@
 #define WORLD_WIDTH SCREEN_WIDTH
 #define WORLD_HEIGHT SCREEN_HEIGHT
 #define s_power
+
+#define TARGET_PV 100
 
 #endif

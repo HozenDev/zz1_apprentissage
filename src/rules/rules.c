@@ -14,11 +14,13 @@ void rules_save_file(FILE * file, rules_t * array_rules)
 {
     for (int i=0 ; i < NB_RULES; ++i)
     {
-	for (int j=0; j<NB_MEASURE; ++j)
-	{
-	    fprintf(file, "%c ", array_rules[i].measures[j] + '0');
-	}
-	fprintf(file, "%c %c \n", array_rules[i].action, array_rules[i].priority + '0');
+        /* print perception */
+        fprintf(file, "%d ", array_rules[i].perception.distance_friend);
+        fprintf(file, "%d ", array_rules[i].perception.cardinality_friend);
+        fprintf(file, "%d ", array_rules[i].perception.distance_target);
+        fprintf(file, "%d ", array_rules[i].perception.cardinality_target);
+        /* print action and priority */
+        fprintf(file, "%c %c \n", array_rules[i].action, array_rules[i].priority + '0');
     }
 }
 
@@ -75,15 +77,15 @@ void rules_read_file(FILE * file, rules_t* array_rules)
     {
 	for (int i = 0; i < NB_RULES; ++i)
 	{
-	    for (int j = 0; j < NB_MEASURE; ++j)
-	    {
-		if (fscanf(file,"%c ", &array_rules[i].measures[j]) != 1)
-		{
-		    zlog(stderr, ERROR, "Erreur lors de la lecture 1 des mesures à partir du fichier.\n", NULL); 
-		    return;
-		}
-		array_rules[i].measures[j] -= '0'; // Conversion du caractère numérique à sa valeur entière
-	    }
+            if (fscanf(file,"%d %d %d %d",
+                       &array_rules[i].perception.distance_friend,
+                       &array_rules[i].perception.cardinality_friend,
+                       &array_rules[i].perception.distance_target,
+                       &array_rules[i].perception.cardinality_target) < 4)
+            {
+                zlog(stderr, ERROR, "Erreur lors de la lecture 1 des mesures à partir du fichier.\n", NULL); 
+                return;
+            }
 	
 	    if (fscanf(file, "%c %c\n", &array_rules[i].action, &array_rules[i].priority) != 2)
 	    {
@@ -119,8 +121,10 @@ void rules_copy_brain(rules_t * brainsrc,rules_t * braindest)
     for (int i =0; i<NB_RULES; i++)
     {
         //copy measure
-        for (int j=0; j<NB_MEASURE; j++)
-	    braindest[i].measures[j] = brainsrc[i].measures[j];
+        braindest[i].perception.distance_friend = brainsrc[i].perception.distance_friend;
+        braindest[i].perception.cardinality_friend = brainsrc[i].perception.cardinality_friend;
+        braindest[i].perception.distance_target = brainsrc[i].perception.distance_target;
+        braindest[i].perception.cardinality_target = brainsrc[i].perception.cardinality_target;
 
         //copy action
         braindest[i].action = brainsrc[i].action;

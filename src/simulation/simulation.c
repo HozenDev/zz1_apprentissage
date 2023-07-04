@@ -1,10 +1,10 @@
 #include "simulation.h"
-#include <stdlib.h>
-int target_x = WORLD_WIDTH/2;
-int target_y = WORLD_HEIGHT/2;
-
 #include "rules.h"
 #include "const.h"
+
+#include <stdlib.h>
+
+simulation_target_t target;
 
 void simulation_create(void)
 {
@@ -15,7 +15,8 @@ void simulation_free(void)
 {
     /* todo */
 }
-void simulation_get_perception(simulation_entity_t * predators){
+void simulation_get_perception(simulation_entity_t * predators)
+{
     enum distance dist;
     enum cardinality card;
     simulation_get_closest_friend(predators);
@@ -28,30 +29,57 @@ void simulation_get_perception(simulation_entity_t * predators){
     }
 }
 
-int simulation_communicate(void)
+void simulation_destroy_target(simulation_entity_t predators[NB_PREDATOR])
 {
-    /* todo */
+    int i;
+    for (i = 0; i < NB_PREDATOR; ++i)
+    {
+        if (predators.perception.distance_target == CLOSE) {
+            target.pv -= PREDATOR_DAMAGE;
+        }
+    }
 }
 
-void simulation_move_entity(simulation_entity_t predators, enum cardinality c)
+int simulation_get_distance_between_2_predator(simulation_entity_t p2, simulation_entity_t p2)
+{
+    return abs(p2.x - predators[j].x) + abs(predators[i].y - predators[j].y)
+}
+
+int simulation_communicate(simulation_entity_t predator, simulation_entity_t * predators[NB_PREDATOR])
+{
+    int i;
+
+    if (predator.p.cardinality_target != NOT_FOUND)
+    {
+        for (i = 0; i < NB_PREDATOR; ++i)
+        {
+            if (simulation_get_distance_between_2_predator(predator, predators[i]) < COM_RADIUS)
+            {
+                predators[i].p.cardinality_target = predator.p.cardinality_target;
+            }
+        }
+    }
+}
+
+void simulation_move_entity(simulation_entity_t predator, enum cardinality c)
 {
     switch (c)
     {
     case NORTH:
-        predators.y -= PREDATOR_SPEED;
-        if (predators.y < 0) predators.y = 0;
+        predator.y -= PREDATOR_SPEED;
+        if (predator.y < 0) predator.y = 0;
         break;
     case SOUTH:
-        predators.y += PREDATOR_SPEED;
-        if (predators.y > WORLD_HEIGHT) predators.y = WORLD_HEIGHT;
+        predator.y += PREDATOR_SPEED;
+        if (predator.y > WORLD_HEIGHT) predator.y = WORLD_HEIGHT;
         break;
     case EAST:
-        predators.x += PREDATOR_SPEED;
-        if (predators.x > WORLD_WIDTH) predators.y = WORLD_WIDTH;
+        predator.x += PREDATOR_SPEED;
+        if (predator.x > WORLD_WIDTH) predator.y = WORLD_WIDTH;
         break;
     case WEST:
-        predators.x -= PREDATOR_SPEED;
-        if (predators.y < 0) predators.y = 0;
+        predator.x -= PREDATOR_SPEED;
+        if (predator.y < 0) predator.y = 0;
         break;
     }
 }
@@ -62,7 +90,7 @@ void simulation_get_closest_friend(simulation_entity_t * predators){
     for (int i=0;i<NB_PREDATOR;i++){
         for(int j=0;i<NB_PREDATOR;j++){
             if(i!=j){
-                dist=abs(predators[i].x - predators[j].x)  + abs(predators[i].y - predators[j].y)
+                dist = (float) simulation_get_distance_between_2_predator(predators[i], predators[j]);
                 if(dist<distmin){
                     dist=distmin;
                     friend=j;
@@ -77,25 +105,23 @@ void simulation_get_closest_friend(simulation_entity_t * predators){
 
 enum distance simulation_get_distance(float distance){
     enum distance dist;
-    if(distance>com_radius) dist=far;
-
-    if(distance>com_radius) dist=close;
-
+    if(distance>COM_RADIUS) dist=FAR;
+    if(distance>COM_RADIUS) dist=CLOSE;
     return(dist);
-
 }
-enum direction_friend simulation_get_cardinals(float xa,float ya,float xb ,float yb){
+
+enum direction_friend simulation_get_cardinals(float xa,float ya,float xb ,float yb)
+{
     enum cardinality card;
-    float deltax=xa - xb,
-          deltay=ya - yb,
-          delta=abs(deltax) - abs(deltay)
-    if(deltax>0 && delta>0) card=west;
+    float
+        deltax=xa - xb,
+        deltay=ya - yb,
+        delta=abs(deltax) - abs(deltay);
 
-    if(deltax<0 && delta>0) card=east;
-
-    if(deltay<0 && delta<0) card=south;
-
-    if(deltay>0 && delta>0) card=north;
+    if(deltax>0 && delta>0) card=WEST;
+    if(deltax<0 && delta>0) card=EAST;
+    if(deltay<0 && delta<0) card=SOUTH;
+    if(deltay>0 && delta>0) card=NORTH;
 
     return(card);
 
