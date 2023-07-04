@@ -14,11 +14,13 @@ void rules_save_file(FILE * file, rules_t * array_rules)
 {
     for (int i=0 ; i < NB_RULES; ++i)
     {
-	for (int j=0; j<NB_MEASURE; ++j)
-	{
-	    fprintf(file, "%c ", array_rules[i].measures[j] + '0');
-	}
-	fprintf(file, "%c %c \n", array_rules[i].action + '0', array_rules[i].priority + '0');
+        /* print perception */
+        fprintf(file, "%d ", array_rules[i].perception.distance_friend);
+        fprintf(file, "%d ", array_rules[i].perception.cardinality_friend);
+        fprintf(file, "%d ", array_rules[i].perception.distance_target);
+        fprintf(file, "%d ", array_rules[i].perception.cardinality_target);
+        /* print action and priority */
+        fprintf(file, "%c %c \n", array_rules[i].action, array_rules[i].priority + '0');
     }
 }
 
@@ -75,15 +77,15 @@ void rules_read_file(FILE * file, rules_t* array_rules)
     {
 	for (int i = 0; i < NB_RULES; ++i)
 	{
-	    for (int j = 0; j < NB_MEASURE; ++j)
-	    {
-		if (fscanf(file,"%c ", &array_rules[i].measures[j]) != 1)
-		{
-		    zlog(stderr, ERROR, "Erreur lors de la lecture 1 des mesures à partir du fichier.\n", NULL); 
-		    return;
-		}
-		array_rules[i].measures[j] -= '0'; // Conversion du caractère numérique à sa valeur entière
-	    }
+            if (fscanf(file,"%d %d %d %d",
+                       &array_rules[i].perception.distance_friend,
+                       &array_rules[i].perception.cardinality_friend,
+                       &array_rules[i].perception.distance_target,
+                       &array_rules[i].perception.cardinality_target) < 4)
+            {
+                zlog(stderr, ERROR, "Erreur lors de la lecture 1 des mesures à partir du fichier.\n", NULL); 
+                return;
+            }
 	
 	    if (fscanf(file, "%c %c\n", &array_rules[i].action, &array_rules[i].priority) != 2)
 	    {
@@ -111,6 +113,26 @@ void rules_read_file(FILE * file, rules_t* array_rules)
 void rules_create_array_rules(rules_t ** array_rules)
 {
     (*array_rules) = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
+}
+
+
+void rules_copy_brain(rules_t * brainsrc,rules_t * braindest)
+{
+    //for each rules in brain
+    for (int i =0; i<NB_RULES; i++)
+    {
+        //copy measure
+        braindest[i].perception.distance_friend = brainsrc[i].perception.distance_friend;
+        braindest[i].perception.cardinality_friend = brainsrc[i].perception.cardinality_friend;
+        braindest[i].perception.distance_target = brainsrc[i].perception.distance_target;
+        braindest[i].perception.cardinality_target = brainsrc[i].perception.cardinality_target;
+
+        //copy action
+        braindest[i].action = brainsrc[i].action;
+
+        //copy priority
+        braindest[i].priority = brainsrc[i].priority;
+    }
 }
 
 /**
@@ -141,8 +163,10 @@ void rules_destroy_array_rules(rules_t * array_rules)
 void rules_copy_rules(rules_t rules_src, rules_t rules_dest)
 {
     //copy measure
-    for (int j=0; j<NB_MEASURE; j++)
-	rules_dest.measures[j] = rules_src.measures[j];
+    rules_dest.perception.distance_friend    = rules_src.perception.distance_friend;
+    rules_dest.perception.cardinality_friend = rules_src.perception.cardinality_friend;
+    rules_dest.perception.distance_target    = rules_src.perception.distance_target;
+    rules_dest.perception.cardinality_target = rules_src.perception.cardinality_target;
 
     //copy action
     rules_dest.action = rules_src.action;
@@ -164,7 +188,7 @@ void rules_copy_rules(rules_t rules_src, rules_t rules_dest)
  * @note The source and destination arrays must have enough memory to store the copied
  * contents. No memory allocation is performed by this function.
  */
-void rules_copy_brain(rules_t brain_src[NB_RULES], rules_t brain_dest[NB_RULES])
+void rules_copy_brain_genetic(rules_t brain_src[NB_RULES], rules_t brain_dest[NB_RULES])
 {
     int i;
     for (i = 0; i<NB_RULES; ++i)

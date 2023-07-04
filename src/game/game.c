@@ -90,10 +90,6 @@ void game_free_game(game_t * game)
     
     if (game)
     {
-        /* free window and game renderer */
-        if (game->window) {SDL_DestroyWindow(game->window); game->window = NULL;}
-        if (game->renderer) {SDL_DestroyRenderer(game->renderer); game->renderer = NULL;}
-
         /* clear game attributs */
         game->sw = 0;
         game->sh = 0;
@@ -103,21 +99,21 @@ void game_free_game(game_t * game)
         game->state.my = 0;
 
         if (game->state.prey)
-        {
             entity_free(game->state.prey);
-        }
         
         for (i = 0; i < game->state.nb_predator; ++i)
-        {
             entity_free(game->state.predators[i]);
-        }
         free(game->state.predators);
 
         for (i = 0; i < game->state.nb_background; ++i)
-        {
             animation_free_background(game->state.back[i]);
-        }
         free(game->state.back);
+
+        if (game->font) TTF_CloseFont(game->font);
+
+        /* free window and game renderer */
+        if (game->renderer) {SDL_DestroyRenderer(game->renderer); game->renderer = NULL;}
+        if (game->window) {SDL_DestroyWindow(game->window); game->window = NULL;}
 
         free(game);
     }
@@ -181,25 +177,11 @@ void game_graphic_update(game_t game)
  */
 void game_state_reset(game_state_t * g_state)
 {
-    /* int i; */
-    /* animation_t * new_a = NULL; */
-    
     g_state->running = 1;
     g_state->end = 0;
 
     g_state->score = 0.0;
     g_state->delay = GAME_DELAY;
-    
-    /* reset all sprites */
-    /* for (i = 0; i < g_state->nb_predator; ++i) */
-    /* { */
-    /*     /\* new_a = animation_create_animation(g_state->predators[i]->sprites[i]->a->n, 1); *\/ */
-    /*     /\* g_state->sprites[i]->a->current_animation = 0.0; *\/ */
-    /*     /\* g_state->sprites[i]->d.x = 0; *\/ */
-    /*     /\* g_state->sprites[i]->d.y = 0; *\/ */
-    /*     /\* animation_change_animation(g_state->sprites[i], new_a); *\/ */
-    /*     /\* free(new_a); *\/ */
-    /* } */
 }
 
 /**
@@ -244,20 +226,23 @@ int game_initialisation(game_t ** game)
     int * tab = (int *) malloc(sizeof(tab)*n_sp);
     
     (*game) = (game_t *) malloc(sizeof(game_t));
-    
+
+    /* ------ initialize game fields -------- */
     (*game)->sw = SCREEN_WIDTH;
     (*game)->sh = SCREEN_HEIGHT;
+    (*game)->renderer = NULL;
+    (*game)->window = NULL;
+    (*game)->font = NULL;
 
-    /* initialize (*game) state */
+    /* ------- initialize game state ------- */
     (*game)->state.mx = 0;
     (*game)->state.my = 0;
     (*game)->state.running = 1;
     (*game)->state.end = 0;
     (*game)->state.score = 0;
-
-    (*game)->state.fps = 0;
-    (*game)->state.old_frame_time = 0;
-    (*game)->state.new_frame_time = 0;
+    (*game)->state.back = NULL;
+    (*game)->state.predators = NULL;
+    (*game)->state.prey = NULL;
 
     /* ------ initialisation SDL2 --------- */
     
@@ -288,8 +273,6 @@ int game_initialisation(game_t ** game)
 
     /* ------ génération objets du jeu --------- */
 
-    (*game)->state.keystate = SDL_GetKeyboardState(NULL);
-    
     (*game)->state.game_rect.x = 10;
     (*game)->state.game_rect.y = 10;
     (*game)->state.game_rect.w = SCREEN_WIDTH-10;
@@ -309,8 +292,6 @@ int game_initialisation(game_t ** game)
         = animation_background_from_file((*game)->renderer, "../data/backgrounds/foreground-merged.png");
 
     zlog(stdout, INFO, "OK '%s'", "Backgrounds are initialized");
-    
-    /* SDL_SetTextureAlphaMod((*game)->state.back[2]->t, 200); */
 
     for (i = 0; i < (*game)->state.nb_background; ++i)
     {
@@ -412,17 +393,17 @@ int game_loop(void)
         	}
         	break;
             case SDL_KEYDOWN:
-                game_keyboard_state_update(&game->state);
+                /* game_keyboard_state_update(&game->state); */
         	break;
             case SDL_KEYUP:
                 /* entity_change_state(game->state.predators[0], IDLE); */
         	break;
             case SDL_MOUSEMOTION:
                 /* update mouse position */
-                SDL_GetMouseState(&game->state.mx, &game->state.my);
+                /* SDL_GetMouseState(&game->state.mx, &game->state.my); */
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                game_mouse_state_update(&game->state);
+                /* game_mouse_state_update(&game->state); */
         	break;
             case SDL_QUIT:
         	zlog(stdout, INFO, "event->type: SDL_QUIT", NULL);
@@ -441,6 +422,8 @@ int game_loop(void)
     }
 
     game_free_game(game);
+    sdl_quit_text();
+    sdl_quit();
     
     return EXIT_SUCCESS;
 }

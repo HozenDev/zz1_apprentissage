@@ -113,25 +113,27 @@ struct entity_s * entity_create(SDL_Renderer * renderer,
     int n_name = strlen(e_name);
     int i;
 
-    /* initialize entity */
+    /* allocation entity */
     struct entity_s * e = (struct entity_s *) malloc(sizeof(struct entity_s));
+    e->name = (char *) malloc(sizeof(char)*n_name);
+    e->sprites = (struct sprite_s **) malloc(sizeof(struct sprite_s *)*n_of_sprites);
 
-    if (!e) exit(-1);
+    if (!e || !e->name || !e->sprites) exit(-1);
     zlog(stdout, INFO, "OK '%s'", "entity is allocated");
 
-    e->sprites = (struct sprite_s **) malloc(sizeof(struct sprite_s *)*n_of_sprites);
-    if (!e->sprites) exit(-1);
-    zlog(stdout, INFO, "OK '%s'", "entity sprites are allocated");
-    
     /* initialize entity's sprites */
     e->n_of_sprites = n_of_sprites;
-    for (i = 0; i < n_of_sprites; ++i)
-    {
-        e->sprites[i] = animation_spritesheet_from_file(renderer, sprite_fnames[i], n_per_sprites[i]);
+
+    /* load all sprites */
+    for (i = 0; i < n_of_sprites; ++i) {
+        if (renderer) e->sprites[i] = animation_spritesheet_from_file(renderer, sprite_fnames[i], n_per_sprites[i]);
+        else e->sprites[i] = NULL;
     }
-    
+
+    if (renderer) /* initialize rect */
+        e->r = (SDL_Rect) {.x = 0, .y = 0, .w = e->sprites[0]->r[0].w, .h = e->sprites[0]->r[0].h};
+
     /* initialize entity name */
-    e->name = (char *) malloc(sizeof(char)*n_name);
     strncpy(e->name, e_name, n_name);
 
     /* initialize entity states */
@@ -141,9 +143,6 @@ struct entity_s * entity_create(SDL_Renderer * renderer,
     e->is_in_animation = 0;
     e->life = life;
     e->speed = speed;
-
-    /* initialize rect */
-    e->r = (SDL_Rect) {.x = 0, .y = 0, .w = e->sprites[0]->r[0].w, .h = e->sprites[0]->r[0].h};
 
     return e;
 }

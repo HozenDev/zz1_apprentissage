@@ -9,12 +9,17 @@
 #include <limits.h>
  
 #include "../rules/rules.h"
-
+#include "../const/const.h"
 
 #define MAX_ITERATIONS  5000
 #define POPULATION_SIZE 5
 #define MUTATION_RATE          0.1
-#define MUTATION_RATE_MEASURE  0.05
+#define MUTATION_RATE_DISTANCE_FRIEND     0.05
+#define MUTATION_RATE_DISTANCE_TARGET     0.05
+#define MUTATION_RATE_CARDINALITY_FRIEND  0.05
+#define MUTATION_RATE_CARDINALITY_TARGET  0.05
+#define MUTATION_RATE_DISTANCE  0.05
+
 #define MUTATION_RATE_ACTION   0.01
 #define MUTATION_RATE_PRIORITY 0.01
 

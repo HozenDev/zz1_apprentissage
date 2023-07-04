@@ -112,21 +112,7 @@ void sdl_render_image(SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect r
  */
 SDL_Texture * sdl_load_image(SDL_Renderer * renderer, char * name)
 {
-    SDL_Texture * texture;
-    SDL_Surface *image = IMG_Load(name);
-
-    if(!image)
-    {
-	zlog(stderr, WARNING, "IMG_Load: %s", IMG_GetError());
-    }
-    else
-    {
-	zlog(stdout, INFO, "IMG_Load: %s : %s", name, "Surface has been loaded");
-    }
-
-    texture = SDL_CreateTextureFromSurface(renderer, image);
-    SDL_FreeSurface(image);
-
+    SDL_Texture * texture = IMG_LoadTexture(renderer, name);
     if (!texture)
     {
 	zlog(stderr, WARNING, "SDL_CreateTextureFromSurface: '%s'", "texture can't load");
@@ -135,7 +121,6 @@ SDL_Texture * sdl_load_image(SDL_Renderer * renderer, char * name)
     {
 	zlog(stdout, INFO, "SDL_CreateTextureFromSurface: %s", "Texture has been loaded");
     }
-    
     return texture;
 }
 
@@ -282,6 +267,14 @@ void sdl_print_text(SDL_Window * window, SDL_Renderer * renderer,
     /* free textures and surface */
     SDL_DestroyTexture(text_text);
     SDL_FreeSurface(text_surf);
+}
+
+/**
+ * @brief Quit sdl
+ */
+void sdl_quit(void)
+{
+    SDL_Quit();
 }
 
 /**

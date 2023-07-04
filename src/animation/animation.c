@@ -28,8 +28,12 @@ void animation_change_animation(struct sprite_s * s, struct animation_s * a)
 
 void animation_free_background(struct background_s * b)
 {
-    if (b->name) free(b->name);
-    if (b->t) SDL_DestroyTexture(b->t);
+    if (b)
+    {
+        if (b->name) free(b->name);
+        if (b->t) SDL_DestroyTexture(b->t);
+        free(b);
+    }
 }
 
 void animation_free_sprite(struct sprite_s * s)
@@ -112,40 +116,51 @@ struct sprite_s * animation_spritesheet_from_file(SDL_Renderer * renderer, char 
     struct sprite_s * s = NULL;
     
     s = (struct sprite_s *) malloc(sizeof(struct sprite_s));
-
-    s->name = (char *) malloc(sizeof(char)*n_fname);
-    strncpy(s->name, fname, n_fname);
-        
-    /* chargement de la texture */
-    
-    s->t = sdl_load_image(renderer, fname);
-
-    if (!s->t)
-    {
-        zlog(stderr, ERROR, "'%s' cannot be loaded", fname);
-        exit(-1);
-    }
-    
-    /* initialisation des rectangles du spritesheet */
-    
-    SDL_QueryTexture(s->t, NULL, NULL, &width, &height);
-
-    offset_x = width / nb_frame;
-    offset_y = height / 1;
-
-    s->n = nb_frame;
     s->r = (SDL_Rect *) malloc(sizeof(SDL_Rect)*nb_frame);
-    
-    for (y = 0; y < height; y += offset_y)
+    s->name = (char *) malloc(sizeof(char)*n_fname);
+    s->t = NULL;
+
+    if (!s || !s->r || !s->name)
     {
-      for (x = 0; x < width; x += offset_x)
-      {
-          s->r[i].x = x;
-          s->r[i].y = y;
-          s->r[i].w = offset_x;
-          s->r[i].h = offset_y;
-          i++;
-      }
+        zlog(stderr, ERROR, "Error in sprites allocations", 0);
+        exit(EXIT_FAILURE);
+    }
+
+    /* copie du nom du sprite */
+    strncpy(s->name, fname, n_fname);
+
+    if (renderer)
+    {
+        /* chargement de la texture */
+        s->t = sdl_load_image(renderer, fname);
+
+        if (!s->t)
+        {
+            zlog(stderr, ERROR, "'%s' cannot be loaded", fname);
+            exit(-1);
+        }
+    
+        /* initialisation des rectangles du spritesheet */
+        SDL_QueryTexture(s->t, NULL, NULL, &width, &height);
+
+        offset_x = width / nb_frame;
+        offset_y = height / 1;
+
+        s->n = nb_frame;
+        for (y = 0; y < height; y += offset_y)
+        {
+            for (x = 0; x < width; x += offset_x)
+            {
+                s->r[i].x = x;
+                s->r[i].y = y;
+                s->r[i].w = offset_x;
+                s->r[i].h = offset_y;
+                i++;
+            }
+        }
+    }
+    else {
+        zlog(stdout, WARNING, "Renderer is NULL", 0);
     }
 
     /* initialisation de l'animation */
@@ -154,6 +169,14 @@ struct sprite_s * animation_spritesheet_from_file(SDL_Renderer * renderer, char 
     return s;
 }
 
+/**
+ * @brief load and allocate a background from a file name
+ *
+ * @param renderer, renderer where the background will be printed
+ * @param fname, file name of the background (path)
+ *
+ * @return
+ */
 struct background_s * animation_background_from_file(SDL_Renderer * renderer,
                                                      char * fname)
 {
@@ -161,14 +184,29 @@ struct background_s * animation_background_from_file(SDL_Renderer * renderer,
 
     b = (struct background_s *) malloc(sizeof(struct background_s));
     b->name = (char *) malloc(sizeof(char)*strlen(fname));
+
+    if (!b || !b->name)
+    {
+        zlog(stderr, ERROR, "Error in allocation background", 0);
+        exit(-1);
+    }
+    
     strncpy(b->name, fname, strlen(fname)-1);
-
-    b->t = sdl_load_image(renderer, fname);
-
     b->r.x = 0;
     b->r.y = 0;
+    b->t = NULL;
 
-    SDL_QueryTexture(b->t, NULL, NULL, &b->r.w, &b->r.h);
+    if (renderer)
+    {
+        /* chargement de la texture */
+        b->t = sdl_load_image(renderer, fname);
+        if (!b->t)
+        {
+            zlog(stderr, ERROR, "Error in allocation background texture", 0);
+            exit(EXIT_FAILURE);
+        }
+        SDL_QueryTexture(b->t, NULL, NULL, &b->r.w, &b->r.h);
+    }
     
     return b;
 }

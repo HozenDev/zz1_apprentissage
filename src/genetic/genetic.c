@@ -162,7 +162,7 @@ void genetic_croisement_generate_child(rules_t children[NB_RULES], rules_t popul
 
     for(i=NB_RULES/2; i<NB_RULES; ++i)
     {
-	rules_copy_brain(population[p2] , &children[k]);
+	rules_copy_brain_genetic(population[p2] , &children[k]);
 	++k;
     }
 
@@ -188,20 +188,32 @@ void genetic_mutate(rules_t individu[NB_RULES])
     (void) individu;
     for (i = 0; i < NB_MEASURE; i++)
     {
-        if ((float) (rand() / RAND_MAX) < MUTATION_RATE_MEASURE)
+        if ((float) (rand() / RAND_MAX) < MUTATION_RATE_DISTANCE_FRIEND)
 	{
-	    // TO DO
+	    individu[i].perception.distance_friend = (rand()%NB_DISTANCE)-1;
+        }
+	if ((float) (rand() / RAND_MAX) < MUTATION_RATE_DISTANCE_TARGET)
+	{
+	    individu[i].perception.distance_target = (rand()%NB_DISTANCE)-1;
+        }
+	if ((float) (rand() / RAND_MAX) < MUTATION_RATE_CARDINALITY_FRIEND)
+	{
+	    individu[i].perception.cardinality_friend = (rand()%NB_CARDINALITY)-1;
+        }
+	if ((float) (rand() / RAND_MAX) < MUTATION_RATE_CARDINALITY_TARGET)
+	{
+	    individu[i].perception.cardinality_target = (rand()%NB_CARDINALITY)-1 ;
         }
     }
 
     if ((float) (rand() / RAND_MAX) < MUTATION_RATE_ACTION)
     {
-	// TO DO
+	individu[i].action = rand()%NB_ACTION;
     }
 
     if ((float) (rand() / RAND_MAX) < MUTATION_RATE_PRIORITY)
     {
-	// TO DO
+        individu[i].action = rand()%NB_PRIORITY;
     }
 }
 
@@ -244,7 +256,7 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 		index_best_individu = genetic_evaluate_population(score, population);
 	    }
 
-	    rules_copy_brain(population[index_best_individu], new_population[0]);
+	    rules_copy_brain_genetic(population[index_best_individu], new_population[0]);
 
             // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
@@ -258,7 +270,7 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 		}
 		else
 		{
-		    rules_copy_brain(population[0], new_population[i]);
+		    rules_copy_brain_genetic(population[0], new_population[i]);
 		    genetic_mutate(new_population[i]);
 		}
 	    }
@@ -271,7 +283,7 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 		index_best_individu = genetic_evaluate_population(score, new_population);
 	    }
 
-	    rules_copy_brain(new_population[index_best_individu], population[0]);
+	    rules_copy_brain_genetic(new_population[index_best_individu], population[0]);
 
             // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
@@ -285,7 +297,7 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 		}
 		else
 		{
-		    rules_copy_brain(new_population[0], population[i]);
+		    rules_copy_brain_genetic(new_population[0], population[i]);
 		    genetic_mutate(population[i]);
 		}
 	    }
