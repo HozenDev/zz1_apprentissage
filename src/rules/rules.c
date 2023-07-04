@@ -18,7 +18,7 @@ void rules_save_file(FILE * file, rules_t * array_rules)
 	{
 	    fprintf(file, "%c ", array_rules[i].measures[j] + '0');
 	}
-	fprintf(file, "%c %c \n", array_rules[i].action, array_rules[i].priority + '0');
+	fprintf(file, "%c %c \n", array_rules[i].action + '0', array_rules[i].priority + '0');
     }
 }
 
@@ -113,23 +113,6 @@ void rules_create_array_rules(rules_t ** array_rules)
     (*array_rules) = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
 }
 
-void rules_copy_brain(rules_t * brainsrc,rules_t * braindest)
-{
-    //for each rules in brain
-    for (int i =0; i<NB_RULES; i++)
-    {
-        //copy measure
-        for (int j=0; j<NB_MEASURE; j++)
-	    braindest[i].measures[j] = brainsrc[i].measures[j];
-
-        //copy action
-        braindest[i].action = brainsrc[i].action;
-
-        //copy priority
-        braindest[i].priority = brainsrc[i].priority;
-    }
-}
-
 /**
  * @brief Allows you to destroy array_rules in memory
  *
@@ -141,3 +124,51 @@ void rules_destroy_array_rules(rules_t * array_rules)
     free(array_rules);
 }
 
+
+/**
+ * @brief Copies the contents of one rules_t structure to another.
+ *
+ * This function copies the contents of the source `rules_t` structure to the destination
+ * `rules_t` structure. It performs a deep copy, copying the measure values, action,
+ * and priority from the source structure to the destination structure.
+ *
+ * @param brainsrc Pointer to the source `rules_t` structure.
+ * @param braindest Pointer to the destination `rules_t` structure.
+ *
+ * @note The destination structure must be preallocated and have enough memory to store
+ * the copied contents. No memory allocation is performed by this function.
+ */
+void rules_copy_rules(rules_t rules_src, rules_t rules_dest)
+{
+    //copy measure
+    for (int j=0; j<NB_MEASURE; j++)
+	rules_dest.measures[j] = rules_src.measures[j];
+
+    //copy action
+    rules_dest.action = rules_src.action;
+
+    //copy priority
+    rules_dest.priority = rules_src.priority;
+}
+
+/**
+ * @brief Copies the contents of one rules_t array to another.
+ *
+ * This function copies the contents of the source `rules_t` array to the destination
+ * `rules_t` array. It performs a deep copy by calling the `rules_copy_rules` function
+ * for each element of the arrays.
+ *
+ * @param brainsrc Pointer to the source `rules_t` array.
+ * @param braindest Pointer to the destination `rules_t` array.
+ *
+ * @note The source and destination arrays must have enough memory to store the copied
+ * contents. No memory allocation is performed by this function.
+ */
+void rules_copy_brain(rules_t brain_src[NB_RULES], rules_t brain_dest[NB_RULES])
+{
+    int i;
+    for (i = 0; i<NB_RULES; ++i)
+    {
+	rules_copy_rules(brain_src[i], brain_dest[i]);
+    }
+}

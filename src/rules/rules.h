@@ -23,11 +23,11 @@ typedef struct rules_s rules_t;
 void rules_save_file(FILE * file, rules_t * array_rules);
 void rules_save_path_file(char * path_file, rules_t * array_rules);
 
-
 void rules_read_file(FILE * file, rules_t* array_rules);
 void rules_read_path_file(char* path_file, rules_t* array_rules);
 
-void rules_copy_brain(rules_t * rulesscr,rules_t * rulesdest);
+void rules_copy_brain(rules_t brain_src[NB_RULES], rules_t brain_dest[NB_RULES]);
+void rules_copy_rules(rules_t rules_src, rules_t rules_dest);
 
 void rules_create_array_rules(rules_t ** array_rules);
 void rules_destroy_array_rules(rules_t * array_rules);

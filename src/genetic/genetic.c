@@ -1,9 +1,7 @@
 #include "genetic.h"
 
 
-// chaque individu est un tableau de règle
-
-
+// chaque individu est un tableau de règle/brain
 
 /**
  * @brief Creates a new individual for genetic algorithms.
@@ -22,7 +20,6 @@ rules_t * genetic_create_individu()
     rules_create_array_rules(&individu);
     return individu;
 }
-
 
 /**
  * @brief Destroys an individual created for genetic algorithms.
@@ -43,51 +40,24 @@ void genetic_destroy_individu(rules_t * individu)
 
 
 /**
- * @brief Initializes the population for genetic algorithms.
+ * @brief Initializes the population by saving the rules to a file.
  *
- * This function initializes the population for genetic algorithms by creating and
- * populating an array of individuals. Each individual is created using the
- * `genetic_create_individu` function.
+ * This function initializes the population by saving the rules for each individual in the
+ * population to a file. It uses the `rules_save_file` function to save the rules of each
+ * individual in the provided `population` array to the given file.
  *
- * @return A pointer to the array of initialized individuals.
+ * @param file Pointer to the file where the rules will be saved.
+ * @param population Array representing the population of individuals.
  *
- * @note The population array is a local static array, so it will remain valid after
- *       the function returns. However, be cautious when using this approach if the
- *       population size is large, as it may lead to stack overflow.
+ * @note The file must be opened in write mode before calling this function.
  */
-rules_t **genetic_initialize_population()
+void genetic_initialize_population(char * path_brain, rules_t population[POPULATION_SIZE][NB_RULES])
 {
-    rules_t ** population = malloc(POPULATION_SIZE * sizeof(rules_t*));
-
-    for (int i = 0; i < POPULATION_SIZE; ++i)
+    for (int i=0; i<POPULATION_SIZE; ++i)
     {
-        population[i] = genetic_create_individu();
+	rules_read_path_file(path_brain, population[i]);
     }
-    return population;
 }
-
-/**
- * @brief Destroys the population created for genetic algorithms.
- *
- * This function destroys the population created for genetic algorithms by
- * freeing the memory allocated for each individual in the static array.
- *
- * @param population A pointer to the array of individuals to be destroyed.
- *
- * @note The function assumes that the population was previously initialized using
- *       the `genetic_initialize_population` function. However, since a static array
- *       was used, the memory for the individuals will not be freed automatically.
- *       Therefore, it's important to call this function to avoid memory leaks.
- */
-void genetic_destroy_population(rules_t **population)
-{
-    for (int i = 0; i < POPULATION_SIZE; ++i)
-    {
-        genetic_destroy_individu(population[i]);
-    }
-    free(population);
-}
-
 
 
 /**
@@ -102,13 +72,14 @@ void genetic_destroy_population(rules_t **population)
  *
  * @return The index of the best individual in the population.
  */
-int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t ** population)
+int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[POPULATION_SIZE][NB_RULES])
 {
     int best_individu = INT_MAX;
     for (int i=0; i < POPULATION_SIZE; ++i)
     {
 	score[i] = genetic_evaluate_individu(population[i]);
-	if (score[i] > best_individu) best_individu = i;
+	if (score[i] < best_individu)
+	    best_individu = i;
     }
     return best_individu;
 }
@@ -142,7 +113,7 @@ int genetic_evaluate_individu(rules_t * individu)
  *
  * @return The index of the individual with the best score, representing the selected parent.
  */
-int genetic_tournament_parent(int * score)
+int genetic_tournament_parent(int score[POPULATION_SIZE])
 {
     int index_best_distance = INT_MAX;
     int iteration =0;
@@ -151,8 +122,8 @@ int genetic_tournament_parent(int * score)
     do
     {
 	random_indice = rand()%POPULATION_SIZE;
-	if(score[random_indice] < index_best_distance) index_best_distance = score[random_indice];
-	
+	if(score[random_indice] < index_best_distance)
+	    index_best_distance = score[random_indice];
 	++ iteration;
     } while(iteration < NB_PARTICIPATION_TOURNOI);
 
@@ -174,13 +145,27 @@ int genetic_tournament_parent(int * score)
  * @note The caller is responsible for allocating memory for the child individual and ensuring
  *       that the parent individuals are valid and within the range of the population array.
  */
-void genetic_croisement_generate_child(rules_t ** children, rules_t ** population, int p1, int p2)
+void genetic_croisement_generate_child(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
 {
-    // TO DO
+    int i, k=0;
+
     (void) children;
     (void) population;
     (void) p1;
     (void) p2;
+  
+    for (i=0; i<NB_RULES/2 ; ++i)
+    {
+	rules_copy_rules(population[p1][i], children[k]);
+	++k;
+    }
+
+    for(i=NB_RULES/2; i<NB_RULES; ++i)
+    {
+	rules_copy_brain(population[p2] , &children[k]);
+	++k;
+    }
+
 }
 
 
@@ -188,7 +173,8 @@ void genetic_croisement_generate_child(rules_t ** children, rules_t ** populatio
  * @brief Applies genetic mutation to an individual.
  *
  * This function applies genetic mutation to an individual by modifying its genetic information.
- * The individual is represented by a pointer to a pointer to `rules_t`, which allows the function
+ * The individual is represented by a pointer to a pointer to `rules_t`, whi
+ch allows the function
  * to directly modify the individual.
  *
  * @param individu A pointer to the pointer of the individual to be mutated.
@@ -196,29 +182,58 @@ void genetic_croisement_generate_child(rules_t ** children, rules_t ** populatio
  * @note The caller is responsible for ensuring that the individual is valid and properly allocated.
  *       The function will modify the individual in place.
  */
-void genetic_mutate(rules_t ** individu)
+void genetic_mutate(rules_t individu[NB_RULES])
 {
+    int i;
     (void) individu;
-    // TO DO
+    for (i = 0; i < NB_MEASURE; i++)
+    {
+        if ((float) (rand() / RAND_MAX) < MUTATION_RATE_MEASURE)
+	{
+	    // TO DO
+        }
+    }
+
+    if ((float) (rand() / RAND_MAX) < MUTATION_RATE_ACTION)
+    {
+	// TO DO
+    }
+
+    if ((float) (rand() / RAND_MAX) < MUTATION_RATE_PRIORITY)
+    {
+	// TO DO
+    }
 }
 
 
-rules_t * genetic_solve_optimized() // game en parametre pour evavaluate population , puis individu 
+void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // game en parametre pour evavaluate population , puis individu 
 {
-    rules_t ** population;
-    rules_t ** new_population;
-
-    int score[POPULATION_SIZE]; // score de chaque individu de la population parent
+    rules_t population     [POPULATION_SIZE][NB_RULES];
+    rules_t new_population [POPULATION_SIZE][NB_RULES];
+    int score[POPULATION_SIZE]; 
     
-    unsigned int iteration = 0, index_best_individu, p1, p2;
+    int iteration = 0 , index_best_individu, p1, p2;
 
-    rules_t * best_individu;
-    best_individu = (rules_t *) malloc(sizeof(rules_t));
+    (void) path_best_brain;
     
-    population = genetic_initialize_population();
-    
-    new_population = genetic_initialize_population();
+    genetic_initialize_population(path_brain_load, population);
+    genetic_initialize_population("test2.txt"    , new_population);
 
+    for (int i=0; i < POPULATION_SIZE; ++i)
+    {
+	printf("Population[%d]\n", i);
+	rules_save_file(stdout, population[i]);
+	printf("\n");
+    }
+
+     for (int i=0; i < POPULATION_SIZE; ++i)
+    {
+	printf("\nNew population[%d]\n", i);
+	rules_save_file(stdout, new_population[i]);
+	printf("\n");
+    }
+    
+    
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 
 	if(iteration%2 == 0) // population forme new_population
@@ -230,16 +245,22 @@ rules_t * genetic_solve_optimized() // game en parametre pour evavaluate populat
 	    }
 
 	    rules_copy_brain(population[index_best_individu], new_population[0]);
-	    // Sélection, croisement et mutation pour générer la nouvelle population
+
+            // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
 	    {
-		p1 = genetic_tournament_parent(score);
-		p2 = genetic_tournament_parent(score);
-		
-		genetic_croisement_generate_child(&new_population[i], population, p1, p2);
+		if((float) (rand() / RAND_MAX) > MUTATION_RATE)
+		{
+		    p1 = genetic_tournament_parent(score);
+		    p2 = genetic_tournament_parent(score);
 
-		//génère une mutation
-		if((float) (rand() / RAND_MAX) < MUTATION_RATE) genetic_mutate(&new_population[i]);
+		    genetic_croisement_generate_child(new_population[i], population, p1, p2);	
+		}
+		else
+		{
+		    rules_copy_brain(population[0], new_population[i]);
+		    genetic_mutate(new_population[i]);
+		}
 	    }
 	}
 	else // new_populaiton forme population
@@ -249,28 +270,31 @@ rules_t * genetic_solve_optimized() // game en parametre pour evavaluate populat
 	    {
 		index_best_individu = genetic_evaluate_population(score, new_population);
 	    }
-	    
-	    rules_copy_brain(population[index_best_individu], population[0]);
-	    // Sélection, croisement et mutation pour générer la nouvelle population
+
+	    rules_copy_brain(new_population[index_best_individu], population[0]);
+
+            // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
 	    {
-		p1 = genetic_tournament_parent(score);
-		p2 = genetic_tournament_parent(score);
-		
-	        genetic_croisement_generate_child(&population[i], new_population, p1, p2);
+		if((float) (rand() / RAND_MAX) > MUTATION_RATE)
+		{
+		    p1 = genetic_tournament_parent(score);
+		    p2 = genetic_tournament_parent(score);
 
-		//génère une mutation
-		if((float) (rand() / RAND_MAX) < MUTATION_RATE) genetic_mutate(&population[i]);
+		    genetic_croisement_generate_child(population[i], new_population, p1, p2);
+		}
+		else
+		{
+		    rules_copy_brain(new_population[0], population[i]);
+		    genetic_mutate(population[i]);
+		}
 	    }
 	}
 	++ iteration;
     }
-
-    (iteration%2==0)? rules_copy_brain(population[0], best_individu) : rules_copy_brain(new_population[0], best_individu);
     
     
-    genetic_destroy_population(population);
-    genetic_destroy_population(new_population);
-    
-    return best_individu;
+    (iteration%2==0)?
+	rules_save_path_file(path_best_brain, population[0]):
+	rules_save_path_file(path_best_brain, new_population[0]);
 }

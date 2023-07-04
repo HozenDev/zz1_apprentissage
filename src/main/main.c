@@ -1,12 +1,15 @@
-#include "../log/log.h"
+/*#include "../log/log.h"
 #include "../game/game.h"
 #include "../seed/seed.h"
 #include "../rules/rules.h"
 #include "../genetic/genetic.h"
+*/
 
 int main(int argc, char *argv[])
 {
-    
+    (void) argc;
+    (void) argv;
+    /*
     int save = 1;
     long int seed;
     create_seed(&seed);
@@ -28,6 +31,8 @@ int main(int argc, char *argv[])
     srand(seed);
     
     game_loop();
-
+    */
+    //genetic_solve_optimized("test.txt", NULL);
+    
     return 0;
 }
