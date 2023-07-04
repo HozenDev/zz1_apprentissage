@@ -198,6 +198,9 @@ void simulation_execute_action(simulation_entity_t predator,int action,simulatio
 
 void simulation_loop(){
     //simulation_init();
-
-    while()
+    int iter=0;
+    while(target.pv!=0 && iter<iter_max)
+    {
+        
+    }
 }
