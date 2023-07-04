@@ -1,5 +1,5 @@
 #include "simulation.h"
-
+#include "rules.h"
 void simulation_create(void)
 {
     /* todo */
@@ -10,7 +10,7 @@ void simulation_free(void)
     /* todo */
 }
 
-void game_get_closest_friend(simulation_entity_t * predators){
+void game_get_closest_friend(simulation_entity_t * predators,rules_t ** rules){
     
     float distmin=FLOAT_MAX,dist=0;
     int friend=0;
@@ -24,11 +24,13 @@ void game_get_closest_friend(simulation_entity_t * predators){
                 }
             }
         }
-
-        
+        (*rules)[i]->measure[1]=game_get_cardinals(predators[i].x,predators[friend].x,predators[i].y,predators[friend].y)
+        (*rules)[i]->measure[0]
     }
 }
-
+enum distance game_get_distance(float distance){
+    
+}
 enum direction_friend game_get_cardinals(float xa,float ya,float xb ,float yb){
     enum direction_friend card;
     float deltax=xa - xb,
