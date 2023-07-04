@@ -1,10 +1,10 @@
 #include "simulation.h"
-#include <stdlib.h>
-int target_x = WORLD_WIDTH/2;
-int target_y = WORLD_HEIGHT/2;
-
 #include "rules.h"
 #include "const.h"
+
+#include <stdlib.h>
+
+simulation_target_t target;
 
 void simulation_create(void)
 {
@@ -15,7 +15,8 @@ void simulation_free(void)
 {
     /* todo */
 }
-void simulation_get_perception(simulation_entity_t * predators){
+void simulation_get_perception(simulation_entity_t * predators)
+{
     enum distance dist;
     enum cardinality card;
     simulation_get_closest_friend(predators);
@@ -24,6 +25,17 @@ void simulation_get_perception(simulation_entity_t * predators){
         if(predators[i].p.direction_target!=NOT_FOUND){
             predators[i].p.direction_target=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
             predators[i].p.distance_target=simulation_get_distance((abs(predators[i].x - target.x) + abs(predators[i].y - target.y)))
+        }
+    }
+}
+
+void simulation_destroy_target(simulation_entity_t predators[NB_PREDATOR])
+{
+    int i;
+    for (i = 0; i < NB_PREDATOR; ++i)
+    {
+        if (predators.perception.distance_target == CLOSE) {
+            target.pv -= PREDATOR_DAMAGE;
         }
     }
 }
@@ -78,7 +90,7 @@ void simulation_get_closest_friend(simulation_entity_t * predators){
     for (int i=0;i<NB_PREDATOR;i++){
         for(int j=0;i<NB_PREDATOR;j++){
             if(i!=j){
-                dist = simulation_get_distance_between_2_predator(predators[i], predators[j]);
+                dist = (float) simulation_get_distance_between_2_predator(predators[i], predators[j]);
                 if(dist<distmin){
                     dist=distmin;
                     friend=j;
@@ -94,13 +106,12 @@ void simulation_get_closest_friend(simulation_entity_t * predators){
 enum distance simulation_get_distance(float distance){
     enum distance dist;
     if(distance>COM_RADIUS) dist=FAR;
-
-    if(distance>com_radius) dist=CLOSE;
-
+    if(distance>COM_RADIUS) dist=CLOSE;
     return(dist);
-
 }
-enum direction_friend simulation_get_cardinals(float xa,float ya,float xb ,float yb){
+
+enum direction_friend simulation_get_cardinals(float xa,float ya,float xb ,float yb)
+{
     enum cardinality card;
     float
         deltax=xa - xb,

@@ -12,8 +12,15 @@ struct simulation_entity_s {
 
 typedef simulation_entity_s simulation_entity_t;
 
-extern int target_x;
-extern int target_y;
+struct simulation_target_s {
+    int target_x;
+    int target_y;
+    int pv;
+};
+
+typedef simulation_target_s simulation_target_t;
+
+extern simulation_target_s target;
 
 void simulation_create(void);
 void simulation_free(void);
