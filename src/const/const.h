@@ -26,5 +26,6 @@
 
 #define WORLD_WIDTH SCREEN_WIDTH
 #define WORLD_HEIGHT SCREEN_HEIGHT
+#define s_power
 
 #endif
