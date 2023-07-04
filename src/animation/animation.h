@@ -2,9 +2,7 @@
 #define _animation_h_
 
 #include "../sdl/sdl.h"
-
-#define MAX_PATH 2048
-#define MAX_TEXTURE 20
+#include "../const/const.h"
 
 struct animation_s {
     float current_animation;
