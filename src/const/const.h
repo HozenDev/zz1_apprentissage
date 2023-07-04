@@ -12,7 +12,7 @@
 #define NB_PREY 1
 #define NB_GAME_BACKGROUNDS 3
 
-#define PREDATOR_SPEED 2
+#define PREDATOR_SPEED 6
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
@@ -30,7 +30,7 @@
 #define S_POWER 0.1
 
 #define TARGET_PV 100
-#define ITER_MAX 100
+#define ITER_MAX  100000
 
 /* RULES */
 #define NB_ACTION      6

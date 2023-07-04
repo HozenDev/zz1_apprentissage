@@ -77,7 +77,7 @@ void rules_read_file(FILE * file, rules_t array_rules[NB_RULES])
     {
 	for (int i = 0; i < NB_RULES; ++i)
 	{
-            if (fscanf(file,"%d %d %d %d",
+            if (fscanf(file,"%d %d %d %d ",
                        &array_rules[i].perception.distance_friend,
                        &array_rules[i].perception.cardinality_friend,
                        &array_rules[i].perception.distance_target,

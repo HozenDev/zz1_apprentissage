@@ -1,5 +1,6 @@
 #include "genetic.h"
 
+
 /**
  * @brief Initializes the population by saving the rules to a file.
  *
@@ -14,9 +15,10 @@
  */
 void genetic_initialize_population(char * path_brain, rules_t population[POPULATION_SIZE][NB_RULES])
 {
-    for (int i=0; i<POPULATION_SIZE; ++i)
+    rules_read_path_file(path_brain, population[0]);
+    for (int i=1; i < POPULATION_SIZE; ++i)
     {
-	rules_read_path_file(path_brain, population[i]);
+        genetic_mutate(population[i]);
     }
 }
 
@@ -39,6 +41,7 @@ int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[PO
     for (int i=0; i < POPULATION_SIZE; ++i)
     {
 	score[i] = genetic_evaluate_individu(population[i]);
+	zlog(stdout, INFO, "l'individu %d a un score de %d \n", i, score[i]);
 	if (score[i] < best_individu)
 	    best_individu = i;
     }
@@ -57,9 +60,9 @@ int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[PO
  */
 int genetic_evaluate_individu(rules_t * individu)
 {
-    (void) individu;
-    // TO DO
-    return 0;
+    int score = INT_MAX;
+    simulation_loop(individu, &score);
+    return score;
 }
 
 /**
@@ -76,15 +79,16 @@ int genetic_evaluate_individu(rules_t * individu)
  */
 int genetic_tournament_parent(int score[POPULATION_SIZE])
 {
-    int index_best_distance = INT_MAX;
-    int iteration =0;
     int random_indice;
+    int index_best_distance = rand() % POPULATION_SIZE;
+    int iteration =0;
     
     do
     {
 	random_indice = rand()%POPULATION_SIZE;
-	if(score[random_indice] < index_best_distance)
-	    index_best_distance = score[random_indice];
+	
+	if(score[random_indice] < score[index_best_distance])
+	    index_best_distance = random_indice;
 	++ iteration;
     } while(iteration < NB_PARTICIPATION_TOURNOI);
 
@@ -109,11 +113,6 @@ int genetic_tournament_parent(int score[POPULATION_SIZE])
 void genetic_croisement_generate_child(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
 {
     int i, k=0;
-
-    (void) children;
-    (void) population;
-    (void) p1;
-    (void) p2;
   
     for (i=0; i<NB_RULES/2 ; ++i)
     {
@@ -123,10 +122,9 @@ void genetic_croisement_generate_child(rules_t children[NB_RULES], rules_t popul
 
     for(i=NB_RULES/2; i<NB_RULES; ++i)
     {
-	rules_copy_brain_genetic(population[p2] , &children[k]);
+	rules_copy_rules(population[p2][i] , &children[k]);
 	++k;
     }
-
 }
 
 
@@ -147,7 +145,7 @@ void genetic_mutate(rules_t individu[NB_RULES])
 {
     int i;
     (void) individu;
-    for (i = 0; i < NB_MEASURE; i++)
+    for (i = 0; i < NB_RULES; i++)
     {
         if ((float) (rand() / RAND_MAX) < MUTATION_RATE_DISTANCE_FRIEND)
 	{
@@ -165,16 +163,16 @@ void genetic_mutate(rules_t individu[NB_RULES])
 	{
 	    individu[i].perception.cardinality_target = (rand()%NB_CARDINALITY)-1 ;
         }
-    }
+	
+	if ((float) (rand() / RAND_MAX) < MUTATION_RATE_ACTION)
+	{
+	    individu[i].action = rand()%NB_ACTION;
+	}
 
-    if ((float) (rand() / RAND_MAX) < MUTATION_RATE_ACTION)
-    {
-	individu[i].action = rand()%NB_ACTION;
-    }
-
-    if ((float) (rand() / RAND_MAX) < MUTATION_RATE_PRIORITY)
-    {
-        individu[i].action = rand()%NB_PRIORITY;
+	if ((float) (rand() / RAND_MAX) < MUTATION_RATE_PRIORITY)
+	{
+	    individu[i].priority = rand()%NB_PRIORITY;
+	}
     }
 }
 
@@ -183,51 +181,30 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 {
     rules_t population     [POPULATION_SIZE][NB_RULES];
     rules_t new_population [POPULATION_SIZE][NB_RULES];
-    int score[POPULATION_SIZE]; 
+    int score[POPULATION_SIZE] = {0}; 
     
-    int iteration = 0 , index_best_individu, p1, p2;
+    int iteration = 0 , index_best_individu = 0, p1, p2;
 
     (void) path_best_brain;
     
     genetic_initialize_population(path_brain_load, population);
-    genetic_initialize_population("test2.txt"    , new_population);
+    genetic_initialize_population(path_brain_load, new_population);
 
-    for (int i=0; i < POPULATION_SIZE; ++i)
-    {
-	printf("Population[%d]\n", i);
-	rules_save_file(stdout, population[i]);
-	printf("\n");
-    }
-
-     for (int i=0; i < POPULATION_SIZE; ++i)
-    {
-	printf("\nNew population[%d]\n", i);
-	rules_save_file(stdout, new_population[i]);
-	printf("\n");
-    }
-    
-    
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
-
 	if(iteration%2 == 0) // population forme new_population
 	{
-	    //calcule distance
-	    for (int i = 0; i < POPULATION_SIZE; i++)
-	    {
-		index_best_individu = genetic_evaluate_population(score, population);
-	    }
-
+	    
+	    index_best_individu = genetic_evaluate_population(score, population);
 	    rules_copy_brain_genetic(population[index_best_individu], new_population[0]);
 
             // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
 	    {
-		if((float) (rand() / RAND_MAX) > MUTATION_RATE)
-		{
+		if((float) (rand() / RAND_MAX) > -1)//MUTATION_RATE)
+		{	    
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
-
-		    genetic_croisement_generate_child(new_population[i], population, p1, p2);	
+		    genetic_croisement_generate_child(new_population[i], population, p1, p2);
 		}
 		else
 		{
@@ -238,15 +215,10 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 	}
 	else // new_populaiton forme population
 	{
-	    //calcule distance
-	    for (int i = 0; i < POPULATION_SIZE; i++)
-	    {
-		index_best_individu = genetic_evaluate_population(score, new_population);
-	    }
-
+	    index_best_individu = genetic_evaluate_population(score, new_population);
 	    rules_copy_brain_genetic(new_population[index_best_individu], population[0]);
 
-            // Sélection, croisement et mutation pour générer la nouvelle population
+	    // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
 	    {
 		if((float) (rand() / RAND_MAX) > MUTATION_RATE)
@@ -266,8 +238,8 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 	++ iteration;
     }
     
-    
+    // saivegarde meillleur individu
     (iteration%2==0)?
-	rules_save_path_file(path_best_brain, population[0]):
-	rules_save_path_file(path_best_brain, new_population[0]);
+      rules_save_path_file(path_best_brain, population[0]):
+      rules_save_path_file(path_best_brain, new_population[0]);
 }

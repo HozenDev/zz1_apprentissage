@@ -3,6 +3,7 @@
 
 #include "../const/const.h"
 #include "../rules/rules.h"
+#include "../simulation/simulation.h"
 
 struct simulation_entity_s {
     int x;
