@@ -22,13 +22,6 @@ void simulation_destroy_target(simulation_entity_t predator)
         target.pv -= PREDATOR_DAMAGE;
 }
 
-void simulation_destroy_target(simulation_entity_t predator)
-{
-    if (predator.perception.distance_target == CLOSE) {
-        target.pv -= PREDATOR_DAMAGE;
-    }
-
-}
 
 int simulation_communicate(simulation_entity_t predator, simulation_entity_t * predators[NB_PREDATOR])
 {
@@ -152,12 +145,11 @@ int simulation_verify_rules(simulation_entity_t predators,rules_t rule){
     return(flag);
 }
 
-int * simulation_filtrage_regle(simulation_entity_t predators,rules_t * brain){
-    int filtered_rules[NB_RULES]={0};
-    int flag=0;
+void simulation_filtrage_regle(simulation_entity_t predators,rules_t * brain,int * filtered_rules[NB_RULES]){
     for(int i=0;i<NB_RULES;i++){
-        if (simulation_verify_rules(predatros,brain[i])){
-            filtered_rules[i]=1;
+        (*filtered_rules)[i]=0;
+        if (simulation_verify_rules(predators,brain[i])){
+            (*filtered_rules)[i]=1;
         }
     }
 }
@@ -170,14 +162,14 @@ int simulation_choose_action(int * filtered_rules,rules_t * brain)
     int action=0;
     for(j=0;j<NB_RULES;j++){
         if(filtered_rules[j]==1){
-            sum+=brain[i].priority**s_power;
-            probability[i]=brain[i].priority**s_power;
+            sum+=brain[j].priority**s_power;
+            probability[j]=brain[j].priority**s_power;
         }
     }
 
     for(j=0;j<NB_RULES;j++){
         if(filtered_rules[j]==1){
-            cumulativeProbability+=probability[i]/sum;
+            cumulativeProbability+=probability[j]/sum;
             if(rand()/RAND_MAX<cumulativeProbability){
                 action=i;
             }
@@ -202,5 +194,47 @@ void simulation_execute_action(simulation_entity_t predator,int action,simulatio
         simulation_communicate(predator,predators);
     case 5:
         simulation_destroy_target(predator);
+    }
+}
+void simulation_init(simulation_entity_t * predators,simulation_target_t target)
+{
+    generate_seed(0);
+    target.x=(float)rand()/RAND_MAX*WORLD_WIDTH;
+    target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT;
+    target.pv=TARGET_PV;
+
+    for(int i=0;i<NB_PREDATOR;i++)
+    {
+        predators[i].x=(float)rand()/RAND_MAX*WORLD_WIDTH;
+        predators[i].y=(float)rand()/RAND_MAX*WORLD_HEIGHT;
+    }
+
+
+}   
+void simulation_loop(rules_t * brain,int * iter){
+    int action[NB_RULES]={0};
+    *iter=0;
+    int filtered_rules[NB_RULES]
+    simulation_entity_t predators[NB_PREDATOR];
+    while(target.pv>0 && *iter<iter_max)
+    {
+        (*iter) ++;
+        simulation_get_perception(predators);
+
+
+        for(int i=0;i<NB_PREDATOR;i++)
+        {
+            /*init filtered_rules*/
+            for(int j=0;j<NB_RULES;j++) filtered_rules[j]=0;
+            /* filter rules */
+            simulation_filtrage_regle(predators[i],brain,&filtered_rules);
+            /* choisis une action */
+            action[i]=simulation_choose_action(filtered_rules,brain);
+
+        }
+
+        /* execute action */
+        for(int i=0;i<NB_PREDATOR;i++) simulation_execute_action(predators[i],action[i]);
+        
     }
 }
