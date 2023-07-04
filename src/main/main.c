@@ -7,7 +7,6 @@
 
 int main(int argc, char *argv[])
 {
-    
     int save = 1;
     long int seed;
     int iter=0;
@@ -39,6 +38,8 @@ int main(int argc, char *argv[])
     zlog(stdout, INFO, "simulation fini: iter %d", iter);
 
     rules_save_file(stdout, brain);
+
+    //genetic_solve_optimized("test.txt", NULL);
 
     return 0;
 }

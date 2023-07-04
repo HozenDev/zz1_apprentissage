@@ -1,13 +1,11 @@
 #ifndef _rules_h_
 #define _rules_h_
 
-#define NB_MEASURE 4   // size of measures
-#define NB_RULES   10  // number rules in brain (size of array_rules)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include "../log/log.h"
+#include "../const/const.h"
 
 enum distance {
     JOKER_D = -1,
@@ -49,5 +47,7 @@ void rules_read_file(FILE * file, rules_t array_rules[NB_RULES]);
 void rules_read_path_file(char* path_file, rules_t array_rules[NB_RULES]);
 
 void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES]);
+void rules_copy_brain_genetic(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES]);
+void rules_copy_rules(rules_t rules_src, rules_t * rules_dest);
 
 #endif

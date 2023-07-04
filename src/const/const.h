@@ -30,6 +30,14 @@
 #define S_POWER 0.1
 
 #define TARGET_PV 100
-#define ITER_MAX 10000000
+#define ITER_MAX 100000
+
+/* RULES */
+#define NB_ACTION      6
+#define NB_PRIORITY    3
+#define NB_DISTANCE    3
+#define NB_CARDINALITY 6
+#define NB_MEASURE     4   // size of measures
+#define NB_RULES       5  // number rules in brain (size of array_rules)
 
 #endif

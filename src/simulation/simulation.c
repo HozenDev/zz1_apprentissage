@@ -238,17 +238,21 @@ void simulation_execute_action(simulation_entity_t predator,
 }
 void simulation_init(simulation_entity_t predators[NB_PREDATOR])
 {
-    target.x=(float)rand()/RAND_MAX*WORLD_WIDTH;
-    target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT;
+    int i;
+    
+    /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
+    /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
+    target.x = 0;
+    target.y = 0;
     target.pv=TARGET_PV;
 
-    for(int i=0;i<NB_PREDATOR;i++)
+    for(i=0;i<NB_PREDATOR;i++)
     {
         predators[i].x=(float)rand()/RAND_MAX*WORLD_WIDTH;
         predators[i].y=(float)rand()/RAND_MAX*WORLD_HEIGHT;
     }
-
-
+    predators[0].x = 0;
+    predators[0].y = 0;
 }   
 void simulation_loop(rules_t brain[NB_RULES], int * iter)
 {
@@ -273,7 +277,6 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
             simulation_filtrage_regle(predators[i], filtered_rules, brain);
             /* choisis une action */
             action[i]=simulation_choose_action(filtered_rules,brain);
-
         }
 
         /* execute action */

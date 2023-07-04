@@ -119,3 +119,52 @@ void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES])
     }
 }
 
+/**
+ * @brief Copies the contents of one rules_t structure to another.
+ *
+ * This function copies the contents of the source `rules_t` structure to the destination
+ * `rules_t` structure. It performs a deep copy, copying the measure values, action,
+ * and priority from the source structure to the destination structure.
+ *
+ * @param brainsrc Pointer to the source `rules_t` structure.
+ * @param braindest Pointer to the destination `rules_t` structure.
+ *
+ * @note The destination structure must be preallocated and have enough memory to store
+ * the copied contents. No memory allocation is performed by this function.
+ */
+void rules_copy_rules(rules_t rules_src, rules_t * rules_dest)
+{
+    //copy measure
+    (*rules_dest).perception.distance_friend    = rules_src.perception.distance_friend;
+    (*rules_dest).perception.cardinality_friend = rules_src.perception.cardinality_friend;
+    (*rules_dest).perception.distance_target    = rules_src.perception.distance_target;
+    (*rules_dest).perception.cardinality_target = rules_src.perception.cardinality_target;
+
+    //copy action
+    rules_dest->action = rules_src.action;
+
+    //copy priority
+    rules_dest->priority = rules_src.priority;
+}
+
+/**
+ * @brief Copies the contents of one rules_t array to another.
+ *
+ * This function copies the contents of the source `rules_t` array to the destination
+ * `rules_t` array. It performs a deep copy by calling the `rules_copy_rules` function
+ * for each element of the arrays.
+ *
+ * @param brainsrc Pointer to the source `rules_t` array.
+ * @param braindest Pointer to the destination `rules_t` array.
+ *
+ * @note The source and destination arrays must have enough memory to store the copied
+ * contents. No memory allocation is performed by this function.
+ */
+void rules_copy_brain_genetic(rules_t brain_src[NB_RULES], rules_t brain_dest[NB_RULES])
+{
+    int i;
+    for (i = 0; i<NB_RULES; ++i)
+    {
+	rules_copy_rules(brain_src[i], &brain_dest[i]);
+    }
+}
