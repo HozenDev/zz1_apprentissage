@@ -1,7 +1,7 @@
 #ifndef _rules_h_
 #define _rules_h_
 
-#define NB_MEASURE 3   // size of measures
+#define NB_MEASURE 4   // size of measures
 #define NB_RULES   10  // number rules in brain (size of array_rules)
 
 
@@ -9,10 +9,17 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "../log/log.h"
+struct perception_s {
+    enum distance distance_friend;
+    enum cardinality cardinality_friend;
+    enum distance distance_target;
+    enum direction_target cardinality_target;
 
+}
+typedef struct rules_s rules_t;
 
 struct rules_s {
-    char measures[NB_MEASURE]; 
+    preception_t perception;
     char action;
     char priority;    
 };

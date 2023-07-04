@@ -3,6 +3,9 @@
 int target_x = WORLD_WIDTH/2;
 int target_y = WORLD_HEIGHT/2;
 
+#include "rules.h"
+#include "const.h"
+
 void simulation_create(void)
 {
     /* todo */
@@ -12,10 +15,22 @@ void simulation_free(void)
 {
     /* todo */
 }
+void simulation_get_perception(simulation_entity_t * predators ){
+    enum distance dist;
+    enum cardinality card;
+    simulation_get_closest_friend(predators,rules);
+    for(int i=0;i<NB_PREDATOR,i++)
+    {
+        if((*rules)[i]->measure[2]!=0){
+            (*rules)[i]->measure[2]=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
+            (*rules)[i]->measure[3]=simulation_get_distance((predators[i].x - target.x + predators[i].y - target.y))
+        }
+    }
+}
 
-int simulation_communicate()
+int simulation_communicate(void)
 {
-    
+    /* todo */
 }
 
 void simulation_move_entity(simulation_entity_t predators, enum cardinality c)
@@ -41,27 +56,36 @@ void simulation_move_entity(simulation_entity_t predators, enum cardinality c)
     }
 }
 
-void game_get_closest_friend(simulation_entity_t * predators){
-    
+void simulation_get_closest_friend(simulation_entity_t * predators,rules_t ** rules){
     float distmin=FLOAT_MAX,dist=0;
     int friend=0;
     for (int i=0;i<NB_PREDATOR;i++){
         for(int j=0;i<NB_PREDATOR;j++){
             if(i!=j){
-                dist=sqrt((predators.x[i] - predators[j]) ** 2 + (predators[i].y - predators[j].y) ** 2)
+                dist=(predators.x[i] - predators[j])  + (predators[i].y - predators[j].y)
                 if(dist<distmin){
                     dist=distmin;
                     friend=j;
                 }
             }
         }
-
-        
+        (*rules)[i]->measure[1]=simulation_get_cardinals(predators[i].x,predators[friend].x,predators[i].y,predators[friend].y)
+        (*rules)[i]->measure[0]=simulation_get_distance(distmin);
     }
 }
 
-enum direction_friend game_get_cardinals(float xa,float ya,float xb ,float yb){
-    enum direction_friend card;
+
+enum distance simulation_get_distance(float distance){
+    enum distance dist;
+    if(distance>com_radius) dist=far;
+
+    if(distance>com_radius) dist=close;
+
+    return(dist);
+
+}
+enum direction_friend simulation_get_cardinals(float xa,float ya,float xb ,float yb){
+    enum cardinality card;
     float deltax=xa - xb,
           deltay=ya - yb,
           delta=abs(deltax) - abs(deltay)
