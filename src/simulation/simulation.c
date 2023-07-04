@@ -21,9 +21,9 @@ void simulation_get_perception(simulation_entity_t * predators){
     simulation_get_closest_friend(predators,rules);
     for(int i=0;i<NB_PREDATOR,i++)
     {
-        if(predators[i].perception.direction_target!=NOT_FOUND){
-            =simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
-            (*rules)[i]->measure[3]=simulation_get_distance((predators[i].x - target.x + predators[i].y - target.y))
+        if(predators[i].p.direction_target!=NOT_FOUND){
+            predators[i].p.direction_target=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
+            predators[i].p.distance_target=simulation_get_distance((predators[i].x - target.x + predators[i].y - target.y))
         }
     }
 }
@@ -62,15 +62,15 @@ void simulation_get_closest_friend(simulation_entity_t * predators,rules_t ** ru
     for (int i=0;i<NB_PREDATOR;i++){
         for(int j=0;i<NB_PREDATOR;j++){
             if(i!=j){
-                dist=(predators.x[i] - predators[j])  + (predators[i].y - predators[j].y)
+                dist=(predators[i].x - predators[j].x)  + (predators[i].y - predators[j].y)
                 if(dist<distmin){
                     dist=distmin;
                     friend=j;
                 }
             }
         }
-        (*rules)[i]->measure[1]=simulation_get_cardinals(predators[i].x,predators[friend].x,predators[i].y,predators[friend].y)
-        (*rules)[i]->measure[0]=simulation_get_distance(distmin);
+        predators[i].p.cardinality_friend=simulation_get_cardinals(predators[i].x,predators[friend].x,predators[i].y,predators[friend].y)
+        predators[i].p.distance_friend=simulation_get_distance(distmin);
     }
 }
 
