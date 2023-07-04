@@ -19,7 +19,7 @@
 rules_t * genetic_create_individu()
 {
     rules_t * individu;
-    rules_create_array_rules(&individu);
+    /* rules_create_array_rules(&individu); */
     return individu;
 }
 
@@ -38,7 +38,8 @@ rules_t * genetic_create_individu()
  */
 void genetic_destroy_individu(rules_t * individu)
 {
-    rules_destroy_array_rules(individu);
+    (void) individu;
+    /* rules_destroy_array_rules(individu); */
 }
 
 

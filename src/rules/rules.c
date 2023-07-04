@@ -10,7 +10,7 @@
  * @param array_rules
  *
  */
-void rules_save_file(FILE * file, rules_t * array_rules)
+void rules_save_file(FILE * file, rules_t array_rules[NB_RULES])
 {
     for (int i=0 ; i < NB_RULES; ++i)
     {
@@ -20,12 +20,12 @@ void rules_save_file(FILE * file, rules_t * array_rules)
         fprintf(file, "%d ", array_rules[i].perception.distance_target);
         fprintf(file, "%d ", array_rules[i].perception.cardinality_target);
         /* print action and priority */
-        fprintf(file, "%c %c \n", array_rules[i].action, array_rules[i].priority + '0');
+        fprintf(file, "%d %d \n", array_rules[i].action, array_rules[i].priority);
     }
 }
 
 
-void rules_save_path_file(char * path_file, rules_t * array_rules)
+void rules_save_path_file(char * path_file, rules_t array_rules[NB_RULES])
 {
     FILE * file;
     if (path_file == NULL)   rules_save_file(stdout, array_rules);
@@ -51,7 +51,7 @@ void rules_save_path_file(char * path_file, rules_t * array_rules)
  * @param array_rules
  *
  */
-void rules_read_path_file(char* path_file, rules_t * array_rules)
+void rules_read_path_file(char* path_file, rules_t array_rules[NB_RULES])
 { 
     FILE * file;
     file = fopen(path_file, "r");
@@ -71,7 +71,7 @@ void rules_read_path_file(char* path_file, rules_t * array_rules)
  * @param FILE * file 
  *
  */
-void rules_read_file(FILE * file, rules_t* array_rules)
+void rules_read_file(FILE * file, rules_t array_rules[NB_RULES])
 {
     if (NULL != file)
     {
@@ -87,13 +87,11 @@ void rules_read_file(FILE * file, rules_t* array_rules)
                 return;
             }
 	
-	    if (fscanf(file, "%c %c\n", &array_rules[i].action, &array_rules[i].priority) != 2)
+	    if (fscanf(file, "%d %d\n", &array_rules[i].action, &array_rules[i].priority) != 2)
 	    {
 		zlog(stderr, ERROR, "Erreur lors de la lecture 2 des action et/ou priority à partir du fichier.\n", NULL);
 		return;
 	    }
-	    array_rules[i].priority -= '0'; // Conversion du caractère numérique à sa valeur entière
-	    array_rules[i].action -= '0'; // Conversion du caractère numérique à sa valeur entière
 	}
     }
     else
@@ -102,20 +100,7 @@ void rules_read_file(FILE * file, rules_t* array_rules)
     }
 }
 
-
-
-/**
- * @brief Allows you to create array_rules in memory
- *
- * @param rules_t ** array_rules : adress of array_rules want create
- *
- */
-void rules_create_array_rules(rules_t ** array_rules)
-{
-    (*array_rules) = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
-}
-
-void rules_copy_brain(rules_t * brainsrc,rules_t * braindest)
+void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES])
 {
     //for each rules in brain
     for (int i =0; i<NB_RULES; i++)
@@ -132,16 +117,5 @@ void rules_copy_brain(rules_t * brainsrc,rules_t * braindest)
         //copy priority
         braindest[i].priority = brainsrc[i].priority;
     }
-}
-
-/**
- * @brief Allows you to destroy array_rules in memory
- *
- * @param rules_t ** array_rules : adress of array_rules want create
- *
- */
-void rules_destroy_array_rules(rules_t * array_rules)
-{
-    free(array_rules);
 }
 

@@ -40,5 +40,7 @@ void simulation_execute_action(simulation_entity_t predator,
 
 void simulation_create(void);
 void simulation_free(void);
+void simulation_loop();
+void simulation_init(simulation_entity_t predators[NB_PREDATOR]);
 
 #endif

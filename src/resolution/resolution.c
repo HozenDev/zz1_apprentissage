@@ -51,14 +51,13 @@ void resolution_random_change(rules_t ** brain)
     //selecting modified rules
     int random_rule=rand()%10;
     //selecting modified attributes
-    int random_attribute=rand()%5;
-    int possibility[5]={4,4,3,3,3}
+    int random_attribute=rand()%6;
     
     //apllying modification
     switch (random_attribute)
     {
     case 1:
-        brain[random_rule]->measures[random_attribute]=rand()%possibility[random_attribute];
+        brain[random_rule].perception.distance_friend=
     case 2:
         brain[random_rule]->measures[random_attribute]=rand()%possibility[random_attribute];
     case 3: 
@@ -82,8 +81,7 @@ void resolution_gloutone_locale(rules_t ** brain,float * temps_min,int * score_m
 
 
     // allocation des cerveaux initial et suivant
-    *brain = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
-    rules_t *new = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
+    
 
     //lit la solution initiale
 }

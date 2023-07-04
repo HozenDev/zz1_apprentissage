@@ -3,12 +3,16 @@
 #include "../seed/seed.h"
 #include "../rules/rules.h"
 #include "../genetic/genetic.h"
+#include "../simulation/simulation.h"
 
 int main(int argc, char *argv[])
 {
     
     int save = 1;
     long int seed;
+    int iter=0;
+    struct rules_s brain[NB_RULES];
+
     create_seed(&seed);
     
     enable_log(argc, argv);
@@ -27,7 +31,14 @@ int main(int argc, char *argv[])
 
     srand(seed);
     
-    game_loop();
+    /* game_loop(); */
+    rules_read_path_file("../data/rules_test.txt", brain);
+    rules_save_file(stdout, brain);
+    simulation_loop(brain, &iter);
+
+    zlog(stdout, INFO, "simulation fini: iter %d", iter);
+
+    rules_save_file(stdout, brain);
 
     return 0;
 }
