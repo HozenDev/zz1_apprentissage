@@ -1,0 +1,10 @@
+Perception :
+        Distance plus proche amis P L (proche dans cercle comm)
+        Direction plus proche amis NSEO 
+        Cible NSEO ou 0 non decouvert
+        Distance cible C L
+
+Action :
+        Deplacement NSEO
+        Communication
+        Destruction 
