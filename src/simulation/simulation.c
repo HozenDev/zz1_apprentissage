@@ -1,6 +1,4 @@
 #include "simulation.h"
-#include "rules.h"
-#include "const.h"
 
 #include <stdlib.h>
 
@@ -15,37 +13,16 @@ void simulation_free(void)
 {
     /* todo */
 }
-void simulation_get_perception(simulation_entity_t * predators)
+
+/* ------- ACTIONS -------- */
+
+void simulation_destroy_target(simulation_entity_t predator)
 {
-    enum distance dist;
-    enum cardinality card;
-    simulation_get_closest_friend(predators);
-    for(int i=0;i<NB_PREDATOR,i++)
-    {
-        if(predators[i].p.direction_target!=NOT_FOUND){
-            predators[i].p.direction_target=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
-            predators[i].p.distance_target=simulation_get_distance((abs(predators[i].x - target.x) + abs(predators[i].y - target.y)))
-        }
-    }
+    if (predator.p.distance_target == CLOSE)
+        target.pv -= PREDATOR_DAMAGE;
 }
 
-void simulation_destroy_target(simulation_entity_t predators[NB_PREDATOR])
-{
-    int i;
-    for (i = 0; i < NB_PREDATOR; ++i)
-    {
-        if (predators.perception.distance_target == CLOSE) {
-            target.pv -= PREDATOR_DAMAGE;
-        }
-    }
-}
-
-int simulation_get_distance_between_2_predator(simulation_entity_t p2, simulation_entity_t p2)
-{
-    return abs(p2.x - predators[j].x) + abs(predators[i].y - predators[j].y)
-}
-
-int simulation_communicate(simulation_entity_t predator, simulation_entity_t * predators[NB_PREDATOR])
+void simulation_communicate(simulation_entity_t predator, simulation_entity_t * predators[NB_PREDATOR])
 {
     int i;
 
@@ -53,9 +30,9 @@ int simulation_communicate(simulation_entity_t predator, simulation_entity_t * p
     {
         for (i = 0; i < NB_PREDATOR; ++i)
         {
-            if (simulation_get_distance_between_2_predator(predator, predators[i]) < COM_RADIUS)
+            if (simulation_get_distance_between_2_predator(predator, *predators[i]) < COM_RADIUS)
             {
-                predators[i].p.cardinality_target = predator.p.cardinality_target;
+                predators[i]->p.cardinality_target = predator.p.cardinality_target;
             }
         }
     }
@@ -83,6 +60,8 @@ void simulation_move_entity(simulation_entity_t predator, enum cardinality c)
         break;
     }
 }
+
+/* ------- PERCEPTIONS ---------- */
 
 void simulation_get_closest_friend(simulation_entity_t * predators){
     float distmin=FLOAT_MAX,dist=0;
@@ -125,4 +104,23 @@ enum direction_friend simulation_get_cardinals(float xa,float ya,float xb ,float
 
     return(card);
 
+}
+
+int simulation_get_distance_between_2_predator(simulation_entity_t p2, simulation_entity_t p2)
+{
+    return abs(p2.x - predators[j].x) + abs(predators[i].y - predators[j].y)
+}
+
+void simulation_get_perception(simulation_entity_t * predators)
+{
+    enum distance dist;
+    enum cardinality card;
+    simulation_get_closest_friend(predators);
+    for(int i=0;i<NB_PREDATOR;i++)
+    {
+        if(predators[i].p.direction_target!=NOT_FOUND){
+            predators[i].p.direction_target=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y);
+            predators[i].p.distance_target=simulation_get_distance((abs(predators[i].x - target.x) + abs(predators[i].y - target.y)));
+        }
+    }
 }
