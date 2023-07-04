@@ -3,9 +3,10 @@
 const struct sprites_available_s sprites_available = 
 {
     .fish = "fish",
-    .jellyfish = "jellyfish"
+    .jellyfish = "jellyfish"d
 };
 
+void 
 /**
  * @brief update game state when keyboard pressed
  *
