@@ -10,14 +10,14 @@ void simulation_free(void)
 {
     /* todo */
 }
-void simulation_get_perception(simulation_entity_t * predators ){
+void simulation_get_perception(simulation_entity_t * predators){
     enum distance dist;
     enum cardinality card;
     simulation_get_closest_friend(predators,rules);
     for(int i=0;i<NB_PREDATOR,i++)
     {
-        if((*rules)[i]->measure[2]!=0){
-            (*rules)[i]->measure[2]=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
+        if(predators[i].perception.direction_target!=NOT_FOUND){
+            =simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
             (*rules)[i]->measure[3]=simulation_get_distance((predators[i].x - target.x + predators[i].y - target.y))
         }
     }
