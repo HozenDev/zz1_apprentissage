@@ -177,25 +177,11 @@ void game_graphic_update(game_t game)
  */
 void game_state_reset(game_state_t * g_state)
 {
-    /* int i; */
-    /* animation_t * new_a = NULL; */
-    
     g_state->running = 1;
     g_state->end = 0;
 
     g_state->score = 0.0;
     g_state->delay = GAME_DELAY;
-    
-    /* reset all sprites */
-    /* for (i = 0; i < g_state->nb_predator; ++i) */
-    /* { */
-    /*     /\* new_a = animation_create_animation(g_state->predators[i]->sprites[i]->a->n, 1); *\/ */
-    /*     /\* g_state->sprites[i]->a->current_animation = 0.0; *\/ */
-    /*     /\* g_state->sprites[i]->d.x = 0; *\/ */
-    /*     /\* g_state->sprites[i]->d.y = 0; *\/ */
-    /*     /\* animation_change_animation(g_state->sprites[i], new_a); *\/ */
-    /*     /\* free(new_a); *\/ */
-    /* } */
 }
 
 /**
