@@ -1,5 +1,5 @@
 #include "simulation.h"
-
+#include <stdlib.h>
 int target_x = WORLD_WIDTH/2;
 int target_y = WORLD_HEIGHT/2;
 
@@ -18,12 +18,12 @@ void simulation_free(void)
 void simulation_get_perception(simulation_entity_t * predators){
     enum distance dist;
     enum cardinality card;
-    simulation_get_closest_friend(predators,rules);
+    simulation_get_closest_friend(predators);
     for(int i=0;i<NB_PREDATOR,i++)
     {
         if(predators[i].p.direction_target!=NOT_FOUND){
             predators[i].p.direction_target=simulation_get_cardinals(predators[i].x,target.x,predators[i].y,target.y)
-            predators[i].p.distance_target=simulation_get_distance((predators[i].x - target.x + predators[i].y - target.y))
+            predators[i].p.distance_target=simulation_get_distance((abs(predators[i].x - target.x) + abs(predators[i].y - target.y)))
         }
     }
 }
@@ -56,13 +56,13 @@ void simulation_move_entity(simulation_entity_t predators, enum cardinality c)
     }
 }
 
-void simulation_get_closest_friend(simulation_entity_t * predators,rules_t ** rules){
+void simulation_get_closest_friend(simulation_entity_t * predators){
     float distmin=FLOAT_MAX,dist=0;
     int friend=0;
     for (int i=0;i<NB_PREDATOR;i++){
         for(int j=0;i<NB_PREDATOR;j++){
             if(i!=j){
-                dist=(predators[i].x - predators[j].x)  + (predators[i].y - predators[j].y)
+                dist=abs(predators[i].x - predators[j].x)  + abs(predators[i].y - predators[j].y)
                 if(dist<distmin){
                     dist=distmin;
                     friend=j;
