@@ -4,22 +4,37 @@
 #define NB_MEASURE 4   // size of measures
 #define NB_RULES   10  // number rules in brain (size of array_rules)
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include "../log/log.h"
+
+enum distance {
+    JOKER_D = -1,
+    CLOSE,
+    FAR
+};
+
+enum cardinality {
+    JOKER_C = -1,
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST,
+    NOT_FOUND
+};
+
 struct perception_s {
     enum distance distance_friend;
     enum cardinality cardinality_friend;
     enum distance distance_target;
-    enum direction_target cardinality_target;
+    enum cardinality cardinality_target;
 
-}
-typedef struct rules_s rules_t;
+};
+typedef struct perception_s perception_t;
 
 struct rules_s {
-    preception_t perception;
+    perception_t perception;
     char action;
     char priority;    
 };

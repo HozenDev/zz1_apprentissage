@@ -10,24 +10,6 @@ struct simulation_entity_s {
     struct perception_s p;
 };
 
-enum distance {
-    CLOSE,
-    FAR
-};
-enum cardinality {
-    NORTH,
-    SOUTH,
-    EAST,
-    WEST
-};
-enum direction_target {
-    NOT_FOUND,
-    NORTH,
-    SOUTH,
-    EAST,
-    WEST
-};
-
 typedef simulation_entity_s simulation_entity_t;
 
 extern int target_x;

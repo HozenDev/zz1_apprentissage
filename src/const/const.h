@@ -15,7 +15,7 @@
 #define PREDATOR_SPEED 2
 #define PREY_SPEED 0
 
-#define com_radius=50
+#define COM_RADIUS 50
 
 /* animation const */
 
