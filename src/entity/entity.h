@@ -21,6 +21,7 @@ enum entity_status_e {
     NEUTRAL
 };
 
+
 struct entity_s {
     char * name;
     
