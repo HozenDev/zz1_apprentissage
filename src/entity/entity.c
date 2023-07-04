@@ -151,8 +151,10 @@ void entity_initialize_target(struct target_s * t)
 void entity_initialize(struct entity_s * e)
 {
     /* initialize coordinates */
-    e->x = ((float) rand()/RAND_MAX)*WORLD_WIDTH;
-    e->y = ((float) rand()/RAND_MAX)*WORLD_HEIGHT;
+    /* e->x = ((float) rand()/RAND_MAX)*WORLD_WIDTH; */
+    /* e->y = ((float) rand()/RAND_MAX)*WORLD_HEIGHT; */
+    e->x = 0;
+    e->y = 0;
 
     /* initialize perception */
     /* initialize other predators perceptions */

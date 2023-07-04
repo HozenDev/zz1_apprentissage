@@ -10,20 +10,21 @@
  
 #include "../rules/rules.h"
 #include "../const/const.h"
+#include "../simulation/simulation.h"
 
-#define MAX_ITERATIONS  5000
-#define POPULATION_SIZE 5
-#define MUTATION_RATE          0.1
-#define MUTATION_RATE_DISTANCE_FRIEND     0.05
-#define MUTATION_RATE_DISTANCE_TARGET     0.05
-#define MUTATION_RATE_CARDINALITY_FRIEND  0.05
-#define MUTATION_RATE_CARDINALITY_TARGET  0.05
-#define MUTATION_RATE_DISTANCE  0.05
+#define MAX_ITERATIONS  10
+#define POPULATION_SIZE 80
+#define MUTATION_RATE          0.01
+#define MUTATION_RATE_DISTANCE_FRIEND     0.005
+#define MUTATION_RATE_DISTANCE_TARGET     0.005
+#define MUTATION_RATE_CARDINALITY_FRIEND  0.005
+#define MUTATION_RATE_CARDINALITY_TARGET  0.005
+#define MUTATION_RATE_DISTANCE  0.005
 
 #define MUTATION_RATE_ACTION   0.01
 #define MUTATION_RATE_PRIORITY 0.01
 
-#define NB_PARTICIPATION_TOURNOI 50 // doit etre > 1
+#define NB_PARTICIPATION_TOURNOI 25 // doit etre > 1
 
 rules_t * genetic_create_individu();
 

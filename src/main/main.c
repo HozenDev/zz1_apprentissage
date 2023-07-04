@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
 {
     int save = 1;
     long int seed;
-    /* int iter=0; */
     struct rules_s brain[NB_RULES];
 
     create_seed(&seed);
@@ -37,7 +36,7 @@ int main(int argc, char *argv[])
     /* simulation_loop(brain, &iter); */
     /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
 
-    //genetic_solve_optimized("test.txt", NULL);
-
+    /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
+    
     return 0;
 }
