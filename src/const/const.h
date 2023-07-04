@@ -20,4 +20,9 @@
 #define MAX_PATH 2048
 #define MAX_TEXTURE 20
 
+/* simulation */
+
+#define WORLD_WIDTH SCREEN_WIDTH
+#define WORLD_HEIGHT SCREEN_HEIGHT
+
 #endif

@@ -3,34 +3,34 @@
 
 #include "../const/const.h"
 
-#define SIMULATION_WORLD_WIDTH SCREEN_WIDTH
-#define SIMULATION_WORLD_HEIGHT SCREEN_HEIGHT
-
 struct simulation_entity_s {
     int x;
     int y;
 };
-enum distance{
-    close,
-    far
-};
-enum direction_friend{
-    north,
-    south,
-    east,
-    west
-};
-enum direction_target{
-    not_found,
-    north,
-    south,
-    east,
-    west,
 
+enum distance{
+    CLOSE,
+    FAR
+};
+
+enum direction_friend{
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST
+};
+
+enum direction_target{
+    NOT_FOUND,
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST,
 };
 typedef simulation_entity_s simulation_entity_t;
 
-extern struct simulation_entity_s target;
+extern int target_x;
+extern int target_y;
 
 void simulation_create(void);
 void simulation_free(void);
