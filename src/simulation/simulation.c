@@ -131,7 +131,8 @@ void simulation_get_perception(simulation_entity_t * predators)
     simulation_get_closest_friend(predators);
     for(i=0;i<NB_PREDATOR;i++)
     {
-        if(predators[i].p.cardinality_target != NOT_FOUND){
+        if(predators[i].p.cardinality_target != NOT_FOUND || 
+            simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y))){
             predators[i].p.cardinality_target =
                 simulation_get_cardinals(predators[i].x,target.x, predators[i].y,target.y);
             predators[i].p.distance_target =
@@ -183,7 +184,7 @@ void simulation_filtrage_regle(simulation_entity_t predators, int filtered_rules
 int simulation_choose_action(int filtered_rules[NB_RULES], rules_t * brain)
 {
     int sum=0;
-    int cumulativeProbability=0;
+    float cumulativeProbability=0;
     int action=0;
     int j;
 
@@ -268,6 +269,7 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
     {
         (*iter) ++;
         simulation_get_perception(predators);
+        for(i=0;i<NB_PREDATOR;i++) printf("%d",predator.distance_target)
         
         for(i=0;i<NB_PREDATOR;i++)
         {
