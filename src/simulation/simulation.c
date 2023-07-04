@@ -147,7 +147,7 @@ int * simulation_filtrage_regle(simulation_entity_t predators,rules_t * brain){
     int filtered_rules[NB_RULES]={0};
     int flag=0;
     for(int i=0;i<NB_RULES;i++){
-        if (simulation_verify_rules(predatros,brain[i])){
+        if (simulation_verify_rules(predators,brain[i])){
             filtered_rules[i]=1;
         }
     }
@@ -194,4 +194,10 @@ void simulation_execute_action(simulation_entity_t predator,int action,simulatio
     case 5:
         simulation_destroy_target(predator);
     }
+}
+
+void simulation_loop(){
+    //simulation_init();
+
+    while()
 }
