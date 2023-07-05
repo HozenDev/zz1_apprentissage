@@ -32,7 +32,7 @@ struct game_state_s {
     /* game simulation state */
     int nb_predator;
     struct entity_s predators[NB_PREDATOR];
-    int action[NB_RULES];
+    int action[NB_PREDATOR];
     int filtered_rules[NB_RULES];
     rules_t brain[NB_RULES];
 

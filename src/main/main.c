@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     int save = 1;
     long int seed;
     struct rules_s brain[NB_RULES];
+    /* int iter=0; */
 
     create_seed(&seed);
     

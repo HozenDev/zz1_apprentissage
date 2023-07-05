@@ -373,7 +373,7 @@ int game_initialisation(game_t ** game)
         (*game)->state.predators[i].e_sdl->r.y = 0;
         entity_sdl_change_state((*game)->state.predators[i].e_sdl, WALK);
     }
-    
+
     zlog(stdout, INFO, "OK '%s'", "Predators are loaded");
     
     /* ---------- free temp memory ------------ */
