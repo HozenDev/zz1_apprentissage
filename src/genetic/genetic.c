@@ -75,7 +75,7 @@ int genetic_evaluate_individu(rules_t * individu)
     int score = INT_MAX;
     //simulation_loop(individu, &score);
     simulation_loop_average(individu, &score);
-    rules_save_file(stdout,individu);
+    /* rules_save_file(stdout,individu); */
     return score;
 }
 
