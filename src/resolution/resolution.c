@@ -1,34 +1,5 @@
-#include "../seed/seed.h"
-#include "../rules/rules.h"
-#include "../utils/utils.h"
-#include "../simulation/simulation.h"
+#include "../resolution/resolution.h"
 
-/*
-void resolution_random_change(rules_t ** brain)
-{
-    //selecting modified rules
-    int random_rule=rand()%10;
-    //selecting modified attributes
-    int random_attribute=rand()%6;
-    
-    //apllying modification
-    switch (random_attribute)
-    {
-    case 0:
-        brain[random_rule].perception.distance_friend=rand()%3;
-    case 1:
-        brain[random_rule].perception.distance_friend=rand()%3;
-    case 2: 
-        brain[random_rule].perception.distance_friend=rand()%3;
-    case 3:
-        brain[random_rule].perception.distance_=rand()%5;
-    case 4:
-        brain[random_rule].priority=rand()%3;
-    case 5:
-        brain[random_rule].action=rand()%6;
-    }
-}
-*/
 void init_random_brain(rules_t * brain){
     for(int i=0;i<NB_RULES;i++){
         brain[i].perception.distance_friend=rand()%NB_DISTANCE - 1;
@@ -38,6 +9,48 @@ void init_random_brain(rules_t * brain){
     }
 }
 
+void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char * path_brain_res, int * res)
+{
+    /* paramètres */
+    float temperature = TEMP_DEP, espsilon = EPSILON;
+    int score_min = INT_MAX; 
+    int score;
+    
+    /* creation des cerveaux */
+    rules_t brain[NB_RULES];
+    rules_t new_brain[NB_RULES];
+
+    rules_read_path_file(path_brain_load, brain);
+
+    /* genere l'aleatoire*/
+    generate_seed(0);
+
+    
+    /* recuit simulé */
+    while (temperature > espsilon)
+    {
+        /* generation voisin*/
+        rules_copy_brain(brain, new_brain);
+	
+        resolution_random_change(new_brain);
+
+        /* fait jouer new*/
+	simulation_loop(new_brain, &score);
+      
+        /* comparaison ou proba*/
+        if(score_min > score || rand()/RAND_MAX< exp(-abs((score-score_min))/temperature))
+           // to do compare time and test if score is maximal
+        {
+            rules_copy_brain(new_brain, brain);
+            score_min=score;
+        }
+
+        /*modification temperature*/
+        temperature=pf(temperature);
+    }
+    *res = score_min;
+    rules_save_path_file(path_brain_res, brain);
+}   
 
 void resolution_random_change(rules_t brain[NB_RULES])
 {
@@ -54,6 +67,7 @@ void resolution_random_change(rules_t brain[NB_RULES])
     else if (random_indice == 3)
 	brain[random_rules].perception.cardinality_target = (rand()%NB_CARDINALITY)-1;
     else if (random_indice == 4)
+	
 	brain[random_rules].action = (rand()%NB_ACTION)-1;
     else if (random_indice == 5)
 	brain[random_rules].priority = (rand()%NB_PRIORITY)-1;
@@ -180,7 +194,5 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
         rules_copy_brain(new, brain);
 
         *iterret=itermin;
-
     }
-
 }
