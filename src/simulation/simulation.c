@@ -379,8 +379,9 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     utils_shuffle(filtered_rules,nb_compatible);
     for(j=0;j<nb_compatible;j++)
     {
-        sum += powf(brain[filtered_rules[j]].priority, S_POWER);
-        probability[filtered_rules[j]] = powf(brain[filtered_rules[j]].priority, S_POWER);
+        res_pow = powf(brain[filtered_rules[j]].priority, S_POWER);
+        sum += res_pow;
+        probability[filtered_rules[j]] = res_pow;
     }
     
     for(j=0;j<nb_compatible;j++) {

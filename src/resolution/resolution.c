@@ -64,7 +64,7 @@ void resolution_random_change(rules_t brain[NB_RULES])
 
 
 
-void resolution_gloutone_aleatoire(rules_t ** brain,int* iterret)
+void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
 {
     //paramètres    
     int itermin=ITER_MAX;
@@ -72,11 +72,9 @@ void resolution_gloutone_aleatoire(rules_t ** brain,int* iterret)
     int parcours[NB_RULES*(NB_MEASURE + 2)];
     int best_j=0,j=0;
     int iter=0;
-    
-
 
     // allocation des cerveaux initial et suivant
-    rules_t new[10];
+    rules_t new[NB_RULES];
 
     /* init le parcours */
     for(int i=0;i<NB_RULES*(NB_MEASURE + 2);i++) parcours[i]=i;
@@ -84,10 +82,9 @@ void resolution_gloutone_aleatoire(rules_t ** brain,int* iterret)
     /* melange le parcours*/
     utils_shuffle(parcours,NB_RULES*(NB_MEASURE + 2));
 
+    init_random_brain(brain);
 
-    init_random_brain(*brain);
-
-    rules_copy_brain(*brain,new);
+    rules_copy_brain(brain, new);
 
     for(int i=0;i<NB_RULES*(NB_MEASURE + 2);i++)
     {
@@ -180,7 +177,7 @@ void resolution_gloutone_aleatoire(rules_t ** brain,int* iterret)
                 }
                 break;
         }
-        rules_copy_brain(new,*brain);
+        rules_copy_brain(new, brain);
 
         *iterret=itermin;
 
