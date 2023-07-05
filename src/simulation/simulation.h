@@ -16,7 +16,7 @@ void simulation_get_perception(entity_t * predators, target_t target);
 int simulation_get_distance_between_2_predator(entity_t p1, entity_t p2);
 
 int simulation_verify_rules(entity_t predators, rules_t rule);
-int simulation_choose_action(int filtered_rules[NB_RULES], rules_t * brain,int nb_compatible);
+int simulation_choose_action(int  filtered_rules[NB_RULES], rules_t brain[NB_RULES],int nb_compatible);
 void simulation_execute_action(entity_t * predator,
                                int action,
                                entity_t predators[NB_PREDATOR],
@@ -25,7 +25,7 @@ int simulation_filtrage_regle(entity_t predators, int filtered_rules[NB_RULES], 
 
 void simulation_create(void);
 void simulation_free(void);
-void simulation_loop();
+void simulation_loop(rules_t brain[NB_RULES], int * iter);
 void simulation_init(entity_t predators[NB_PREDATOR], target_t * target);
 
 #endif

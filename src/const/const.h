@@ -16,7 +16,7 @@
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
-#define COM_RADIUS 100
+#define COM_RADIUS 50
 
 /* animation const */
 
@@ -29,8 +29,8 @@
 #define WORLD_HEIGHT SCREEN_HEIGHT
 #define S_POWER 0.1
 
-#define TARGET_PV 100
-#define ITER_MAX 1000
+#define TARGET_PV 1000
+#define ITER_MAX 50000
 
 /* RULES */
 #define NB_ACTION      6
@@ -38,6 +38,10 @@
 #define NB_DISTANCE    3
 #define NB_CARDINALITY 6
 #define NB_MEASURE     4   // size of measures
-#define NB_RULES       14  // number rules in brain (size of array_rules)
+#define NB_RULES       5  // number rules in brain (size of array_rules)
 
+
+/*RECUIS*/
+#define TEMP_DEP 1000
+#define EPSILON  0.001
 #endif

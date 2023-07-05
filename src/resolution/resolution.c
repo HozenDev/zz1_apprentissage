@@ -2,51 +2,6 @@
 #include "../rules/rules.h"
 #include "../utils/utils.h"
 #include "../simulation/simulation.h"
-/*
-void resolution_recuis_simule(float (*pf)(float),rules_t ** brain,float * temps_min)
-{
-    //paramètres 
-    float temps=0,temperature = 1000,espsilon = 0.001;
-    temps_min=50000;
-    //genere l'aleatoire
-    generate_seed(0);
-
-
-    //allocation des cerveaux initial et suivant
-    *brain = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
-    rules_t *new = (rules_t *) malloc(sizeof(rules_t)*NB_RULES);
-
-    // init solution 
-    //lit la solution initiale
-        
-    // fait jouer solution 
-    //to do test init 
-    
-    //recuit simulé 
-    while (temperature > espsilon)
-    {
-        // generation voisin
-        rules_copy_brain(brain,new);
-        resolution_random_change(&new);
-
-        //fait jouer new
-        //to do test new
-      
-        // comparaison ou proba
-        if(temps_min>temps || rand()/RAND_MAX<exp(-abs((temps-temps_min))/temperature)) // to do compare time and test if score is maximal
-        {
-            rules_copy_brain(new,brain);
-            temps_min=temps;
-        }
-
-        //modification temperature
-        temperature=pf(temperature);
-    }
-    // liberation new 
-     //to do liberer new
-    
-}   
-*/
 
 /*
 void resolution_random_change(rules_t ** brain)
@@ -82,7 +37,34 @@ void init_random_brain(rules_t * brain){
         brain[i].perception.cardinality_target=rand()%NB_CARDINALITY - 1;
     }
 }
-void resolution_gloutone_aleatoire(rules_t * brain[NB_RULES],int *iterret)
+
+
+void resolution_random_change(rules_t brain[NB_RULES])
+{
+    //selecting modified rules
+    int random_rules   = rand()%NB_RULES;
+    int random_indice = rand()%NB_MEASURE+2;
+
+    if(random_indice == 0)
+	brain[random_rules].perception.distance_friend = (rand()%NB_DISTANCE)-1;       
+    else if (random_indice == 1)
+	brain[random_rules].perception.distance_target = (rand()%NB_DISTANCE)-1;
+    else if (random_indice == 2)
+	brain[random_rules].perception.cardinality_friend = (rand()%(NB_CARDINALITY-1))-1;
+    else if (random_indice == 3)
+	brain[random_rules].perception.cardinality_target = (rand()%NB_CARDINALITY)-1;
+    else if (random_indice == 4)
+	brain[random_rules].action = (rand()%NB_ACTION)-1;
+    else if (random_indice == 5)
+	brain[random_rules].priority = (rand()%NB_PRIORITY)-1;
+    else
+	fprintf(stderr, "Erreur dans resolution_random_change, random_indice supérieur au nombre de champs de rules");
+}
+
+
+
+
+void resolution_gloutone_aleatoire(rules_t ** brain,int* iterret)
 {
     //paramètres    
     int itermin=ITER_MAX;

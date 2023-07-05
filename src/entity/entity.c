@@ -137,7 +137,7 @@ void entity_initialize_target(struct target_s * t)
     /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
     /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
     t->x = 600;
-    t->y = 200;
+    t->y = 300;
     t->pv = TARGET_PV;
 }
 
@@ -148,13 +148,13 @@ void entity_initialize_target(struct target_s * t)
  *
  * @note e->e_sdl is NULL and need to be allocated for SDL use
  */
-void entity_initialize(struct entity_s * e)
+void entity_initialize(struct entity_s * e, int x, int y)
 {
     /* initialize coordinates */
     /* e->x = ((float) rand()/RAND_MAX)*WORLD_WIDTH; */
     /* e->y = ((float) rand()/RAND_MAX)*WORLD_HEIGHT; */
-    e->x = 0;
-    e->y = 0;
+    e->x = x;
+    e->y = y;
 
     /* initialize perception */
     /* initialize other predators perceptions */
