@@ -45,7 +45,7 @@ struct target_s {
 
 typedef struct target_s target_t;
 
-void entity_initialize(struct entity_s * e, int x, int y);
+void entity_initialize(struct entity_s * e, int x, int y, entity_sdl_t * e_sdl);
 void entity_initialize_target(struct target_s * t);
 
 int entity_sdl_collide(struct entity_sdl_s * e1, struct entity_sdl_s * e2);

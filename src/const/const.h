@@ -3,8 +3,8 @@
 
 /* game const */
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 #define GAME_DELAY 10
 
@@ -16,7 +16,7 @@
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
-#define COM_RADIUS 100
+#define COM_RADIUS 200
 
 /* animation const */
 

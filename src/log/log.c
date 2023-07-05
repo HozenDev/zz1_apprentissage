@@ -102,7 +102,7 @@ void print_log(FILE* flux,
     char* buffer_start;
 
     if (flux == NULL) {flux = stdout;}
-    if (!no_log && (!no_debug_log || log_level != DEBUG)) {
+    if (!no_log && (no_debug_log || log_level != DEBUG)) {
 	if (log_level == INFO
 	    || log_level == ERROR
 	    || log_level == DEBUG
