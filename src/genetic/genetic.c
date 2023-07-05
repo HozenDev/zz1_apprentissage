@@ -213,7 +213,9 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
     int score[POPULATION_SIZE] = {0}; 
     
     int iteration = 0 , index_best_individu = 0, p1, p2;
-    
+
+    zlog(stdout, INFO, "Entrez dans genetic solve brain\n", NULL);
+
     genetic_initialize_population_brain(brain, population);
     genetic_initialize_population_brain(brain, new_population);
     

@@ -12,7 +12,8 @@ void init_random_brain(rules_t * brain){
 void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char * path_brain_res, int * res)
 {
     /* paramètres */
-    float temperature = ITER_MAX, epsilon = EPSILON;
+    float temperature = ITER_MAX;
+    float epsilon = EPSILON;
     int score_min = INT_MAX; 
     int score;
     
@@ -23,28 +24,27 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     rules_read_path_file(path_brain_load, brain);
 
     /* genere l'aleatoire*/
-    generate_seed(0);
+    // generate_seed(0);
 
-    simulation_loop(brain, &score_min);
+    simulation_loop_average(brain, &score_min);
     
     /* recuit simulé */
     while (temperature > epsilon)
     {
-	zlog(stdout, INFO,"TEMPERATURE %f > EPS %f", temperature, epsilon);
-        /* generation voisin*/
+	/* generation voisin*/
         rules_copy_brain(brain, new_brain);
-	
         resolution_random_change(new_brain);
 
         /* fait jouer new*/
 	simulation_loop_average(new_brain, &score);
         /* comparaison ou proba*/
-        if(score_min > score || rand()/RAND_MAX< exp(-abs((score-score_min))/temperature))
-           // to do compare time and test if score is maximal
+	if (score_min > score ||
+	    ( rand() / (float)RAND_MAX < exp(-fabs((score - score_min) / temperature)) &&  score_min*1.3 > score) )
+	    // to do compare time and test if score is maximal
         {
+	    zlog(stdout, INFO, "changement de cerveau, score %d\n", score);
             rules_copy_brain(new_brain, brain);
             score_min=score;
-	    zlog(stdout, INFO, "Trouver un meilleur cerveau\n", NULL);
 	    rules_save_file(stdout, brain);
         }
         /*modification temperature*/
