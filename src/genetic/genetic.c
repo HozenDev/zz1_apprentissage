@@ -40,8 +40,9 @@ int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[PO
     int best_individu = INT_MAX;
     for (int i=0; i < POPULATION_SIZE; ++i)
     {
+	printf("evaluation score de l'individu %d\n", i);
 	score[i] = genetic_evaluate_individu(population[i]);
-	zlog(stdout, INFO, "l'individu %d a un score de %d \n", i, score[i]);
+	printf("l'individu %d a un score de %d \n", i, score[i]);
 	if (score[i] < best_individu)
 	    best_individu = i;
     }
@@ -184,8 +185,6 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
     int score[POPULATION_SIZE] = {0}; 
     
     int iteration = 0 , index_best_individu = 0, p1, p2;
-
-    (void) path_best_brain;
     
     genetic_initialize_population(path_brain_load, population);
     genetic_initialize_population(path_brain_load, new_population);
@@ -201,10 +200,11 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 	printf("Brain number %d\n",i);
 	rules_save_file(stdout, population[i]);
     }
+    sleep(10);
+    
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 	if(iteration%2 == 0) // population forme new_population
 	{
-	    
 	    index_best_individu = genetic_evaluate_population(score, population);
 	    rules_copy_brain_genetic(population[index_best_individu], new_population[0]);
 

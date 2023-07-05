@@ -485,12 +485,6 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
 
     *iter=0;
     simulation_init(predators, &target);
-
-     for(i=0; i<NB_PREDATOR; ++i)
-    {
-	printf("Predator [%d]\n", i);
-	printf("%d %d %d %d %d\n", predators[i].x, predators[i].y, predators[i].p.distance_friend, predators[i].p.cardinality_friend, predators[i].p.cardinality_target);
-    }
     
     while(target.pv > 0 && *iter < ITER_MAX)
     {
