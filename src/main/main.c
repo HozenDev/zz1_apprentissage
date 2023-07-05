@@ -37,17 +37,17 @@ int main(int argc, char *argv[])
     rules_read_path_file("../data/rules_init.txt", brain);
     rules_save_file(stdout, brain);
 
-    parallel_multiple_simulation(brain, &iter);
+    // parallel_multiple_simulation(brain, &iter);
     rules_save_path_file("../data/rules_test.txt", brain);
     /* parallel_loop(); */
-    game_loop(brain, &iter);
+    /* game_loop(brain, &iter);*/
     /* simulation_loop(brain, &iter); */
     /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
     
     /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
 
-    /* resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", NULL, &score); */
-    /* zlog(stdout, DEBUG ,"descente geometrique score %d\n", score); */
+    resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", "../data/rules_recuis_geometrique.txt", &score);
+    zlog(stdout, DEBUG ,"descente geometrique score %d\n", score);
 
     /* resolution_recuis_simule(&utils_descente_lineaire, "../data/rules_test.txt", NULL, &score); */
     /* zlog(stdout, DEBUG ,"descente lineaire score %d\n", score); */
