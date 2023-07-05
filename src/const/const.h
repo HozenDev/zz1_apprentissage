@@ -40,4 +40,8 @@
 #define NB_MEASURE     4   // size of measures
 #define NB_RULES       14  // number rules in brain (size of array_rules)
 
+
+/*RECUIS*/
+#define TEMP_DEP 1000
+#define EPSILON  0.001
 #endif

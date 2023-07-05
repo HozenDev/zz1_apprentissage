@@ -1,8 +1,18 @@
 #ifndef _resolution_h_
 #define _resolution_h_
 
-void resolution_recuis_simule(float (*pf)(float),regle_t ** solution,float * temps_min,int * score_max);
-void resolution_random_change(rules_t ** brain);
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <limits.h>
 
+#include  "../rules/rules.h"
+#include  "../const/const.h"
+#include  "../simulation/simulation.h"
+#include "../seed/seed.h"
+
+
+void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char * path_brain_res, int * score);
+void resolution_random_change(rules_t brain[NB_RULES]);
 
 #endif
