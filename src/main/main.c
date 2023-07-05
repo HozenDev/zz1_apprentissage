@@ -4,14 +4,16 @@
 #include "../rules/rules.h"
 #include "../genetic/genetic.h"
 #include "../simulation/simulation.h"
+#include "../resolution/resolution.h"
+
 #include "../parallel/parallel.h"
 
 int main(int argc, char *argv[])
 {
     int save = 1;
+    int iter=0;
     long int seed;
     struct rules_s brain[NB_RULES];
-    int iter=0;
 
     create_seed(&seed);
     

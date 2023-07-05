@@ -37,4 +37,6 @@ void utils_copy_list(int *listsrc,int* listdst,int taille);
 float utils_descente_geometrique(float temperature);
 
 float utils_descente_lineaire(float temperature);
+
+
 #endif

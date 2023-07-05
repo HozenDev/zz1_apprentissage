@@ -3,7 +3,7 @@
 #include <limits.h>
 
 #include <stdlib.h>
-
+#include "../utils/utils.h"
 void simulation_create(void)
 {
     /* todo */
@@ -332,15 +332,18 @@ int simulation_verify_rules(entity_t predator,rules_t rule)
  * @note The function assumes that the `NB_RULES` and `simulation_verify_rules` functions
  * are defined and accessible within the scope of this function.
  */
-void simulation_filtrage_regle(entity_t predator, int filtered_rules[NB_RULES], rules_t brain[NB_RULES])
+int simulation_filtrage_regle(entity_t predator, int filtered_rules[NB_RULES], rules_t brain[NB_RULES])
 {
     int i;
+    int nb_compatible=0;
     for(i=0;i<NB_RULES;i++){
         if (simulation_verify_rules(predator, brain[i]))
         {
-            filtered_rules[i] = 1;
+            filtered_rules[nb_compatible] = i;
+            nb_compatible++;
         }
     }
+    return(nb_compatible);
 }
 
 /**
@@ -363,36 +366,30 @@ void simulation_filtrage_regle(entity_t predator, int filtered_rules[NB_RULES], 
  * @note The function assumes that the `NB_RULES`, `S_POWER`, and `rand` function are defined and
  * accessible within the scope of this function.
  */
-int simulation_choose_action(int filtered_rules[NB_RULES], rules_t * brain)
+int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RULES], int nb_compatible)
 {
     float sum=0.0;
     float cumulativeProbability=0.0;
     float res_pow = 0.0;
     int action=0;
     int j;
+    float p=(float) rand()/(RAND_MAX) ;
 
     float probability[NB_RULES]={0};
-
-    for(j=0; j<NB_RULES; j++)
+    utils_shuffle(filtered_rules,nb_compatible);
+    for(j=0;j<nb_compatible;j++)
     {
-        if(filtered_rules[j] == 1)
-        {
-	    res_pow = powf(brain[j].priority, S_POWER);
-            sum += res_pow;
-            probability[j] = res_pow;
-        }
+        res_pow = powf(brain[filtered_rules[j]].priority, S_POWER);
+        sum += res_pow;
+        probability[filtered_rules[j]] = res_pow;
     }
     
-    for(j=0; j<NB_RULES; j++)
-    {
-        if (filtered_rules[j] == 1)
-        {
-            cumulativeProbability += probability[j]/sum;
-            if(((float) rand()/RAND_MAX) < cumulativeProbability){
-                action = brain[j].action;
+    for(j=0;j<nb_compatible;j++) {
+            cumulativeProbability += probability[filtered_rules[j]]/sum;
+            if(p< cumulativeProbability){
+                action = brain[filtered_rules[j]].action;
                 break;
             }
-        }
     }
     return(action);
 }
@@ -476,13 +473,13 @@ void simulation_init(entity_t predators[NB_PREDATOR], target_t * target)
 
 void simulation_loop(rules_t brain[NB_RULES], int * iter)
 {
-    int action[NB_PREDATOR]={0};
+    
+    int action[NB_RULES]={0};
     int filtered_rules[NB_RULES] = {0};
     entity_t predators[NB_PREDATOR];
     target_t target;
-    int i = 0;
-    int j = 0;
-
+    int i, j;
+    int nb_compatible=0;
     *iter=0;
     simulation_init(predators, &target);
     
@@ -491,14 +488,16 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
         (*iter) ++;
         simulation_get_perception(predators, target);
         
+        
         for(i=0;i<NB_PREDATOR;i++)
         {
             /*init filtered_rules*/
             for(j=0;j<NB_RULES;j++) filtered_rules[j]=0;
             /* filter rules */
-            simulation_filtrage_regle(predators[i], filtered_rules, brain);
+            nb_compatible=simulation_filtrage_regle(predators[i], filtered_rules, brain);
             /* choisis une action */
-            action[i] = simulation_choose_action(filtered_rules, brain);
+            action[i] = simulation_choose_action(filtered_rules,brain,nb_compatible);
+            
         }
         /* execute action */
         for(i=0;i<NB_PREDATOR;i++) simulation_execute_action(&predators[i], action[i], predators, &target);
