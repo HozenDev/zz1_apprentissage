@@ -62,8 +62,10 @@ void game_loop_state_update(game_state_t * g_state)
 
     /* execute action */
     for(i = 0; i < g_state->nb_predator; i++)
+    {
         simulation_execute_action(&g_state->predators[i], g_state->action[i], g_state->predators, &g_state->prey);
-
+    }
+    
     /* update sdl entity */
     for (i = 0; i < g_state->nb_predator; ++i) {
         g_state->predators[i].e_sdl->r.x = g_state->predators[i].x;
@@ -170,10 +172,17 @@ void game_graphic_update(game_t game)
         animation_render_sprite(game.renderer,
                                 game.state.predators[i].e_sdl->sprites[game.state.predators[i].e_sdl->state],
                                 game.state.predators[i].e_sdl->r);
+        if (game.state.action[i] == 4)
+        {
+            sdl_draw_circle(game.renderer,
+                            game.state.predators[i].e_sdl->r.x + game.state.predators[i].e_sdl->r.w/2,
+                            game.state.predators[i].e_sdl->r.y + game.state.predators[i].e_sdl->r.h/2,
+                            COM_RADIUS);    
+        }
     }
     
     /* sdl_render_image(game.renderer, game.back->t, game.back->r); */
-
+    
     if (game.state.end) { /* écran de fin de jeu */
 
         /* screen of end */
@@ -297,6 +306,8 @@ int game_initialisation(game_t ** game)
     zlog(stdout, INFO, "OK '%s'", "Font is initialized.");
 
     /* ------ génération objets du jeu --------- */
+
+    SDL_SetRenderDrawColor((*game)->renderer, 255, 255, 0, 255);
 
     (*game)->state.game_rect.x = 10;
     (*game)->state.game_rect.y = 10;

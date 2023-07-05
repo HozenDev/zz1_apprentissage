@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     int score;
     (void) score;
     create_seed(&seed);
+
+    rules_read_path_file("../data/rules_test.txt", brain);
     
     enable_log(argc, argv);
 
@@ -28,17 +30,20 @@ int main(int argc, char *argv[])
             save = 0;
             zlog(stdout, INFO, "chargement de la seed: %ld", seed);
         }
+        else if (strcmp(argv[2], "--parallel") == 0)
+        {
+            rules_read_path_file("../data/rules_test.txt", brain);
+            rules_save_file(stdout, brain);
+            parallel_multiple_simulation(brain, &iter);
+            rules_save_path_file("../data/rules_test.txt", brain);
+            rules_save_file(stdout, brain);
+        }
     }
     
     if (save) save_seed(seed);
 
     srand(seed);
     
-    rules_read_path_file("../data/rules_test.txt", brain);
-    rules_save_file(stdout, brain);
-
-    parallel_multiple_simulation(brain, &iter);
-    rules_save_path_file("../data/rules_test.txt", brain);
     /* parallel_loop(); */
     fprintf(stdout, "simulation fini: iter %d\n", iter);
     game_loop(brain, &iter);
@@ -46,7 +51,7 @@ int main(int argc, char *argv[])
     
     /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
 
-    /* resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", NULL, &score); */
+    /* resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", "../data/rules_recuis_geometrique.txt", &score); */
     /* zlog(stdout, DEBUG ,"descente geometrique score %d\n", score); */
 
     /* resolution_recuis_simule(&utils_descente_lineaire, "../data/rules_test.txt", NULL, &score); */

@@ -30,25 +30,22 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     /* recuit simulé */
     while (temperature > epsilon)
     {
-	printf("TEMPERATURE %f > EPS %f", temperature, epsilon);
-	printf("Score_min = %d\n", score_min);
+	zlog(stdout, INFO,"TEMPERATURE %f > EPS %f", temperature, epsilon);
         /* generation voisin*/
         rules_copy_brain(brain, new_brain);
 	
         resolution_random_change(new_brain);
 
         /* fait jouer new*/
-	simulation_loop(new_brain, &score);
-
+	simulation_loop_average(new_brain, &score);
         /* comparaison ou proba*/
         if(score_min > score || rand()/RAND_MAX< exp(-abs((score-score_min))/temperature))
            // to do compare time and test if score is maximal
         {
             rules_copy_brain(new_brain, brain);
             score_min=score;
-	    printf("Trouver un meilleur cerveau\n");
+	    zlog(stdout, INFO, "Trouver un meilleur cerveau\n", NULL);
 	    rules_save_file(stdout, brain);
-	    sleep(10);
         }
         /*modification temperature*/
         temperature=pf(temperature);

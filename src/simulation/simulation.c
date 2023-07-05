@@ -507,7 +507,10 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
 void simulation_loop_average(rules_t brain[NB_RULES], int * iter)
 {
     int sum =0, score;
-    simulation_loop(brain, &score);
-    sum += score;
+    int i;
+    for (i = 0; i < NB_SIMULATION_LOOP; ++i) {
+	 simulation_loop(brain, &score);
+	 sum += score;
+    }
     *iter = (int) sum/NB_SIMULATION_LOOP;
 }

@@ -164,18 +164,15 @@ void sdl_draw_circle(SDL_Renderer * renderer, int center_x, int center_y, int ra
     while (x >= y)
     {
 	/* the loop fill every octant of the circle */
-	for (i = 0; i <= x; ++i)
-	{
 	    /* Each of the following renders an octant of the circle */
-	    SDL_RenderDrawPoint(renderer, center_x + i, center_y - y);
-	    SDL_RenderDrawPoint(renderer, center_x + i, center_y + y);
-	    SDL_RenderDrawPoint(renderer, center_x - i, center_y - y);
-	    SDL_RenderDrawPoint(renderer, center_x - i, center_y + y);
-	    SDL_RenderDrawPoint(renderer, center_x + y, center_y - i);
-	    SDL_RenderDrawPoint(renderer, center_x + y, center_y + i);
-	    SDL_RenderDrawPoint(renderer, center_x - y, center_y - i);
-	    SDL_RenderDrawPoint(renderer, center_x - y, center_y + i);
-	}
+        SDL_RenderDrawPoint(renderer, center_x + x, center_y - y);
+        SDL_RenderDrawPoint(renderer, center_x + x, center_y + y);
+        SDL_RenderDrawPoint(renderer, center_x - x, center_y - y);
+        SDL_RenderDrawPoint(renderer, center_x - x, center_y + y);
+        SDL_RenderDrawPoint(renderer, center_x + y, center_y - x);
+        SDL_RenderDrawPoint(renderer, center_x + y, center_y + x);
+        SDL_RenderDrawPoint(renderer, center_x - y, center_y - x);
+        SDL_RenderDrawPoint(renderer, center_x - y, center_y + x);
 
 	if (error <= 0)
 	{
