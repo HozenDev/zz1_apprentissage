@@ -190,6 +190,17 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
     genetic_initialize_population(path_brain_load, population);
     genetic_initialize_population(path_brain_load, new_population);
 
+    printf("Popultion \n");
+    for (int i=0; i < POPULATION_SIZE; ++i) {
+	printf("Brain number %d\n",i);
+	rules_save_file(stdout, population[i]);
+    }
+
+    printf("new popultion \n");
+    for (int i=0; i < POPULATION_SIZE; ++i) {
+	printf("Brain number %d\n",i);
+	rules_save_file(stdout, population[i]);
+    }
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 	if(iteration%2 == 0) // population forme new_population
 	{
