@@ -4,7 +4,9 @@
 #include <threads.h>
 #include <stdio.h>
 #include <time.h>
+#include "../rules/rules.h"
 
 int parallel_loop(void);
+void parallel_multiple_simulation(rules_t brain[NB_RULES], int * iter_average);
 
 #endif

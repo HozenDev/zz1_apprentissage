@@ -134,10 +134,32 @@ struct entity_sdl_s * entity_sdl_create(SDL_Renderer * renderer,
 
 void entity_initialize_target(struct target_s * t)
 {
-    /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
-    /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
-    t->x = 600;
-    t->y = 300;
+    float p = ((float)rand()/RAND_MAX);
+
+    if (p < 0.25)
+    {
+        t->x = rand()%((int) (0.25*WORLD_WIDTH));
+        t->y = rand()%((int) (0.25*WORLD_HEIGHT));
+    }
+    else if (p < 0.5)
+    {
+        t->x = rand()%((int) (0.25*WORLD_WIDTH)) + (0.75*WORLD_WIDTH - 40);
+        t->y = rand()%((int) (0.25*WORLD_HEIGHT));
+    }
+    else if (p < 0.75)
+    {
+        t->x = rand()%((int) (0.25*WORLD_WIDTH));
+        t->y = rand()%((int) (0.25*WORLD_HEIGHT)) +(0.75*WORLD_HEIGHT - 40);
+    }
+    else {
+        t->x = rand()%((int) (0.25*WORLD_WIDTH)) + (0.75*WORLD_WIDTH - 40);
+        t->y = rand()%((int) (0.25*WORLD_HEIGHT)) + (0.75*WORLD_HEIGHT - 40);
+    }
+    
+    /* target.x = ((float)rand()/RAND_MAX) * WORLD_WIDTH; */
+    /* target.y = ((float)rand()/RAND_MAX) * WORLD_HEIGHT; */
+    /* t->x = 600; */
+    /* t->y = 300; */
     t->pv = TARGET_PV;
 }
 

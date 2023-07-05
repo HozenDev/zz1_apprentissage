@@ -36,12 +36,13 @@ int main(int argc, char *argv[])
     rules_read_path_file("../data/rules_test.txt", brain);
     rules_save_file(stdout, brain);
 
+    parallel_multiple_simulation(brain, &iter);
     /* parallel_loop(); */
-    //game_loop(brain, &iter);
+    /* game_loop(brain, &iter); */
     /* simulation_loop(brain, &iter); */
-    zlog(stdout, INFO, "simulation fini: iter %d", iter);
+    /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
     
-    genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
+    /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
     
     return 0;
 }
