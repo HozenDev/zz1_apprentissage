@@ -4,8 +4,6 @@
 
 #include <stdlib.h>
 
-simulation_target_t target;
-
 void simulation_create(void)
 {
     /* todo */
@@ -17,6 +15,7 @@ void simulation_free(void)
 }
 
 /* ------- ACTIONS -------- */
+
 
 /**
  * @brief Destroys the target in the simulation if the predator is close enough.
@@ -30,13 +29,12 @@ void simulation_free(void)
  * @note The function assumes that the `target` object and the `PREDATOR_DAMAGE` constant
  * are defined and accessible within the scope of this function.
  */
-void simulation_destroy_target(simulation_entity_t predator)
+void simulation_destroy_target(entity_t predator, target_t * target)
 {
     if (predator.p.distance_target == CLOSE) {
-        target.pv -= PREDATOR_DAMAGE;
+        target->pv -= PREDATOR_DAMAGE;
     }
 }
-
 
 /**
  * @brief Communicates the target information to nearby predators in the simulation.
@@ -54,7 +52,7 @@ void simulation_destroy_target(simulation_entity_t predator)
  * `simulation_get_distance_between_2_predator` function are defined and accessible within
  * the scope of this function.
  */
-void simulation_communicate(simulation_entity_t predator, simulation_entity_t predators[NB_PREDATOR])
+void simulation_communicate(entity_t predator, entity_t predators[NB_PREDATOR])
 {
     int i;
 
@@ -62,14 +60,13 @@ void simulation_communicate(simulation_entity_t predator, simulation_entity_t pr
     {
         for (i = 0; i < NB_PREDATOR; ++i)
         {
-            if (simulation_get_distance_between_2_predator(predator, predators[i]) < COM_RADIUS)
+            if (simulation_get_distance_between_2_predator(predator, predators[i]) < 0.5*COM_RADIUS)
             {
                 predators[i].p.cardinality_target = predator.p.cardinality_target;
             }
         }
     }
 }
-
 
 /**
  * @brief Moves the predator entity based on the given direction.
@@ -85,7 +82,7 @@ void simulation_communicate(simulation_entity_t predator, simulation_entity_t pr
  * @note The function assumes that the `PREDATOR_SPEED`, `WORLD_WIDTH`, and `WORLD_HEIGHT`
  * constants are defined and accessible within the scope of this function.
  */
-void simulation_move_entity(simulation_entity_t * predator, enum cardinality c)
+void simulation_move_entity(entity_t * predator, enum cardinality c)
 {
     switch (c)
     {
@@ -99,11 +96,11 @@ void simulation_move_entity(simulation_entity_t * predator, enum cardinality c)
         break;
     case EAST:
         predator->x += PREDATOR_SPEED;
-        if (predator->x > WORLD_WIDTH) predator->y = WORLD_WIDTH;
+        if (predator->x > WORLD_WIDTH) predator->x = WORLD_WIDTH;
         break;
     case WEST:
         predator->x -= PREDATOR_SPEED;
-        if (predator->y < 0) predator->y = 0;
+        if (predator->x < 0) predator->x = 0;
         break;
     case NOT_FOUND:
         /* to do */
@@ -140,20 +137,18 @@ void simulation_move_entity(simulation_entity_t * predator, enum cardinality c)
  */
 enum cardinality simulation_get_cardinals(float xa,float ya,float xb ,float yb)
 {
-    enum cardinality card;
+    enum cardinality card = NORTH;
     int 
         deltax=xa - xb,
         deltay=ya - yb,
         delta=abs(deltax) - abs(deltay);
 
-    if(deltax>0 && delta>0) card=WEST;
-    if(deltax<0 && delta>0) card=EAST;
-    if(deltay<0 && delta<0) card=SOUTH;
-    if(deltay>0 && delta<0) card=NORTH;
+    if     (deltax>0 && delta>0) card=WEST;
+    else if(deltax<0 && delta>0) card=EAST;
+    else if(deltay<0 && delta<0) card=SOUTH;
 
     return(card);
 }
-
 
 /**
  * @brief Determines the closest friend for each predator in the simulation.
@@ -172,7 +167,7 @@ enum cardinality simulation_get_cardinals(float xa,float ya,float xb ,float yb)
  * function. It also assumes the use of appropriate variables (`distmin`, `dist`, `friend`,
  * `i`, and `j`) and appropriate data types (`INT_MAX` for `distmin`).
  */
-void simulation_get_closest_friend(simulation_entity_t * predators)
+void simulation_get_closest_friend(entity_t * predators)
 {
     int distmin = INT_MAX;
     int dist = 0;
@@ -195,7 +190,7 @@ void simulation_get_closest_friend(simulation_entity_t * predators)
         predators[i].p.cardinality_friend =
             simulation_get_cardinals(predators[i].x, predators[i].y, predators[friend].x, predators[friend].y);
 
-	predators[i].p.distance_friend =
+        predators[i].p.distance_friend =
             simulation_get_distance(distmin);
     }
 }
@@ -224,6 +219,7 @@ enum distance simulation_get_distance(float dsrc)
     return dist;
 }
 
+
 /**
  * @brief Determines the perception of each predator in the simulation.
  *
@@ -242,7 +238,7 @@ enum distance simulation_get_distance(float dsrc)
  * `simulation_get_cardinals`, `simulation_get_distance`, and `target` (global) are defined
  * and accessible within the scope of this function.
  */
-void simulation_get_perception(simulation_entity_t * predators)
+void simulation_get_perception(entity_t * predators, target_t target)
 {
     int i;
     
@@ -253,12 +249,13 @@ void simulation_get_perception(simulation_entity_t * predators)
            || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y)) == CLOSE)
         {
             predators[i].p.cardinality_target =
-                simulation_get_cardinals(predators[i].x,target.x, predators[i].y,target.y);
+                simulation_get_cardinals(predators[i].x, target.x, predators[i].y,target.y);
             predators[i].p.distance_target =
                 simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y));
         }
     }
 }
+
 
 /**
  * @brief Calculates the distance between two predators in the simulation.
@@ -272,12 +269,10 @@ void simulation_get_perception(simulation_entity_t * predators)
  *
  * @return The distance between the two predators.
  */
-int simulation_get_distance_between_2_predator(simulation_entity_t p1, simulation_entity_t p2)
+int simulation_get_distance_between_2_predator(entity_t p1, entity_t p2)
 {
     return abs(p1.x - p2.x) + abs(p1.y - p2.y);
 }
-
-
 
 /* ------- REGLES --------- */
 /**
@@ -296,27 +291,29 @@ int simulation_get_distance_between_2_predator(simulation_entity_t p1, simulatio
  *
  * @return 1 if the predator's perception matches the rules, 0 otherwise.
  */
-int simulation_verify_rules(simulation_entity_t predator,rules_t rule)
+
+int simulation_verify_rules(entity_t predator,rules_t rule)
 {
     int flag=1;
     /*test distance friend*/
     if(rule.perception.distance_friend != JOKER_D
-       && predator.p.distance_friend  != rule.perception.distance_friend) flag=0;
+       && predator.p.distance_friend != rule.perception.distance_friend) flag=0;
    
     /*test distance target*/
     if(rule.perception.distance_target != JOKER_D
-       && predator.p.distance_target  != rule.perception.distance_target) flag=0;
+       && predator.p.distance_target != rule.perception.distance_target) flag=0;
     
     /*test cardinality friend*/
     if(rule.perception.cardinality_friend != JOKER_C
-       && predator.p.cardinality_friend  != rule.perception.cardinality_friend) flag=0;
+       && predator.p.cardinality_friend != rule.perception.cardinality_friend) flag=0;
     
     /*test direction target*/
     if(rule.perception.cardinality_target != JOKER_C
-       && predator.p.cardinality_target  != rule.perception.cardinality_target) flag=0;
+       && predator.p.cardinality_target != rule.perception.cardinality_target) flag=0;
 
     return(flag);
 }
+
 
 /**
  * @brief Filters the rules based on a predator's perception.
@@ -335,11 +332,11 @@ int simulation_verify_rules(simulation_entity_t predator,rules_t rule)
  * @note The function assumes that the `NB_RULES` and `simulation_verify_rules` functions
  * are defined and accessible within the scope of this function.
  */
-void simulation_filtrage_regle(simulation_entity_t predators, int filtered_rules[NB_RULES], rules_t brain[NB_RULES])
+void simulation_filtrage_regle(entity_t predator, int filtered_rules[NB_RULES], rules_t brain[NB_RULES])
 {
     int i;
-    for(i=0; i<NB_RULES; i++){
-        if (simulation_verify_rules(predators,brain[i]))
+    for(i=0;i<NB_RULES;i++){
+        if (simulation_verify_rules(predator, brain[i]))
         {
             filtered_rules[i] = 1;
         }
@@ -400,6 +397,7 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t * brain)
     return(action);
 }
 
+
 /**
  * @brief Executes the specified action for the predator in the simulation.
  *
@@ -422,9 +420,11 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t * brain)
  * `simulation_communicate`, and `simulation_destroy_target` functions are defined and accessible
  * within the scope of this function. It also assumes the availability of `NB_PREDATOR` constant.
  */
-void simulation_execute_action(simulation_entity_t * predator,
+
+void simulation_execute_action(entity_t * predator,
                                int action,
-                               simulation_entity_t predators[NB_PREDATOR])
+                               entity_t predators[NB_PREDATOR],
+                               target_t * target)
 {
     switch(action)
     {
@@ -444,7 +444,7 @@ void simulation_execute_action(simulation_entity_t * predator,
         simulation_communicate(*predator, predators);
         break;
     case 5:
-        simulation_destroy_target(*predator);
+        simulation_destroy_target(*predator, target);
         break;
     }
 }
@@ -465,39 +465,26 @@ void simulation_execute_action(simulation_entity_t * predator,
  * `TARGET_PV`, `FAR`, `NORTH`, and `NOT_FOUND` constants, as well as the `rand` function, within
  * the scope of this function.
  */
-void simulation_init(simulation_entity_t predators[NB_PREDATOR])
+void simulation_init(entity_t predators[NB_PREDATOR], target_t * target)
 {
     int i;
-    
-    /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
-    /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
-    target.x = 50;
-    target.y = 50;
-    target.pv=TARGET_PV;
-
+    entity_initialize_target(target);
     for(i=0;i<NB_PREDATOR;i++)
-    {
-        predators[i].x = 0;
-        predators[i].y = 0;
-        predators[i].p.distance_friend = FAR;
-        predators[i].p.distance_target = FAR;
-        predators[i].p.cardinality_friend = NORTH;
-        predators[i].p.cardinality_target = NOT_FOUND;
-    }
-    predators[0].x = 0;
-    predators[0].y = 0;
+        entity_initialize(&predators[i]);
 }
 
 
 void simulation_loop(rules_t brain[NB_RULES], int * iter)
 {
-    int action[NB_RULES]={0};
+    int action[NB_PREDATOR]={0};
     int filtered_rules[NB_RULES] = {0};
-    simulation_entity_t predators[NB_PREDATOR];
-    int i, j;
+    entity_t predators[NB_PREDATOR];
+    target_t target;
+    int i = 0;
+    int j = 0;
 
     *iter=0;
-    simulation_init(predators);
+    simulation_init(predators, &target);
 
      for(i=0; i<NB_PREDATOR; ++i)
     {
@@ -508,7 +495,7 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
     while(target.pv > 0 && *iter < ITER_MAX)
     {
         (*iter) ++;
-        simulation_get_perception(predators);
+        simulation_get_perception(predators, target);
         
         for(i=0;i<NB_PREDATOR;i++)
         {
@@ -517,10 +504,9 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
             /* filter rules */
             simulation_filtrage_regle(predators[i], filtered_rules, brain);
             /* choisis une action */
-            action[i] = simulation_choose_action(filtered_rules,brain);
-            
+            action[i] = simulation_choose_action(filtered_rules, brain);
         }
         /* execute action */
-        for(i=0;i<NB_PREDATOR;i++) simulation_execute_action(&predators[i], action[i], predators);
+        for(i=0;i<NB_PREDATOR;i++) simulation_execute_action(&predators[i], action[i], predators, &target);
     }
 }

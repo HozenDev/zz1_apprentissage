@@ -16,20 +16,22 @@ void game_keyboard_state_update(game_state_t * g_state)
     switch (g_state->event.key.keysym.sym)
     {
     case SDLK_SPACE:
-        /* g_state->predators[0]->is_in_animation = 0; */
-        /* if (g_state->predators[0]->state != ATTACK) entity_change_state(g_state->predators[0], ATTACK); */
+        /* g_state->predators[0].e_sdl->is_in_animation = 0; */
+        /* if (g_state->predators[0].e_sdl->state != ATTACK) */
+        /*     entity_sdl_change_state(&g_state->predators[0].e_sdl, ATTACK); */
         break;
     case SDLK_DOWN:
-        /* if (g_state->predators[0]->state != WALK) entity_change_state(g_state->predators[0], WALK); */
+        /* if (g_state->predators[0].e_sdl->state != WALK) */
+        /*     entity_sdl_change_state(&g_state->predators[0].e_sdl, WALK); */
         break;
     case SDLK_UP:
-        /* if (g_state->predators[0]->state != WALK) entity_change_state(g_state->predators[0], WALK); */
+        /* todo */
         break;
     case SDLK_LEFT:
-        /* if (g_state->predators[0]->state != WALK) entity_change_state(g_state->predators[0], WALK); */
+        /* todo */
         break;
     case SDLK_RIGHT:
-        /* if (g_state->predators[0]->state != WALK) entity_change_state(g_state->predators[0], WALK); */
+        /* todo */
         break;
     default:
         /* todo */
@@ -44,38 +46,54 @@ void game_keyboard_state_update(game_state_t * g_state)
  */
 void game_loop_state_update(game_state_t * g_state)
 {
-    int i;
+    int i, j;
+    
+    simulation_get_perception(g_state->predators, g_state->prey);
 
+    for(i = 0; i < g_state->nb_predator; i++)
+    {
+        /*init filtered_rules*/
+        for(j=0;j<NB_RULES;j++) g_state->filtered_rules[j] = 0;
+        /* filter rules */
+        simulation_filtrage_regle(g_state->predators[i], g_state->filtered_rules, g_state->brain);
+        /* choisis une action */
+        g_state->action[i] = simulation_choose_action(g_state->filtered_rules, g_state->brain);
+    }
+
+    /* execute action */
+    for(i = 0; i < g_state->nb_predator; i++)
+        simulation_execute_action(&g_state->predators[i], g_state->action[i], g_state->predators, &g_state->prey);
+
+    /* update sdl entity */
+    for (i = 0; i < g_state->nb_predator; ++i) {
+        g_state->predators[i].e_sdl->r.x = g_state->predators[i].x;
+        g_state->predators[i].e_sdl->r.y = g_state->predators[i].y;
+        if (g_state->predators[i].e_sdl->r.x > SCREEN_WIDTH-g_state->predators[i].e_sdl->r.w)
+            g_state->predators[i].e_sdl->r.x = SCREEN_WIDTH-g_state->predators[i].e_sdl->r.w;
+        if (g_state->predators[i].e_sdl->r.y > SCREEN_HEIGHT-g_state->predators[i].e_sdl->r.h)
+            g_state->predators[i].e_sdl->r.y = SCREEN_HEIGHT-g_state->predators[i].e_sdl->r.h;
+    }
+    
     /* mise à jour parallax background */
     for (i = 0; i < g_state->nb_background; ++i)
         g_state->back[i]->r.x -= (i+1);
     
-    /* update entity animations */
-    entity_update_animation(g_state->prey, 0.1);
+    /* update entity_sdl animations */
+    entity_sdl_update_animation(g_state->prey.e_sdl, 0.1);
     for (i = 0; i < g_state->nb_predator; ++i)
-        entity_update_animation(g_state->predators[i], 0.3);
+        entity_sdl_update_animation(g_state->predators[i].e_sdl, 0.2);
 
-    if (!g_state->end) {
-        for (i = 0; i < g_state->nb_predator; ++i)
-        {
-            g_state->predators[i]->r.x += (rand()%PREDATOR_SPEED+1) * (((float) (rand()%2))-0.5) * 2;
-            g_state->predators[i]->r.y += (rand()%PREDATOR_SPEED+1) * (((float) (rand()%2))-0.5) * 2;
-        }
-        if (!g_state->prey->is_in_animation) entity_change_state(g_state->prey, IDLE);
+    if (!g_state->end) /* if it is not the end of the game */
+    {
+        if (!g_state->prey.e_sdl->is_in_animation) entity_sdl_change_state(g_state->prey.e_sdl, IDLE);
 
-        if (g_state->prey->life <= 0)
+        if (g_state->prey.pv <= 0)
         {
-            g_state->predators[i]->is_in_animation = 0;
-            entity_change_state(g_state->predators[i], DEATH);
-        }
-
-        if (g_state->prey->life <= 0)
-        {
-            /* g_state->end = 1; */
+            g_state->end = 1;
         }
     }
     else { /* gestion fin de jeu */
-        /* g_state->running = 0; */
+        g_state->running = 0;
     }
 }
 
@@ -98,12 +116,17 @@ void game_free_game(game_t * game)
         game->state.mx = 0;
         game->state.my = 0;
 
-        if (game->state.prey)
-            entity_free(game->state.prey);
+        if (game->state.prey.e_sdl)
+        {
+            entity_sdl_free(game->state.prey.e_sdl);
+            game->state.prey.e_sdl = NULL;
+        }
         
         for (i = 0; i < game->state.nb_predator; ++i)
-            entity_free(game->state.predators[i]);
-        free(game->state.predators);
+        {
+            entity_sdl_free(game->state.predators[i].e_sdl);
+            game->state.predators[i].e_sdl = NULL;
+        }
 
         for (i = 0; i < game->state.nb_background; ++i)
             animation_free_background(game->state.back[i]);
@@ -138,16 +161,15 @@ void game_graphic_update(game_t game)
 
     /* render prey */
     animation_render_sprite(game.renderer,
-                            game.state.prey->sprites[game.state.prey->state],
-                            game.state.prey->r);
-    
+                            game.state.prey.e_sdl->sprites[game.state.prey.e_sdl->state],
+                            game.state.prey.e_sdl->r);
     
     /* render predators */
     for (i = 0; i < game.state.nb_predator; ++i)
     {
         animation_render_sprite(game.renderer,
-                                game.state.predators[i]->sprites[game.state.predators[i]->state],
-                                game.state.predators[i]->r);
+                                game.state.predators[i].e_sdl->sprites[game.state.predators[i].e_sdl->state],
+                                game.state.predators[i].e_sdl->r);
     }
     
     /* sdl_render_image(game.renderer, game.back->t, game.back->r); */
@@ -241,8 +263,11 @@ int game_initialisation(game_t ** game)
     (*game)->state.end = 0;
     (*game)->state.score = 0;
     (*game)->state.back = NULL;
-    (*game)->state.predators = NULL;
-    (*game)->state.prey = NULL;
+
+    for (i = 0; i < NB_RULES; ++i) {
+        (*game)->state.action[i] = 0;
+        (*game)->state.filtered_rules[i] = 0;
+    }
 
     /* ------ initialisation SDL2 --------- */
     
@@ -310,7 +335,7 @@ int game_initialisation(game_t ** game)
     tab[3] = 2;
     tab[4] = 6;
 
-    /* initialize the prey */
+    /* -------- initialize prey ----------- */
 
     strncpy(e_fnames[0], "../data/sprites/jellyfish/Idle.png", 99);
     strncpy(e_fnames[1], "../data/sprites/jellyfish/Walk.png", 99);
@@ -318,17 +343,16 @@ int game_initialisation(game_t ** game)
     strncpy(e_fnames[3], "../data/sprites/jellyfish/Hurt.png", 99);
     strncpy(e_fnames[4], "../data/sprites/jellyfish/Death.png", 99);
 
-    (*game)->state.prey
-        = entity_create((*game)->renderer, e_fnames, n_sp,
-                        tab, "fish", PLAYER, GOOD, 3, (float) PREY_SPEED);
-    entity_scale((*game)->state.prey, 0.004*SCREEN_HEIGHT);
-    (*game)->state.prey->r.x = rand()%(SCREEN_WIDTH-(*game)->state.prey->r.w);
-    (*game)->state.prey->r.y = rand()%(SCREEN_HEIGHT-(*game)->state.prey->r.h);
+    entity_initialize_target(&(*game)->state.prey);
+    (*game)->state.prey.e_sdl
+        = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, (float) PREY_SPEED);
+    entity_sdl_scale((*game)->state.prey.e_sdl, 0.004*SCREEN_HEIGHT);
+    (*game)->state.prey.e_sdl->r.x = (*game)->state.prey.x;
+    (*game)->state.prey.e_sdl->r.y = (*game)->state.prey.y;
 
-    /* initialize predators */
+    zlog(stdout, INFO, "OK '%s'", "Prey is loaded");
 
-    (*game)->state.nb_predator = NB_PREDATOR;
-    (*game)->state.predators = (struct entity_s **) malloc(sizeof(struct entity_s *) * (*game)->state.nb_predator);
+    /* -------- initialize predators ----------- */
     
     strncpy(e_fnames[0], "../data/sprites/fish/Idle.png", 99);
     strncpy(e_fnames[1], "../data/sprites/fish/Walk.png", 99);
@@ -336,27 +360,31 @@ int game_initialisation(game_t ** game)
     strncpy(e_fnames[3], "../data/sprites/fish/Hurt.png", 99);
     strncpy(e_fnames[4], "../data/sprites/fish/Death.png", 99);
 
-    for (i = 0; i < (*game)->state.nb_predator; ++i) {
-        (*game)->state.predators[i]
-            = entity_create((*game)->renderer, e_fnames, n_sp,
-                            tab, "fish", IA, BAD, 2, PREY_SPEED);
-        entity_scale((*game)->state.predators[i], 0.004*SCREEN_HEIGHT);
-        (*game)->state.predators[i]->r.x = rand()%(SCREEN_WIDTH-(*game)->state.predators[i]->r.w);
-        (*game)->state.predators[i]->r.y = rand()%(SCREEN_HEIGHT-(*game)->state.predators[i]->r.h);
-        entity_change_state((*game)->state.predators[i], WALK);
-    }
-    
-    
-    zlog(stdout, INFO, "OK '%s'", "Predators are loaded");
+    (*game)->state.nb_predator = NB_PREDATOR;
 
-    /* free temp memory */
+    for (i = 0; i < (*game)->state.nb_predator; ++i)
+    {
+        entity_initialize(&(*game)->state.predators[i]);
+        (*game)->state.predators[i].e_sdl
+            = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, PREY_SPEED);
+
+        entity_sdl_scale((*game)->state.predators[i].e_sdl, 0.004*SCREEN_HEIGHT);
+        (*game)->state.predators[i].e_sdl->r.x = 0;
+        (*game)->state.predators[i].e_sdl->r.y = 0;
+        entity_sdl_change_state((*game)->state.predators[i].e_sdl, WALK);
+    }
+
+    zlog(stdout, INFO, "OK '%s'", "Predators are loaded");
+    
+    /* ---------- free temp memory ------------ */
+
     for (i = 0; i < n_sp; ++i) {
         free(e_fnames[i]);
     }
     free(e_fnames);
     free(tab);
 
-    zlog(stdout, INFO, "OK '%s'", "tabs are free");
+    zlog(stdout, INFO, "OK '%s'", "Initialisation of the game successed");
 
     return EXIT_SUCCESS;
 }
@@ -366,13 +394,14 @@ int game_initialisation(game_t ** game)
  *
  * @return exit code: 0 success, != 0 failure
  */
-int game_loop(void)
+int game_loop(rules_t brain[NB_RULES])
 {
     game_t * game = NULL;
     
     SDL_Event * event;
     
     game_initialisation(&game);
+    rules_copy_brain(brain, game->state.brain);
 
     event = &(game->state.event);
     
@@ -396,7 +425,7 @@ int game_loop(void)
                 /* game_keyboard_state_update(&game->state); */
         	break;
             case SDL_KEYUP:
-                /* entity_change_state(game->state.predators[0], IDLE); */
+                /* entity_sdl_change_state(game->state.predators[0].e_sdl, IDLE); */
         	break;
             case SDL_MOUSEMOTION:
                 /* update mouse position */
