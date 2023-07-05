@@ -42,6 +42,6 @@
 
 
 /*RECUIS*/
-#define TEMP_DEP 1000
 #define EPSILON  0.001
+
 #endif

@@ -5,7 +5,7 @@
 #include "../genetic/genetic.h"
 #include "../simulation/simulation.h"
 #include "../resolution/resolution.h"
-
+#include "../utils/utils.h"
 #include "../parallel/parallel.h"
 
 int main(int argc, char *argv[])
@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     int iter=0;
     long int seed;
     struct rules_s brain[NB_RULES];
+    int score;
 
     create_seed(&seed);
     
@@ -41,7 +42,13 @@ int main(int argc, char *argv[])
     /* simulation_loop(brain, &iter); */
     zlog(stdout, INFO, "simulation fini: iter %d", iter);
     
-    genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
+    //genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
+
+    resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", NULL, &score);
+    zlog(stdout, DEBUG ,"descente geometrique score %d\n", score);
+
+    resolution_recuis_simule(&utils_descente_lineaire, "../data/rules_test.txt", NULL, &score);
+    zlog(stdout, DEBUG ,"descente lineaire score %d\n", score);
     
     return 0;
 }

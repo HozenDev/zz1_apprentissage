@@ -487,7 +487,8 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
     {
         (*iter) ++;
         simulation_get_perception(predators, target);
-        
+        if (*iter %1000 == 0)
+	    printf("iter %d\n", *iter);
         
         for(i=0;i<NB_PREDATOR;i++)
         {
