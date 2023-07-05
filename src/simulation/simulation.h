@@ -25,7 +25,7 @@ void simulation_filtrage_regle(entity_t predators, int filtered_rules[NB_RULES],
 
 void simulation_create(void);
 void simulation_free(void);
-void simulation_loop();
+void simulation_loop(rules_t brain[NB_RULES], int * iter);
 void simulation_init(entity_t predators[NB_PREDATOR], target_t * target);
 
 #endif
