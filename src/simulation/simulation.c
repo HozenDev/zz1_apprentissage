@@ -4,8 +4,6 @@
 
 #include <stdlib.h>
 
-simulation_target_t target;
-
 void simulation_create(void)
 {
     /* todo */
@@ -18,14 +16,14 @@ void simulation_free(void)
 
 /* ------- ACTIONS -------- */
 
-void simulation_destroy_target(simulation_entity_t predator)
+void simulation_destroy_target(entity_t predator, target_t * target)
 {
     if (predator.p.distance_target == CLOSE) {
-        target.pv -= PREDATOR_DAMAGE;
+        target->pv -= PREDATOR_DAMAGE;
     }
 }
 
-void simulation_communicate(simulation_entity_t predator, simulation_entity_t predators[NB_PREDATOR])
+void simulation_communicate(entity_t predator, entity_t predators[NB_PREDATOR])
 {
     int i;
 
@@ -33,7 +31,7 @@ void simulation_communicate(simulation_entity_t predator, simulation_entity_t pr
     {
         for (i = 0; i < NB_PREDATOR; ++i)
         {
-            if (simulation_get_distance_between_2_predator(predator, predators[i]) < COM_RADIUS)
+            if (simulation_get_distance_between_2_predator(predator, predators[i]) < 0.5*COM_RADIUS)
             {
                 predators[i].p.cardinality_target = predator.p.cardinality_target;
             }
@@ -41,7 +39,7 @@ void simulation_communicate(simulation_entity_t predator, simulation_entity_t pr
     }
 }
 
-void simulation_move_entity(simulation_entity_t * predator, enum cardinality c)
+void simulation_move_entity(entity_t * predator, enum cardinality c)
 {
     switch (c)
     {
@@ -55,11 +53,11 @@ void simulation_move_entity(simulation_entity_t * predator, enum cardinality c)
         break;
     case EAST:
         predator->x += PREDATOR_SPEED;
-        if (predator->x > WORLD_WIDTH) predator->y = WORLD_WIDTH;
+        if (predator->x > WORLD_WIDTH) predator->x = WORLD_WIDTH;
         break;
     case WEST:
         predator->x -= PREDATOR_SPEED;
-        if (predator->y < 0) predator->y = 0;
+        if (predator->x < 0) predator->x = 0;
         break;
     case NOT_FOUND:
         /* to do */
@@ -68,8 +66,6 @@ void simulation_move_entity(simulation_entity_t * predator, enum cardinality c)
         /* todo */
         break;
     }
-
-    
 }
 
 /* ------- PERCEPTIONS ---------- */
@@ -90,7 +86,7 @@ enum cardinality simulation_get_cardinals(float xa,float ya,float xb ,float yb)
     return(card);
 }
 
-void simulation_get_closest_friend(simulation_entity_t * predators)
+void simulation_get_closest_friend(entity_t * predators)
 {
     int distmin = INT_MAX;
     int dist = 0;
@@ -126,7 +122,7 @@ enum distance simulation_get_distance(float dsrc)
     return dist;
 }
 
-void simulation_get_perception(simulation_entity_t * predators)
+void simulation_get_perception(entity_t * predators, target_t target)
 {
     int i;
     
@@ -144,14 +140,14 @@ void simulation_get_perception(simulation_entity_t * predators)
     }
 }
 
-int simulation_get_distance_between_2_predator(simulation_entity_t p1, simulation_entity_t p2)
+int simulation_get_distance_between_2_predator(entity_t p1, entity_t p2)
 {
     return abs(p1.x - p2.x) + abs(p1.y - p2.y);
 }
 
 /* ------- REGLES --------- */
 
-int simulation_verify_rules(simulation_entity_t predators,rules_t rule)
+int simulation_verify_rules(entity_t predators,rules_t rule)
 {
     int flag=1;
     /*test distance friend*/
@@ -173,7 +169,7 @@ int simulation_verify_rules(simulation_entity_t predators,rules_t rule)
     return(flag);
 }
 
-void simulation_filtrage_regle(simulation_entity_t predators, int filtered_rules[NB_RULES], rules_t brain[NB_RULES])
+void simulation_filtrage_regle(entity_t predators, int filtered_rules[NB_RULES], rules_t brain[NB_RULES])
 {
     int i;
     for(i=0;i<NB_RULES;i++){
@@ -215,9 +211,10 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t * brain)
     return(action);
 }
 
-void simulation_execute_action(simulation_entity_t * predator,
+void simulation_execute_action(entity_t * predator,
                                int action,
-                               simulation_entity_t predators[NB_PREDATOR])
+                               entity_t predators[NB_PREDATOR],
+                               target_t * target)
 {
     switch(action)
     {
@@ -237,31 +234,16 @@ void simulation_execute_action(simulation_entity_t * predator,
         simulation_communicate(*predator, predators);
         break;
     case 5:
-        simulation_destroy_target(*predator);
+        simulation_destroy_target(*predator, target);
         break;
     }
 }
-void simulation_init(simulation_entity_t predators[NB_PREDATOR])
+void simulation_init(entity_t predators[NB_PREDATOR], target_t * target)
 {
     int i;
-    
-    /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
-    /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
-    target.x = 50;
-    target.y = 50;
-    target.pv=TARGET_PV;
-
+    entity_initialize_target(target);
     for(i=0;i<NB_PREDATOR;i++)
-    {
-        predators[i].x = 0;
-        predators[i].y = 0;
-        predators[i].p.distance_friend = FAR;
-        predators[i].p.distance_target = FAR;
-        predators[i].p.cardinality_friend = NORTH;
-        predators[i].p.cardinality_target = NOT_FOUND;
-    }
-    predators[0].x = 0;
-    predators[0].y = 0;
+        entity_initialize(&predators[i]);
 }
 
 void simulation_loop(rules_t brain[NB_RULES], int * iter)
@@ -269,16 +251,17 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
     
     int action[NB_RULES]={0};
     int filtered_rules[NB_RULES] = {0};
-    simulation_entity_t predators[NB_PREDATOR];
+    entity_t predators[NB_PREDATOR];
+    target_t target;
     int i, j;
     printf("je suis rentré");
     *iter=0;
-    simulation_init(predators);
+    simulation_init(predators, &target);
 
     while(target.pv > 0 && *iter < ITER_MAX)
     {
         (*iter) ++;
-        simulation_get_perception(predators);
+        simulation_get_perception(predators, target);
         
         
         for(i=0;i<NB_PREDATOR;i++)
@@ -292,6 +275,6 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
             
         }
         /* execute action */
-        for(i=0;i<NB_PREDATOR;i++) simulation_execute_action(&predators[i], action[i], predators);
+        for(i=0;i<NB_PREDATOR;i++) simulation_execute_action(&predators[i], action[i], predators, &target);
     }
 }

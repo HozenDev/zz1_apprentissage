@@ -165,6 +165,7 @@ struct sprite_s * animation_spritesheet_from_file(SDL_Renderer * renderer, char 
 
     /* initialisation de l'animation */
     s->a = animation_create_animation(nb_frame, 1);
+    s->n = i;
 
     return s;
 }

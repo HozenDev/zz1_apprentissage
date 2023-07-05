@@ -4,12 +4,14 @@
 #include "../rules/rules.h"
 #include "../genetic/genetic.h"
 #include "../simulation/simulation.h"
+#include "../resolution/resolution.h"
+
 
 int main(int argc, char *argv[])
 {
     int save = 1;
-    long int seed;
     int iter=0;
+    long int seed;
     struct rules_s brain[NB_RULES];
 
     create_seed(&seed);
@@ -30,19 +32,14 @@ int main(int argc, char *argv[])
 
     srand(seed);
     
-    /* game_loop(); */
     rules_read_path_file("../data/rules_test.txt", brain);
-    printf("kdalm\n");
-    rules_save_file(stdout, brain);
-    printf("kdalm\n");
-
-    simulation_loop(brain, &iter);
-
-    zlog(stdout, INFO, "simulation fini: iter %d", iter);
-
     rules_save_file(stdout, brain);
 
-    //genetic_solve_optimized("test.txt", NULL);
-
+    //game_loop(brain);
+    /* simulation_loop(brain, &iter); */
+    /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
+    resolution_gloutone_aleatoire(brain,&iter);
+    /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
+    
     return 0;
 }
