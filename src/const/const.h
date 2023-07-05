@@ -30,7 +30,7 @@
 #define S_POWER 0.1
 
 #define TARGET_PV 100
-#define ITER_MAX 10000
+#define ITER_MAX 10
 
 /* RULES */
 #define NB_ACTION      6

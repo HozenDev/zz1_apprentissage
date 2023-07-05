@@ -32,7 +32,10 @@ int main(int argc, char *argv[])
     
     /* game_loop(); */
     rules_read_path_file("../data/rules_test.txt", brain);
+    printf("kdalm\n");
     rules_save_file(stdout, brain);
+    printf("kdalm\n");
+
     simulation_loop(brain, &iter);
 
     zlog(stdout, INFO, "simulation fini: iter %d", iter);
