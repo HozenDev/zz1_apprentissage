@@ -23,6 +23,7 @@
     print_log(_flux_, _level_, __FILENAME__, __LINE__, fmt, __VA_ARGS__);
 
 extern int no_log;
+extern int no_debug_log;
 
 void enable_log(int, char**);
 void test_log();

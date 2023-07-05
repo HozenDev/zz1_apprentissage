@@ -50,40 +50,51 @@ void game_loop_state_update(game_state_t * g_state)
     
     simulation_get_perception(g_state->predators, g_state->prey);
 
+    /* update predators */
     for(i = 0; i < g_state->nb_predator; i++)
     {
         /*init filtered_rules*/
         for(j=0;j<NB_RULES;j++) g_state->filtered_rules[j] = 0;
+
         /* filter rules */
         nb_compatible=simulation_filtrage_regle(g_state->predators[i], g_state->filtered_rules, g_state->brain);
+
         /* choisis une action */
         g_state->action[i] = simulation_choose_action(g_state->filtered_rules, g_state->brain,nb_compatible);
-    }
 
-    /* execute action */
-    for(i = 0; i < g_state->nb_predator; i++)
-    {
+        /* execute action */
         simulation_execute_action(&g_state->predators[i], g_state->action[i], g_state->predators, &g_state->prey);
-    }
-    
-    /* update sdl entity */
-    for (i = 0; i < g_state->nb_predator; ++i) {
+
+        /* update sdl coordinates */
         g_state->predators[i].e_sdl->r.x = g_state->predators[i].x;
         g_state->predators[i].e_sdl->r.y = g_state->predators[i].y;
         if (g_state->predators[i].e_sdl->r.x > SCREEN_WIDTH-g_state->predators[i].e_sdl->r.w)
             g_state->predators[i].e_sdl->r.x = SCREEN_WIDTH-g_state->predators[i].e_sdl->r.w;
         if (g_state->predators[i].e_sdl->r.y > SCREEN_HEIGHT-g_state->predators[i].e_sdl->r.h)
             g_state->predators[i].e_sdl->r.y = SCREEN_HEIGHT-g_state->predators[i].e_sdl->r.h;
+
+        /* update predators animations */
+        entity_sdl_update_animation(g_state->predators[i].e_sdl, 0.2);
+
+        /* update sprites of predators */
+        switch (g_state->action[i])
+        {
+        case 5: /* attack action */
+            g_state->predators[i].e_sdl->is_in_animation = 0;
+            entity_sdl_change_state(g_state->predators[i].e_sdl, ATTACK);
+            break;
+        default:
+            /* do nothing */
+            break;
+        }
     }
-    
+
     /* mise à jour parallax background */
     for (i = 0; i < g_state->nb_background; ++i)
         g_state->back[i]->r.x -= (i+1);
     
-    /* update entity_sdl animations */
+    /* update prey animation */
     entity_sdl_update_animation(g_state->prey.e_sdl, 0.1);
-    for (i = 0; i < g_state->nb_predator; ++i)
-        entity_sdl_update_animation(g_state->predators[i].e_sdl, 0.2);
 
     if (!g_state->end) /* if it is not the end of the game */
     {
@@ -172,13 +183,19 @@ void game_graphic_update(game_t game)
         animation_render_sprite(game.renderer,
                                 game.state.predators[i].e_sdl->sprites[game.state.predators[i].e_sdl->state],
                                 game.state.predators[i].e_sdl->r);
-        if (game.state.action[i] == 4)
+        switch (game.state.action[i])
         {
+        case 4:
             sdl_draw_circle(game.renderer,
                             game.state.predators[i].e_sdl->r.x + game.state.predators[i].e_sdl->r.w/2,
                             game.state.predators[i].e_sdl->r.y + game.state.predators[i].e_sdl->r.h/2,
-                            COM_RADIUS);    
+                            COM_RADIUS);
+            break;
+        default:
+            /* do nothing */
+            break;
         }
+        
     }
     
     /* sdl_render_image(game.renderer, game.back->t, game.back->r); */

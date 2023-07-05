@@ -7,17 +7,23 @@
 #include "log.h"
 
 int no_log = 1;
+int no_debug_log = 0;
 
 void enable_log(int argc, char* argv[]) {
     if (argc < 2) {
-        fprintf(stdout, "To enable logs use : -l argument\n");
+        fprintf(stdout,
+                "To enable all logs use : -l argument\n"
+                "To enable all logs without debug use : -d argument");
     }
     else {
 	if (argv[1][0] == '-' && argv[1][1] == 'l') {
 	    no_log = 0;
-	    zlog(stdout, INFO, "logs enable", NULL);
+	    zlog(stdout, INFO, "All logs enable", NULL);
 	}
-	else fprintf(stdout, "non-valid argument\n");
+        if (argv[1][0] == '-' && argv[1][1] == 'd') {
+	    no_debug_log = 1;
+	    zlog(stdout, INFO, "All logs without debug enable", NULL);
+	}
     }
 }
 
@@ -96,7 +102,7 @@ void print_log(FILE* flux,
     char* buffer_start;
 
     if (flux == NULL) {flux = stdout;}
-    if (!no_log) {
+    if (!no_log && (!no_debug_log || log_level != DEBUG)) {
 	if (log_level == INFO
 	    || log_level == ERROR
 	    || log_level == DEBUG
