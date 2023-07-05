@@ -104,12 +104,12 @@ void print_log(FILE* flux,
 
 	    va_start(args, format);
 	    vsprintf(buffer, format, args);
-	    buffer_start = get_start_msg_log(log_level,
-					     file_name,
-					     line_number);
-	    fprintf(flux, "%s%s\n", buffer_start, buffer);
-	    fflush(flux);
-	    free(buffer_start);
+            buffer_start = get_start_msg_log(log_level,
+                                             file_name,
+                                             line_number);
+            fprintf(flux, "%s%s\n", buffer_start, buffer);
+            fflush(flux);
+            free(buffer_start);
 	}
     }
 }

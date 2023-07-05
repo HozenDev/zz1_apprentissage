@@ -34,15 +34,15 @@ int main(int argc, char *argv[])
 
     srand(seed);
     
-    rules_read_path_file("../data/rules_init.txt", brain);
+    rules_read_path_file("../data/rules_test.txt", brain);
     rules_save_file(stdout, brain);
 
     parallel_multiple_simulation(brain, &iter);
     rules_save_path_file("../data/rules_test.txt", brain);
     /* parallel_loop(); */
+    fprintf(stdout, "simulation fini: iter %d\n", iter);
     game_loop(brain, &iter);
     /* simulation_loop(brain, &iter); */
-    /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
     
     /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
 

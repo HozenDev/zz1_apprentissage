@@ -12,7 +12,7 @@
 #define NB_PREY 1
 #define NB_GAME_BACKGROUNDS 3
 
-#define PREDATOR_SPEED 3
+#define PREDATOR_SPEED 6
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
