@@ -487,9 +487,7 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
     {
         (*iter) ++;
         simulation_get_perception(predators, target);
-        if (*iter %1000 == 0)
-	    printf("iter %d\n", *iter);
-        
+
         for(i=0;i<NB_PREDATOR;i++)
         {
             /*init filtered_rules*/
@@ -503,4 +501,13 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
         /* execute action */
         for(i=0;i<NB_PREDATOR;i++) simulation_execute_action(&predators[i], action[i], predators, &target);
     }
+}
+
+
+void simulation_loop_average(rules_t brain[NB_RULES], int * iter)
+{
+    int sum =0, score;
+    simulation_loop(brain, &score);
+    sum += score;
+    *iter = (int) sum/NB_SIMULATION_LOOP;
 }

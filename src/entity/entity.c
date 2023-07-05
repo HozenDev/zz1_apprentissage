@@ -134,10 +134,10 @@ struct entity_sdl_s * entity_sdl_create(SDL_Renderer * renderer,
 
 void entity_initialize_target(struct target_s * t)
 {
-    /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
-    /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
-    t->x = 600;
-    t->y = 300;
+    t->x=(float)rand()/RAND_MAX*WORLD_WIDTH;
+    t->y=(float)rand()/RAND_MAX*WORLD_HEIGHT;
+    /*t->x = 600;
+    t->y = 300;*/
     t->pv = TARGET_PV;
 }
 

@@ -32,6 +32,8 @@
 #define TARGET_PV 1000
 #define ITER_MAX 50000
 
+#define NB_SIMULATION_LOOP 4
+
 /* RULES */
 #define NB_ACTION      6
 #define NB_PRIORITY    3

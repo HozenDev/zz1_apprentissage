@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     long int seed;
     struct rules_s brain[NB_RULES];
     int score;
-
+    (void) score;
     create_seed(&seed);
     
     enable_log(argc, argv);
@@ -41,14 +41,14 @@ int main(int argc, char *argv[])
     //game_loop(brain, &iter);
     /* simulation_loop(brain, &iter); */
     zlog(stdout, INFO, "simulation fini: iter %d", iter);
-    
-    //genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
 
-    resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", NULL, &score);
+    genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
+
+    /*resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", NULL, &score);
     zlog(stdout, DEBUG ,"descente geometrique score %d\n", score);
 
     resolution_recuis_simule(&utils_descente_lineaire, "../data/rules_test.txt", NULL, &score);
-    zlog(stdout, DEBUG ,"descente lineaire score %d\n", score);
+    zlog(stdout, DEBUG ,"descente lineaire score %d\n", score);*/
     
     return 0;
 }

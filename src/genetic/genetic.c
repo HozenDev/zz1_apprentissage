@@ -51,9 +51,9 @@ int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[PO
     int best_individu = INT_MAX;
     for (int i=0; i < POPULATION_SIZE; ++i)
     {
-	printf("evaluation score de l'individu %d\n", i);
+	zlog(stdout, INFO, "evaluation score de l'individu %d\n", i);
 	score[i] = genetic_evaluate_individu(population[i]);
-	printf("l'individu %d a un score de %d \n", i, score[i]);
+	zlog(stdout, INFO, "l'individu %d a un score de %d \n", i, score[i]);
 	if (score[i] < best_individu)
 	    best_individu = i;
     }
@@ -73,7 +73,8 @@ int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[PO
 int genetic_evaluate_individu(rules_t * individu)
 {
     int score = INT_MAX;
-    simulation_loop(individu, &score);
+    //simulation_loop(individu, &score);
+    simulation_loop_average(individu, &score);
     rules_save_file(stdout,individu);
     return score;
 }
@@ -196,7 +197,7 @@ void genetic_mutate(rules_t individu[NB_RULES])
 }
 
 
-void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // game en parametre pour evavaluate population , puis individu 
+void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // game en parametre pour evavaluate population, puis individu 
 {
     rules_t brain[NB_RULES];
     rules_read_path_file(path_brain_load, brain);
