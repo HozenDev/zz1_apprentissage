@@ -149,37 +149,39 @@ ch allows the function
 void genetic_mutate(rules_t individu[NB_RULES])
 {
     int i;
-    float p =(float) (rand() / RAND_MAX);
+    float p =(float) (rand()) / RAND_MAX;
+    float cum_p [NB_MEASURE +2];
+    cum_p[0] = MUTATION_RATE_DISTANCE_FRIEND;
+    cum_p[1] = cum_p[0] + MUTATION_RATE_DISTANCE_TARGET;
+    cum_p[2] = cum_p[1] + MUTATION_RATE_CARDINALITY_FRIEND;
+    cum_p[3] = cum_p[2] + MUTATION_RATE_CARDINALITY_TARGET;
+    cum_p[4] = cum_p[3] + MUTATION_RATE_ACTION;
+    cum_p[5] = cum_p[4] + MUTATION_RATE_ACTION;
+    
     for (i = 0; i < NB_RULES; i++)
-    {
-        if ( p < MUTATION_RATE_DISTANCE_FRIEND)
+    {	p =(float) (rand()) / RAND_MAX;
+        if ( p < cum_p[0])
 	{
-	    printf("PASSAGE 0\n");
 	    individu[i].perception.distance_friend = (rand()%NB_DISTANCE)-1;
         }
-	else if ((float) (rand() / RAND_MAX) < MUTATION_RATE_DISTANCE_TARGET)
+	else if (p < cum_p[1])
 	{
-	    printf("PASSAGE 1\n");
 	    individu[i].perception.distance_target = (rand()%NB_DISTANCE)-1;
         }
-	else if ((float) (rand() / RAND_MAX) < MUTATION_RATE_CARDINALITY_FRIEND)
+	else if (p < cum_p[2])
 	{
-	    printf("PASSAGE 2\n");
-	    individu[i].perception.cardinality_friend = (rand()%NB_CARDINALITY)-1;
+	    individu[i].perception.cardinality_friend = (rand()%(NB_CARDINALITY-1))-1;
         }
-	else if ((float) (rand() / RAND_MAX) < MUTATION_RATE_CARDINALITY_TARGET)
+	else if (p < cum_p[3])
 	{
-	    printf("PASSAGE 3\n");
 	    individu[i].perception.cardinality_target = (rand()%NB_CARDINALITY)-1 ;
         }
-	else if ((float) (rand() / RAND_MAX) < MUTATION_RATE_ACTION)
+	else if  (p < cum_p[4])
 	{
-	    printf("PASSAGE 4\n");
 	    individu[i].action = rand()%NB_ACTION;
 	}
-	else if ((float) (rand() / RAND_MAX) < MUTATION_RATE_PRIORITY)
+	else if  (p < cum_p[5])
 	{
-	    printf("PASSAGE 5\n");
 	    individu[i].priority = rand()%NB_PRIORITY;
 	}
     }
@@ -208,7 +210,8 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 	printf("Brain number %d\n",i);
 	rules_save_file(stdout, population[i]);
     }
-	
+    sleep(10);
+    
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 	if(iteration%2 == 0) // population forme new_population
 	{
