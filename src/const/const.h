@@ -16,7 +16,7 @@
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
-#define COM_RADIUS 100
+#define COM_RADIUS 50
 
 /* animation const */
 
@@ -38,6 +38,6 @@
 #define NB_DISTANCE    3
 #define NB_CARDINALITY 6
 #define NB_MEASURE     4   // size of measures
-#define NB_RULES       14  // number rules in brain (size of array_rules)
+#define NB_RULES       5  // number rules in brain (size of array_rules)
 
 #endif

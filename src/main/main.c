@@ -4,6 +4,7 @@
 #include "../rules/rules.h"
 #include "../genetic/genetic.h"
 #include "../simulation/simulation.h"
+#include "../parallel/parallel.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     rules_read_path_file("../data/rules_test.txt", brain);
     rules_save_file(stdout, brain);
 
+    /* parallel_loop(); */
     game_loop(brain);
     /* simulation_loop(brain, &iter); */
     /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */

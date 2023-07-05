@@ -346,7 +346,7 @@ int game_initialisation(game_t ** game)
     entity_initialize_target(&(*game)->state.prey);
     (*game)->state.prey.e_sdl
         = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, (float) PREY_SPEED);
-    entity_sdl_scale((*game)->state.prey.e_sdl, 0.004*SCREEN_HEIGHT);
+    /* entity_sdl_scale((*game)->state.prey.e_sdl, 0.004*SCREEN_HEIGHT); */
     (*game)->state.prey.e_sdl->r.x = (*game)->state.prey.x;
     (*game)->state.prey.e_sdl->r.y = (*game)->state.prey.y;
 
@@ -364,11 +364,10 @@ int game_initialisation(game_t ** game)
 
     for (i = 0; i < (*game)->state.nb_predator; ++i)
     {
-        entity_initialize(&(*game)->state.predators[i]);
+        entity_initialize(&(*game)->state.predators[i], SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
         (*game)->state.predators[i].e_sdl
             = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, PREY_SPEED);
-
-        entity_sdl_scale((*game)->state.predators[i].e_sdl, 0.004*SCREEN_HEIGHT);
+        /* entity_sdl_scale((*game)->state.predators[i].e_sdl, 0.004*SCREEN_HEIGHT); */
         (*game)->state.predators[i].e_sdl->r.x = 0;
         (*game)->state.predators[i].e_sdl->r.y = 0;
         entity_sdl_change_state((*game)->state.predators[i].e_sdl, WALK);
