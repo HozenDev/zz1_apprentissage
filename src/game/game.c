@@ -46,7 +46,7 @@ void game_keyboard_state_update(game_state_t * g_state)
  */
 void game_loop_state_update(game_state_t * g_state)
 {
-    int i, j;
+    int i, j,nb_compatible=0;
     
     simulation_get_perception(g_state->predators, g_state->prey);
 
@@ -55,9 +55,9 @@ void game_loop_state_update(game_state_t * g_state)
         /*init filtered_rules*/
         for(j=0;j<NB_RULES;j++) g_state->filtered_rules[j] = 0;
         /* filter rules */
-        simulation_filtrage_regle(g_state->predators[i], g_state->filtered_rules, g_state->brain);
+        nb_compatible=simulation_filtrage_regle(g_state->predators[i], g_state->filtered_rules, g_state->brain);
         /* choisis une action */
-        g_state->action[i] = simulation_choose_action(g_state->filtered_rules, g_state->brain);
+        g_state->action[i] = simulation_choose_action(g_state->filtered_rules, g_state->brain,nb_compatible);
     }
 
     /* execute action */
