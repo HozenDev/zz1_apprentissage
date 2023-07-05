@@ -393,7 +393,7 @@ int game_initialisation(game_t ** game)
  *
  * @return exit code: 0 success, != 0 failure
  */
-int game_loop(rules_t brain[NB_RULES])
+int game_loop(rules_t brain[NB_RULES], int * iter)
 {
     game_t * game = NULL;
     
@@ -407,6 +407,8 @@ int game_loop(rules_t brain[NB_RULES])
     /* Boucle de jeu */
     while (game->state.running == 1)
     {
+        (*iter)++;
+        
         /* Boucle d'évènements */
         while (SDL_PollEvent(event))
         {

@@ -137,7 +137,7 @@ void entity_initialize_target(struct target_s * t)
     /* target.x=(float)rand()/RAND_MAX*WORLD_WIDTH; */
     /* target.y=(float)rand()/RAND_MAX*WORLD_HEIGHT; */
     t->x = 600;
-    t->y = 200;
+    t->y = 300;
     t->pv = TARGET_PV;
 }
 

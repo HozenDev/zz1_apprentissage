@@ -35,14 +35,11 @@ int main(int argc, char *argv[])
     rules_save_file(stdout, brain);
 
     /* parallel_loop(); */
-    game_loop(brain);
+    game_loop(brain, &iter);
     /* simulation_loop(brain, &iter); */
-    /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
-
-
-    rules_save_file(stdout, brain);
+    zlog(stdout, INFO, "simulation fini: iter %d", iter);
     
-   genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
+    /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
     
     return 0;
 }

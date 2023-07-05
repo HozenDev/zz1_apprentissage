@@ -65,6 +65,6 @@ SDL_bool game_kill_mole(int x,int y,SDL_Rect mole);
 void game_graphic_update(game_t game);
 void game_mouse_state_update(game_state_t * g_state);
 int game_initialisation(game_t ** game);
-int game_loop(rules_t brain[NB_RULES]);
+int game_loop(rules_t brain[NB_RULES], int * iter);
 
 #endif
