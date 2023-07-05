@@ -12,7 +12,7 @@ void init_random_brain(rules_t * brain){
 void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char * path_brain_res, int * res)
 {
     /* paramètres */
-    float temperature = TEMP_DEP, espsilon = EPSILON;
+    float temperature = ITER_MAX, epsilon = EPSILON;
     int score_min = INT_MAX; 
     int score;
     
@@ -25,10 +25,13 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     /* genere l'aleatoire*/
     generate_seed(0);
 
+    simulation_loop(brain, &score_min);
     
     /* recuit simulé */
-    while (temperature > espsilon)
+    while (temperature > epsilon)
     {
+	printf("TEMPERATURE %f > EPS %f", temperature, epsilon);
+	printf("Score_min = %d\n", score_min);
         /* generation voisin*/
         rules_copy_brain(brain, new_brain);
 	
@@ -36,15 +39,17 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
 
         /* fait jouer new*/
 	simulation_loop(new_brain, &score);
-      
+
         /* comparaison ou proba*/
         if(score_min > score || rand()/RAND_MAX< exp(-abs((score-score_min))/temperature))
            // to do compare time and test if score is maximal
         {
             rules_copy_brain(new_brain, brain);
             score_min=score;
+	    printf("Trouver un meilleur cerveau\n");
+	    rules_save_file(stdout, brain);
+	    sleep(10);
         }
-
         /*modification temperature*/
         temperature=pf(temperature);
     }

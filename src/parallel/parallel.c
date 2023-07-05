@@ -30,8 +30,7 @@ int parallel_treatment_genetique(void * parameters)
     float result = 0.0;
     
     begin = clock();
-    /* genetic_solve_brain(tdata->brain, tdata->iteration); */
-    tdata->iteration = rand()%10;
+    genetic_solve_brain(tdata->brain, &tdata->iteration);
     end = clock();
     millis = (end -  begin) * 1000 / CLOCKS_PER_SEC;
     zlog(stdout, INFO, "GENETIC SOLVE: %f - Finished in %ld ms", result, millis);
@@ -116,19 +115,29 @@ void parallel_multiple_simulation(rules_t brain[NB_RULES], int * iter_average)
     int error_code_of_thread[NB_THREADS];
     int min = ITER_MAX;
     float mean = 0.0;
-    int i;
+    int i, i_min;
     int (*fres) (void *) = NULL;
 
     fres = parallel_treatment_genetique;
-    
-    for (i = 0; i < NB_THREADS; ++i) thrd_create(&threads[i], *fres, (void *)&tdata[i]);
+
+    for (i = 0; i < NB_THREADS; ++i)
+    {
+        rules_copy_brain(brain, tdata[i].brain);
+        thrd_create(&threads[i], *fres, (void *)&tdata[i]);   
+    }
     for (i = 0; i < NB_THREADS; ++i) thrd_join(threads[i], &error_code_of_thread[i]);
 
     for (i = 0; i < NB_THREADS; ++i) {
-        if (tdata[i].iteration < min)
+        if (tdata[i].iteration < min) {
             min = tdata[i].iteration;
+            i_min = i;
+        }
         mean += tdata[i].iteration;
     }
+
     mean /= NB_THREADS;
     zlog(stdout, INFO, "Itération minimum: %d - Moyenne des itérations: %f", min, mean);
+    *iter_average = mean;
+
+    rules_copy_brain(tdata[i_min].brain, brain);
 }

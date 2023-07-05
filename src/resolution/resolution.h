@@ -15,4 +15,7 @@
 void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char * path_brain_res, int * score);
 void resolution_random_change(rules_t brain[NB_RULES]);
 
+void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret);
+
+void init_random_brain(rules_t * brain);
 #endif

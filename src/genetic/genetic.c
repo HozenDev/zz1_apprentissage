@@ -24,6 +24,16 @@ void genetic_initialize_population(char * path_brain, rules_t population[POPULAT
 }
 
 
+void genetic_initialize_population_brain(rules_t brain[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES])
+{
+    rules_copy_brain(brain, population[0]);
+    for (int i=1; i < POPULATION_SIZE; ++i)
+    {
+	rules_copy_brain(population[0],population[i]);
+	genetic_mutate(population[i]);
+    }
+}
+
 /**
  * @brief Evaluates the fitness of each individual in the population and returns the index of the best individual.
  *
@@ -188,14 +198,23 @@ void genetic_mutate(rules_t individu[NB_RULES])
 
 void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // game en parametre pour evavaluate population , puis individu 
 {
+    rules_t brain[NB_RULES];
+    rules_read_path_file(path_brain_load, brain);
+    genetic_solve_brain(brain, NULL);
+    rules_save_path_file(path_best_brain, brain);
+}
+
+
+void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // game en parametre pour evavaluate population , puis individu 
+{
     rules_t population     [POPULATION_SIZE][NB_RULES];
     rules_t new_population [POPULATION_SIZE][NB_RULES];
     int score[POPULATION_SIZE] = {0}; 
     
     int iteration = 0 , index_best_individu = 0, p1, p2;
     
-    genetic_initialize_population(path_brain_load, population);
-    genetic_initialize_population(path_brain_load, new_population);
+    genetic_initialize_population_brain(brain, population);
+    genetic_initialize_population_brain(brain, new_population);
     
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 	if(iteration%2 == 0) // population forme new_population
@@ -246,6 +265,8 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
     
     // saivegarde meillleur individu
     (iteration%2==0)?
-      rules_save_path_file(path_best_brain, population[0]):
-      rules_save_path_file(path_best_brain, new_population[0]);
+	rules_copy_brain(brain, population[0]):
+	rules_copy_brain(brain, new_population[0]);
+
+    *score_best_brain = score[0];
 }
