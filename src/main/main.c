@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     long int seed;
     struct rules_s brain[NB_RULES];
     int score;
-
+    (void) score;
     create_seed(&seed);
     
     enable_log(argc, argv);
