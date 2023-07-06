@@ -465,7 +465,15 @@ void simulation_init(entity_t predators[NB_PREDATOR], target_t * target)
     int i;
     entity_initialize_target(target);
     for(i=0;i<NB_PREDATOR;i++)
-        entity_initialize(&predators[i], WORLD_WIDTH/2, WORLD_HEIGHT/2, NULL);
+    {
+        /* entity_initialize(&predators[i], WORLD_WIDTH/2, WORLD_HEIGHT/2, NULL); */
+        /* entity_even_distribution_init(&predators[i], i, NULL); */
+        /* entity_all_centered_distribution_init(&predators[i], NULL); */
+        /* entity_random_distribution_init(&predators[i], NULL); */
+        /* entity_horizontal_distribution_init(&predators[i], NULL); */
+        /* entity_vertical_distribution_init(&predators[i], NULL); */
+        entity_vertical_even_distribution_init(&predators[i], i, NULL);
+    }
 }
 
 

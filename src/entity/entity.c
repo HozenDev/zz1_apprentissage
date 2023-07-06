@@ -250,6 +250,21 @@ void entity_horizontal_distribution_init(struct entity_s *e ,entity_sdl_t * e_sd
     e->e_sdl = e_sdl;
 }
 
+void entity_vertical_even_distribution_init(struct entity_s *e, int i, entity_sdl_t * e_sdl)
+{
+    e->x = 0;
+    e->y = i*SCREEN_HEIGHT/NB_PREDATOR;
+    
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+
 void entity_vertical_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
 {
     e->x=SCREEN_WIDTH*0.5;

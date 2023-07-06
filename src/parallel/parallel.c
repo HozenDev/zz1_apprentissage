@@ -26,7 +26,8 @@ int parallel_treatment_genetique(void * parameters)
     clock_t begin;
     clock_t end;
     float result = 0.0;
-    
+
+    zlog(stdout, INFO, "Threads launched", 0);
     begin = clock();
     genetic_solve_brain(tdata->brain, &tdata->iteration);
     end = clock();
@@ -118,6 +119,8 @@ void parallel_multiple_simulation(rules_t brain[NB_RULES], int * iter_average)
 
     fres = parallel_treatment_genetique;
 
+    zlog(stdout, INFO, "Simulation parallele lancé sur %d threads", NB_THREADS);
+    
     for (i = 0; i < NB_THREADS; ++i)
     {
         rules_copy_brain(brain, tdata[i].brain);
