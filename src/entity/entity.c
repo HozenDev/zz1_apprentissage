@@ -285,7 +285,7 @@ void entity_random_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
  * @param e        A pointer to the entity structure to be initialized.
  * @param e_sdl    A pointer to the entity's SDL structure.
  */
-void enitity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
+void entity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
 {
     e->x=SCREEN_WIDTH/2;
     e->y=SCREEN_HEIGHT/2;
