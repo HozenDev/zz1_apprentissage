@@ -127,7 +127,7 @@ struct sprite_s * animation_spritesheet_from_file(SDL_Renderer * renderer, char 
     }
 
     /* copie du nom du sprite */
-    strncpy(s->name, fname, n_fname);
+    strncpy(s->name, fname, n_fname-1);
 
     if (renderer)
     {

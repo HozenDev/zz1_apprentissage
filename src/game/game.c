@@ -267,13 +267,12 @@ void game_state_reset(game_state_t * g_state)
     g_state->delay = GAME_DELAY;
     /* g_state->print_radius = 0; */
 
-    for (i = 0; i < NB_RULES; ++i) {
-        g_state->action[i] = 0;
-        g_state->filtered_rules[i] = 0;
-    }
+    for (i = 0; i < NB_PREDATOR; ++i) g_state->action[i] = 0;
+    for (i = 0; i < NB_RULES; ++i) g_state->filtered_rules[i] = 0;
 
     for (i = 0; i < NB_PREDATOR; ++i) {
         entity_initialize(&g_state->predators[i], (float)(rand())/RAND_MAX*SCREEN_WIDTH, SCREEN_HEIGHT/2, g_state->predators[i].e_sdl);
+        /* entity_initialize(&g_state->predators[i], 100, (float)(rand())/RAND_MAX*SCREEN_HEIGHT, g_state->predators[i].e_sdl); */
         g_state->predators[i].e_sdl->is_in_animation = 0;
         entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
     }
@@ -347,8 +346,11 @@ int game_initialisation(game_t ** game)
     (*game)->state.print_radius = 0;
     (*game)->state.back = NULL;
 
-    for (i = 0; i < NB_RULES; ++i) {
+    for (i = 0; i < NB_PREDATOR; ++i) {
         (*game)->state.action[i] = 0;
+    }
+    
+    for (i = 0; i < NB_RULES; ++i) {
         (*game)->state.filtered_rules[i] = 0;
     }
 

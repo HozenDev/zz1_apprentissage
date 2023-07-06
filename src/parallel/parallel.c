@@ -113,7 +113,7 @@ void parallel_multiple_simulation(rules_t brain[NB_RULES], int * iter_average)
     int error_code_of_thread[NB_THREADS];
     int min = ITER_MAX;
     float mean = 0.0;
-    int i, i_min;
+    int i, i_min = 0;
     int (*fres) (void *) = NULL;
 
     fres = parallel_treatment_genetique;
