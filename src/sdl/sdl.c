@@ -168,7 +168,7 @@ void sdl_draw_circle_filled(SDL_Renderer *renderer, int x, int y, int radius)
 
 void sdl_draw_diamond(SDL_Renderer * renderer, int center_x, int center_y, int radius, SDL_Color c)
 {
-    /*
+
     SDL_Vertex trisup[3] =
         {
             {
@@ -208,7 +208,6 @@ void sdl_draw_diamond(SDL_Renderer * renderer, int center_x, int center_y, int r
 
     if( SDL_RenderGeometry(renderer, NULL, trisup, 3, NULL, 0) < 0 ) {SDL_Log("%s\n", SDL_GetError());}
     if( SDL_RenderGeometry(renderer, NULL, triinf, 3, NULL, 0) < 0 ) {SDL_Log("%s\n", SDL_GetError());}
-    */
 }
 
 
