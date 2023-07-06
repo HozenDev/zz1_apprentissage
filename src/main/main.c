@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     game_loop(brain, &iter);
     /* simulation_loop(brain, &iter); */
     
-    /* genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt"); */
+    //genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
 
     /* resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", "../data/rules_recuis_geometrique.txt", &score); */
     /* zlog(stdout, DEBUG ,"descente geometrique score %d\n", score); */
