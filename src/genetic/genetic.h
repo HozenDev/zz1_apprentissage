@@ -11,10 +11,11 @@
 #include "../rules/rules.h"
 #include "../const/const.h"
 #include "../simulation/simulation.h"
+#include "../resolution/resolution.h"
 
 #define MAX_ITERATIONS  3
 #define POPULATION_SIZE 20
-#define MUTATION_RATE          0.1
+#define MUTATION_RATE 0.05
 #define MUTATION_RATE_DISTANCE_FRIEND     0.03
 #define MUTATION_RATE_DISTANCE_TARGET     0.03
 #define MUTATION_RATE_CARDINALITY_FRIEND  0.03

@@ -60,7 +60,7 @@ void simulation_communicate(entity_t predator, entity_t predators[NB_PREDATOR])
     {
         for (i = 0; i < NB_PREDATOR; ++i)
         {
-            if (simulation_get_distance_between_2_predator(predator, predators[i]) < 2*COM_RADIUS)
+            if (simulation_get_distance_between_2_predator(predator, predators[i]) < COM_RADIUS)
             {
                 predators[i].p.cardinality_target = predator.p.cardinality_target;
             }
@@ -181,7 +181,7 @@ void simulation_get_closest_friend(entity_t * predators)
             if(i!=j)
             {
                 dist = simulation_get_distance_between_2_predator(predators[i], predators[j]);
-                if(dist<distmin)
+                if(dist < distmin)
                 {
                     distmin=dist;
                     friend=j;
@@ -191,7 +191,7 @@ void simulation_get_closest_friend(entity_t * predators)
         predators[i].p.cardinality_friend =
             simulation_get_cardinals(predators[i].x, predators[i].y, predators[friend].x, predators[friend].y);
         predators[i].p.distance_friend =
-            simulation_get_distance(distmin);
+            simulation_get_distance(distmin, 2*COM_RADIUS);
     }
 }
 
@@ -211,14 +211,12 @@ void simulation_get_closest_friend(entity_t * predators)
  * @note The function assumes that the `distance` enum and the `COM_RADIUS` constant are
  * defined and accessible within the scope of this function.
  */
-enum distance simulation_get_distance(int dsrc)
+enum distance simulation_get_distance(int dsrc, int radius)
 {
-    enum distance dist=FAR;
-    if (dsrc <= COM_RADIUS) dist=CLOSE;
-    else dist=FAR;
+    enum distance dist = FAR;
+    if (dsrc <= radius) dist = CLOSE;
     return dist;
 }
-
 
 /**
  * @brief Determines the perception of each predator in the simulation.
@@ -246,12 +244,12 @@ void simulation_get_perception(entity_t * predators, target_t target)
     for(i=0;i<NB_PREDATOR;i++)
     {
         if(predators[i].p.cardinality_target != NOT_FOUND
-           || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y)) == CLOSE)
+           || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y), 2*COM_RADIUS) == CLOSE)
         {
             predators[i].p.cardinality_target =
-                simulation_get_cardinals(predators[i].x,predators[i].y, target.x,target.y);
+                simulation_get_cardinals(predators[i].x, predators[i].y, target.x, target.y);
             predators[i].p.distance_target =
-                simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y));
+                simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y), DESTROY_RADIUS);
         }
     }
 }
@@ -374,8 +372,8 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     int action=-1;
     int j;
     float p=(float) rand()/(RAND_MAX) ;
-
     float probability[NB_RULES]={0};
+
     utils_shuffle(filtered_rules,nb_compatible);
     for(j=0;j<nb_compatible;j++)
     {
@@ -386,7 +384,7 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     
     for(j=0;j<nb_compatible;j++) {
             cumulativeProbability += probability[filtered_rules[j]]/sum;
-            if(p< cumulativeProbability){
+            if(p < cumulativeProbability){
                 action = brain[filtered_rules[j]].action;
                 break;
             }
@@ -494,6 +492,7 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
             for(j=0;j<NB_RULES;j++) filtered_rules[j]=0;
             /* filter rules */
             nb_compatible=simulation_filtrage_regle(predators[i], filtered_rules, brain);
+            
             /* choisis une action */
             action[i] = simulation_choose_action(filtered_rules,brain,nb_compatible);
             

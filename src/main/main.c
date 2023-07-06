@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
         {
             rules_read_path_file("../data/rules_test.txt", brain);
             rules_save_file(stdout, brain);
+            /* genetic_solve_brain(brain, &iter); */
             //parallel_multiple_simulation(brain, &iter);
             rules_save_path_file("../data/rules_test.txt", brain);
             rules_save_file(stdout, brain);
@@ -43,20 +44,16 @@ int main(int argc, char *argv[])
     if (save) save_seed(seed);
 
     srand(seed);
-    
-    rules_read_path_file("../data/hand_rules.txt", brain);
-    //rules_save_file(stdout, brain);
 
-    //parallel_multiple_simulation(brain, &iter);
-    //rules_save_path_file("../data/rules_glouton.txt", brain);
+    /* fprintf(stdout, "simulation fini: iter %d\n", iter); */
+
     /* parallel_loop(); */
-    //resolution_gloutone_aleatoire(brain, &iter); 
-    /* zlog(stdout, INFO, "simulation fini: iter %d", iter); */
+    game_loop(brain, &iter);
+    /* simulation_loop(brain, &iter); */
     
     //genetic_solve_optimized("../data/rules_test.txt", "../data/best_brain_genetic.txt");
 
     //resolution_recuis_simule(&utils_descente_geometrique, "../data/rules_test.txt", "../data/rules_recuis_geometrique.txt", &score);
-    game_loop(brain, &iter);
 
 
     /* resolution_recuis_simule(&utils_descente_lineaire, "../data/rules_test.txt", NULL, &score); */
