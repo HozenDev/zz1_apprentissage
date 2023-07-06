@@ -191,8 +191,36 @@ void entity_initialize(struct entity_s * e, int x, int y, entity_sdl_t * e_sdl)
 }
 void entity_even_distribution_init(struct entity_s *e ,int i,entity_sdl_t * e_sdl)
 {
-    e->x=SCREEN_WIDTH*(i%2+1)/(NB_PREDATOR/2+1),
+    e->x=SCREEN_WIDTH*(i%2+1)/(NB_PREDATOR/2+1);
     e->y=SCREEN_HEIGHT*(3*(i%2)+1)/5;
+
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+void entity_random_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
+{
+    e->x=(float )(rand())/RAND_MAX*SCREEN_WIDTH;
+    e->y=SCREEN_HEIGHT*(float)(rand())/RAND_MAX;
+    
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+void enitity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
+{
+    e->x=SCREEN_WIDTH/2;
+    e->y=SCREEN_HEIGHT/2;
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
