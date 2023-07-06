@@ -29,7 +29,7 @@ void genetic_initialize_population_brain(rules_t brain[NB_RULES], rules_t popula
     rules_copy_brain(brain, population[0]);
     for (int i=1; i < POPULATION_SIZE; ++i)
     {
-	rules_copy_brain(population[0],population[i]);
+	rules_copy_brain(population[0], population[i]);
 	genetic_mutate(population[i]);
     }
 }
@@ -49,15 +49,19 @@ void genetic_initialize_population_brain(rules_t brain[NB_RULES], rules_t popula
 int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[POPULATION_SIZE][NB_RULES])
 {
     int best_individu = INT_MAX;
+    int index_best_individu = 0;
     for (int i=0; i < POPULATION_SIZE; ++i)
     {
 	zlog(stdout, INFO, "evaluation score de l'individu %d\n", i);
 	score[i] = genetic_evaluate_individu(population[i]);
 	zlog(stdout, INFO, "l'individu %d a un score de %d \n", i, score[i]);
 	if (score[i] < best_individu)
-	    best_individu = i;
+        {
+            best_individu = score[i];
+            index_best_individu = i;    
+        }
     }
-    return best_individu;
+    return index_best_individu;
 }
 
 /**
@@ -223,7 +227,7 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 	if(iteration%2 == 0) // population forme new_population
 	{
 	    index_best_individu = genetic_evaluate_population(score, population);
-	    rules_copy_brain_genetic(population[index_best_individu], new_population[0]);
+	    rules_copy_brain(population[index_best_individu], new_population[0]);
 
             // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
@@ -244,7 +248,7 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 	else // new_populaiton forme population
 	{
 	    index_best_individu = genetic_evaluate_population(score, new_population);
-	    rules_copy_brain_genetic(new_population[index_best_individu], population[0]);
+	    rules_copy_brain(new_population[index_best_individu], population[0]);
 
 	    // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
@@ -258,18 +262,20 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 		}
 		else
 		{
-		    rules_copy_brain_genetic(new_population[0], population[i]);
+		    rules_copy_brain(new_population[0], population[i]);
 		    genetic_mutate(population[i]);
 		}
 	    }
 	}
 	++ iteration;
     }
+
+    zlog(stdout, INFO, "best index : %d", index_best_individu);
     
     /* sauvegarde meillleur individu */
     (iteration%2==0)?
-	rules_copy_brain(population[0], brain):
-	rules_copy_brain(new_population[0], brain);
+	rules_copy_brain(new_population[0], brain):
+	rules_copy_brain(population[0], brain);
 
     *score_best_brain = score[0];
 }

@@ -8,7 +8,7 @@
 
 #define GAME_DELAY 10
 
-#define NB_PREDATOR 10
+#define NB_PREDATOR 8
 #define NB_PREY 1
 #define NB_GAME_BACKGROUNDS 3
 
@@ -30,7 +30,7 @@
 #define S_POWER 2
 
 #define TARGET_PV 1000
-#define ITER_MAX 10000
+#define ITER_MAX 3000
 
 #define NB_SIMULATION_LOOP 100
 
