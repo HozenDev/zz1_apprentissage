@@ -213,7 +213,7 @@ void simulation_get_closest_friend(entity_t * predators)
  */
 enum distance simulation_get_distance(int dsrc)
 {
-    enum distance dist=CLOSE;
+    enum distance dist=FAR;
     if (dsrc <= COM_RADIUS) dist=CLOSE;
     else dist=FAR;
     return dist;
@@ -249,7 +249,7 @@ void simulation_get_perception(entity_t * predators, target_t target)
            || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y)) == CLOSE)
         {
             predators[i].p.cardinality_target =
-                simulation_get_cardinals(predators[i].x, target.x, predators[i].y,target.y);
+                simulation_get_cardinals(predators[i].x,predators[i].y, target.x,target.y);
             predators[i].p.distance_target =
                 simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y));
         }

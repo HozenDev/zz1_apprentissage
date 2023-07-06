@@ -8,7 +8,7 @@
 
 #define GAME_DELAY 10
 
-#define NB_PREDATOR 8
+#define NB_PREDATOR 12
 #define NB_PREY 1
 #define NB_GAME_BACKGROUNDS 3
 
