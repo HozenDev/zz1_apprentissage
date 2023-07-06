@@ -32,3 +32,12 @@
 !/data/rules
 /data/rules/*
 !/data/rules/rules_*.txt
+
+# doc file
+!/doc
+/doc/*
+!/doc/Doxyfile
+!/doc/readme.md
+!/doc/html
+/doc/html/*
+!/doc/html/index.html

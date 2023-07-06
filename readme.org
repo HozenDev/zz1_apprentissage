@@ -1,1 +1,99 @@
 * Jeu par apprentissage de règles
+** Résumé
+
+Le projet se décompose en deux phases, correspondant chacune approximativement à une semaine de travail. La première phase est commune à tous les groupes et met en place des outils permettant de manipuler des images et d’interagir avec l’utilisateur. Cette phase est ponctuée de petits exercices assez libres où vous devrez démontrer votre maîtrise des points abordés en individuel et se termine par la création d’un petit jeu.
+
+La seconde phase, plus spécifique à chaque groupe, consiste à réinvestir les acquis de la première phase afin de créer un prototype de votre propre « jeu vidéo » respectant la thématique du projet.
+
+** Pour commencer
+*** Pré-requis :
+**** C (standard)
+
+    Liste des bibliothèques utilisées :
+    - =stdio.h=
+    - =stdlib.h=
+    - =threads.h=
+    - =string.h=
+    - =math.h=
+    - =dirent.h=
+    - =stdarg.h=
+    - =stdbool.h=
+    - =float.h=
+    - =limits.h=
+    - =unistd.h=
+    - =time.h=
+    - =errno.h=
+
+    Liste des bibliothèques tierces:
+    - =SDL2/SDL.h=
+    - =SDL2/SDL_image.h=
+    - =SDL2/SDL_ttf.h=
+
+
+    Installation SDL2:
+
+    #+begin_src bash
+      git clone https://github.com/libsdl-org/SDL.git -b SDL2
+      cd SDL
+      mkdir build
+      cd build
+      ../configure
+      make
+      sudo make install
+    #+end_src
+    
+** Démarrage
+*** Linux
+**** Seance 3
+
+#+begin_src shell
+  cd build
+  make -Bj
+  ./app
+#+end_src
+
+Liste des arguments:
+
+Premier Argument:
+=-l= : activer tout les logs
+=-d= : activer tout les logs sauf les debugs
+=-n= : aucun log d'activer
+
+Deuxième Argument
+=--parallel= : lancer une simulation parallèle (défaut: 8 threads)
+=--load= : lancer avec le chargement de la dernière seed sauvegardée
+
+*** Windows
+
+Aucune compabilité garantie
+
+** Outils
+
+- Emacs
+- GDB
+- Valgrind
+- Doxygen
+- VSCode
+
+** Versions
+
+*Dernière version stable :* 1.0
+
+*Dernière version :* 1.0
+
+[[../../tags][Liste des versions]]
+
+** Auteurs
+*** Responsable de projet
+
+- DANIEL Yves-Jean
+
+*** Equipe de développement
+      
+- DUREL Enzo
+- LEROY Louis
+- VILLEPREUX Thibault
+
+** Licence
+
+Le projet est *open-source*
