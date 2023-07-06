@@ -2,10 +2,13 @@
 
 void init_random_brain(rules_t * brain){
     for(int i=0;i<NB_RULES;i++){
-        brain[i].perception.distance_friend=rand()%NB_DISTANCE - 1;
+        brain[i].perception.distance_friend=(rand()%NB_DISTANCE) - 1;
         brain[i].perception.cardinality_friend=rand()%(NB_CARDINALITY-1) - 1;
         brain[i].perception.distance_target=rand()%NB_DISTANCE - 1;
         brain[i].perception.cardinality_target=rand()%NB_CARDINALITY - 1;
+        brain[i].action=rand()%NB_ACTION ;
+        brain[i].priority=rand()%NB_PRIORITY ;
+
     }
 }
 
@@ -99,13 +102,19 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
     utils_shuffle(parcours,NB_RULES*(NB_MEASURE + 2));
 
     init_random_brain(brain);
-
+    rules_save_file(stdout,brain);
     rules_copy_brain(brain, new);
+    for (int k=0;k<100;k++)
+    {
+        utils_shuffle(parcours,NB_RULES*(NB_MEASURE + 2));
 
+    
     for(int i=0;i<NB_RULES*(NB_MEASURE + 2);i++)
     {
-        itermin=ITER_MAX;
-        best_j=0;
+        rules_copy_brain(brain, new);
+
+    
+        best_j=-2;
         indice_rule=parcours[i]/6;
         switch(parcours[i]%6)
         {
@@ -113,13 +122,13 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                 for(j=0;j<NB_DISTANCE;j++){
                     iter=0;
                     new[indice_rule].perception.distance_friend=j-1;
-                    simulation_loop(new,&iter);
+                    simulation_loop_average(new,&iter);
                     if(iter<itermin)
                     {
                         itermin=iter;
                         best_j=j-1;
                     }
-                    new[indice_rule].perception.distance_friend=best_j;
+                    if(best_j!=-2) brain[indice_rule].perception.distance_friend=best_j;
 
                 }
                 break;
@@ -128,13 +137,13 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                 {
                     iter=0;
                     new[indice_rule].perception.cardinality_friend=j-1;
-                    simulation_loop(new,&iter);
+                    simulation_loop_average(new,&iter);
                     if(iter<itermin)
                     {
                         itermin=iter;
                         best_j=j-1;
                     }
-                    new[indice_rule].perception.cardinality_friend=best_j;
+                    if(best_j!=-2)brain[indice_rule].perception.cardinality_friend=best_j;
 
                 }
                 break;
@@ -142,14 +151,14 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                 for(j=0;j<NB_DISTANCE;j++){
                     iter=0;
                     new[indice_rule].perception.distance_target=j-1;
-                    simulation_loop(new,&iter);
+                    simulation_loop_average(new,&iter);
                     if(iter<itermin)
                     {
                         itermin=iter;
                         best_j=j-1;
 
                     }
-                    new[indice_rule].perception.distance_target=best_j;
+                    if(best_j!=-2) brain[indice_rule].perception.distance_target=best_j;
                 }
                 break;
 
@@ -158,43 +167,48 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                 {
                     iter=0;
                     new[indice_rule].perception.cardinality_target=j-1;
-                    simulation_loop(new,&iter);
+                    simulation_loop_average(new,&iter);
                     if(iter<itermin)
                     {
                         itermin=iter;
                         best_j=j-1;
                     }
+                    if(best_j!=-2) brain[indice_rule].perception.cardinality_target=best_j;
+
                 }
                 break;
             case 4:
                 for(j=0;j<NB_ACTION;j++){
                     iter=0;
                     new[indice_rule].action=j;
-                    simulation_loop(new,&iter);
+                    simulation_loop_average(new,&iter);
                     if(iter<itermin)
                     {
                         itermin=iter;
                         best_j=j;
                     }
-                    new[indice_rule].action=best_j;
+                    if(best_j!=-2) brain[indice_rule].action=best_j;
                 }
                 break;
             case 5:
                 for(j=0;j<NB_PRIORITY;j++){
                     iter=0;
                     new[indice_rule].priority=j;
-                    simulation_loop(new,&iter);
+                    simulation_loop_average(new,&iter);
                     if(iter<itermin)
                     {
                         itermin=iter;
                         best_j=j;
                     }
-                    new[indice_rule].priority=best_j;
+                    if(best_j!=-2) brain[indice_rule].priority=best_j;
                 }
                 break;
         }
-        rules_copy_brain(new, brain);
-
+        
+        zlog(stdout ,DEBUG,"%d iter",iter)
         *iterret=itermin;
+    }
+    rules_save_path_file_a("../data/rules_glouton.txt", brain,*iterret,k);
+    printf("%d\n",k);
     }
 }

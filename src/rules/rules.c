@@ -44,6 +44,25 @@ void rules_save_path_file(char * path_file, rules_t array_rules[NB_RULES])
     }
 }
 
+void rules_save_path_file_a(char * path_file, rules_t array_rules[NB_RULES],int iter,int k)
+{
+    FILE * file;
+    if (path_file == NULL)   rules_save_file(stdout, array_rules);
+    else
+    {
+	file = fopen(path_file, "a");
+	
+	if (NULL == file)
+	{
+	    zlog(stderr, ERROR, "Erreur open path_file, code error of errno %d", errno);
+	    return;
+	}
+	fprintf(file,"\niter:%d,en %d iter\n",k,iter);
+	rules_save_file(file, array_rules);
+	fclose(file);
+    }
+}
+
 /**
  * @brief Allows you to retrieve the rules structure in a path_file
  *       

@@ -371,7 +371,7 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     float sum=0.0;
     float cumulativeProbability=0.0;
     float res_pow = 0.0;
-    int action=0;
+    int action=-1;
     int j;
     float p=(float) rand()/(RAND_MAX) ;
 
