@@ -13,7 +13,7 @@
 #include "../simulation/simulation.h"
 #include "../resolution/resolution.h"
 
-#define MAX_ITERATIONS  3
+#define MAX_ITERATIONS  5
 #define POPULATION_SIZE 20
 #define MUTATION_RATE 0.05
 #define MUTATION_RATE_DISTANCE_FRIEND     0.03
