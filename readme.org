@@ -99,3 +99,7 @@ Aucune compabilité garantie
 ** Licence
 
 Le projet est *open-source*
+
+** Documentation
+
+Lien vers la documentation: https://perso.isima.fr/~endurel/zz1/projet/doc_pp/html/index.html

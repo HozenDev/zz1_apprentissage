@@ -1,27 +1,28 @@
 
 # Table of Contents
 
-1.  [Jeu par apprentissage de règles](#org50c7a60)
-    1.  [Résumé](#org73bfdbe)
-    2.  [Pour commencer](#org79532b9)
-        1.  [Pré-requis :](#org6263a46)
-    3.  [Démarrage](#org13c4b41)
-        1.  [Linux](#orgf4db39c)
-        2.  [Windows](#org3abf490)
-    4.  [Outils](#org30bd0d9)
-    5.  [Versions](#org6e70555)
-    6.  [Auteurs](#orga84cf8e)
-        1.  [Responsable de projet](#org4bb725f)
-        2.  [Equipe de développement](#org9e313f9)
-    7.  [Licence](#org49927dd)
+1.  [Jeu par apprentissage de règles](#org6c90627)
+    1.  [Résumé](#org8ddccd5)
+    2.  [Pour commencer](#org6c97ad5)
+        1.  [Pré-requis :](#orge360b62)
+    3.  [Démarrage](#org16a8225)
+        1.  [Linux](#org7820482)
+        2.  [Windows](#org545fc2c)
+    4.  [Outils](#org26ae861)
+    5.  [Versions](#orgadb71ec)
+    6.  [Auteurs](#org482fbb3)
+        1.  [Responsable de projet](#org3f89df5)
+        2.  [Equipe de développement](#org4a37a64)
+    7.  [Licence](#org953648e)
+    8.  [Documentation](#org03cb309)
 
 
-<a id="org50c7a60"></a>
+<a id="org6c90627"></a>
 
 # Jeu par apprentissage de règles
 
 
-<a id="org73bfdbe"></a>
+<a id="org8ddccd5"></a>
 
 ## Résumé
 
@@ -32,12 +33,12 @@ Un monde : par exemple une grille à maille rectangulaire, avec ou sans quelques
 Dans une version à peine étendue, on retrouve le jeu PACMAN, mais on peut rentrer dans ce cadre aussi bien un jeu de raquettes (la balle est la proie, le prédateur la raquette), un shooter, … que des simulations environnementales ou économiques.
 
 
-<a id="org79532b9"></a>
+<a id="org6c97ad5"></a>
 
 ## Pour commencer
 
 
-<a id="org6263a46"></a>
+<a id="orge360b62"></a>
 
 ### Pré-requis :
 
@@ -76,12 +77,12 @@ Dans une version à peine étendue, on retrouve le jeu PACMAN, mais on peut rent
         sudo make install
 
 
-<a id="org13c4b41"></a>
+<a id="org16a8225"></a>
 
 ## Démarrage
 
 
-<a id="orgf4db39c"></a>
+<a id="org7820482"></a>
 
 ### Linux
 
@@ -103,14 +104,14 @@ Dans une version à peine étendue, on retrouve le jeu PACMAN, mais on peut rent
     `--load` : lancer avec le chargement de la dernière seed sauvegardée
 
 
-<a id="org3abf490"></a>
+<a id="org545fc2c"></a>
 
 ### Windows
 
 Aucune compabilité garantie
 
 
-<a id="org30bd0d9"></a>
+<a id="org26ae861"></a>
 
 ## Outils
 
@@ -121,7 +122,7 @@ Aucune compabilité garantie
 -   VSCode
 
 
-<a id="org6e70555"></a>
+<a id="orgadb71ec"></a>
 
 ## Versions
 
@@ -132,19 +133,19 @@ Aucune compabilité garantie
 [Liste des versions](../../tags)
 
 
-<a id="orga84cf8e"></a>
+<a id="org482fbb3"></a>
 
 ## Auteurs
 
 
-<a id="org4bb725f"></a>
+<a id="org3f89df5"></a>
 
 ### Responsable de projet
 
 -   DANIEL Yves-Jean
 
 
-<a id="org9e313f9"></a>
+<a id="org4a37a64"></a>
 
 ### Equipe de développement
 
@@ -153,9 +154,16 @@ Aucune compabilité garantie
 -   VILLEPREUX Thibault
 
 
-<a id="org49927dd"></a>
+<a id="org953648e"></a>
 
 ## Licence
 
 Le projet est **open-source**
+
+
+<a id="org03cb309"></a>
+
+## Documentation
+
+Lien vers la documentation: <https://perso.isima.fr/~endurel/zz1/projet/doc_pp/html/index.html>
 
