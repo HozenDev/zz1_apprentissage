@@ -55,7 +55,7 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     /* recuit simulé */
     while (temperature > epsilon)
     {
-	zlog(stdout, INFO, "temperature %f epsilon %f\n", temperature, epsilon);
+	zlog(stdout, DEBUG, "Temperature %f epsilon %f\n", temperature, epsilon);
 	/* generation voisin*/
         rules_copy_brain(brain, new_brain);
         resolution_random_change(new_brain);
@@ -64,10 +64,10 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
 	simulation_loop_average(new_brain, &score);
         /* comparaison ou proba*/
 	if (score_min > score ||
-	    rand() / (float)RAND_MAX < exp(-fabs((score - score_min) / temperature)))
+	    (float) rand() / (float) RAND_MAX < exp(-fabs((score - score_min) / temperature)))
 	    // to do compare time and test if score is maximal
         {
-	    zlog(stdout, INFO, "changement de cerveau, score %d\n", score);
+	    zlog(stdout, DEBUG, "Changement de cerveau, score %d\n", score);
             rules_copy_brain(new_brain, brain);
             score_min=score;
         }
@@ -244,7 +244,7 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                     break;
             }
             
-            zlog(stdout ,INFO,"%d iter,%d i",iter,i)
+            zlog(stdout, DEBUG, "%d iter, %d i", iter, i);
             *iterret=itermin;
         }
     //rules_save_path_file_a("../data/rules_glouton.txt", brain,*iterret,k);
