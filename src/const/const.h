@@ -12,11 +12,12 @@
 #define NB_PREY 1
 #define NB_GAME_BACKGROUNDS 3
 
-#define PREDATOR_SPEED 5
+#define PREDATOR_SPEED 10
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
-#define COM_RADIUS 200
+#define COM_RADIUS 150
+#define DESTROY_RADIUS 50
 
 /* animation const */
 

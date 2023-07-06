@@ -7,7 +7,7 @@ void init_random_brain(rules_t * brain){
         brain[i].perception.distance_target=rand()%NB_DISTANCE - 1;
         brain[i].perception.cardinality_target=rand()%NB_CARDINALITY - 1;
         brain[i].action=rand()%NB_ACTION ;
-        brain[i].priority=rand()%NB_PRIORITY ;
+        brain[i].priority=rand()%NB_PRIORITY + 1 ;
 
     }
 }
@@ -74,9 +74,9 @@ void resolution_random_change(rules_t brain[NB_RULES])
 	brain[random_rules].perception.cardinality_target = (rand()%NB_CARDINALITY)-1;
     else if (random_indice == 4)
 	
-	brain[random_rules].action = (rand()%NB_ACTION)-1;
+	brain[random_rules].action = (rand()%NB_ACTION);
     else if (random_indice == 5)
-	brain[random_rules].priority = (rand()%NB_PRIORITY)-1;
+	brain[random_rules].priority = (rand()%NB_PRIORITY + 1);
     else
 	fprintf(stderr, "Erreur dans resolution_random_change, random_indice supérieur au nombre de champs de rules");
 }

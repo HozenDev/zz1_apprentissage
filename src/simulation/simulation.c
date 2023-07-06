@@ -191,7 +191,7 @@ void simulation_get_closest_friend(entity_t * predators)
         predators[i].p.cardinality_friend =
             simulation_get_cardinals(predators[i].x, predators[i].y, predators[friend].x, predators[friend].y);
         predators[i].p.distance_friend =
-            simulation_get_distance(distmin);
+            simulation_get_distance(distmin, 2*COM_RADIUS);
     }
 }
 
@@ -211,13 +211,12 @@ void simulation_get_closest_friend(entity_t * predators)
  * @note The function assumes that the `distance` enum and the `COM_RADIUS` constant are
  * defined and accessible within the scope of this function.
  */
-enum distance simulation_get_distance(int dsrc)
+enum distance simulation_get_distance(int dsrc, int radius)
 {
     enum distance dist = FAR;
-    if (dsrc <= COM_RADIUS) dist=CLOSE;
+    if (dsrc <= radius) dist = CLOSE;
     return dist;
 }
-
 
 /**
  * @brief Determines the perception of each predator in the simulation.
@@ -245,12 +244,12 @@ void simulation_get_perception(entity_t * predators, target_t target)
     for(i=0;i<NB_PREDATOR;i++)
     {
         if(predators[i].p.cardinality_target != NOT_FOUND
-           || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y)) == CLOSE)
+           || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y), 2*COM_RADIUS) == CLOSE)
         {
             predators[i].p.cardinality_target =
                 simulation_get_cardinals(predators[i].x, predators[i].y, target.x, target.y);
             predators[i].p.distance_target =
-                simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y));
+                simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y), DESTROY_RADIUS);
         }
     }
 }
