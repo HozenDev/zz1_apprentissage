@@ -1,5 +1,17 @@
 #include "../resolution/resolution.h"
 
+
+/**
+ * @brief Initialize the brain with random values.
+ *
+ * This function initializes the brain with random values. It generates random values for each rule in the brain's perception
+ * and action fields. The random values are generated within the specified ranges: distance_friend [0, NB_DISTANCE-1],
+ * cardinality_friend [0, NB_CARDINALITY-2], distance_target [0, NB_DISTANCE-1], cardinality_target [0, NB_CARDINALITY-1],
+ * action [0, NB_ACTION-1], priority [1, NB_PRIORITY]. The generated random values are assigned to the corresponding fields
+ * in each rule of the brain.
+ *
+ * @param brain  Pointer to the brain to be initialized.
+ */
 void init_random_brain(rules_t * brain){
     for(int i=0;i<NB_RULES;i++){
         brain[i].perception.distance_friend=(rand()%NB_DISTANCE) - 1;

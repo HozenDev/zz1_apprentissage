@@ -469,6 +469,14 @@ void simulation_init(entity_t predators[NB_PREDATOR], target_t * target)
 }
 
 
+/**
+ * @brief Main simulation loop.
+ *
+ * This function runs the main simulation loop where the predators and target interact based on the specified brain rules.
+ *
+ * @param brain The array of rules representing the brain.
+ * @param iter  Pointer to the iteration counter.
+ */
 void simulation_loop(rules_t brain[NB_RULES], int * iter)
 {
     
@@ -502,7 +510,14 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
     }
 }
 
-
+/**
+ * @brief Run multiple simulations and calculate the average score.
+ *
+ * This function runs multiple simulations using the specified brain rules and calculates the average score achieved.
+ *
+ * @param brain The array of rules representing the brain.
+ * @param iter  Pointer to store the average score.
+ */
 void simulation_loop_average(rules_t brain[NB_RULES], int * iter)
 {
     int sum =0, score;

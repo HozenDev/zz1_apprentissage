@@ -192,10 +192,6 @@ void game_graphic_update(game_t game)
     animation_render_sprite(game.renderer,
                             game.state.prey.e_sdl->sprites[game.state.prey.e_sdl->state],
                             game.state.prey.e_sdl->r);
-
-    animation_render_sprite(game.renderer,
-                            game.state.predators[i].e_sdl->sprites[game.state.predators[i].e_sdl->state],
-                            game.state.predators[i].e_sdl->r);
     
     /* render predators */
     for (i = 0; i < game.state.nb_predator; ++i)
@@ -271,13 +267,15 @@ void game_state_reset(game_state_t * g_state)
     g_state->delay = GAME_DELAY;
     /* g_state->print_radius = 0; */
 
-    for (i = 0; i < NB_RULES; ++i) {
-        g_state->action[i] = 0;
-        g_state->filtered_rules[i] = 0;
-    }
+    for (i = 0; i < NB_PREDATOR; ++i) g_state->action[i] = 0;
+    for (i = 0; i < NB_RULES; ++i) g_state->filtered_rules[i] = 0;
 
     for (i = 0; i < NB_PREDATOR; ++i) {
-        entity_initialize(&g_state->predators[i], (i/2 + 1)*SCREEN_WIDTH/((NB_PREDATOR+2)/2), (3*i%2 + 2)*SCREEN_HEIGHT/5, g_state->predators[i].e_sdl);
+        /* entity_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl); */
+        /* entity_all_centered_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
+        /* entity_random_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
+        entity_horizontal_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl);
+        /* entity_vertical_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
         g_state->predators[i].e_sdl->is_in_animation = 0;
         entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
     }
@@ -351,8 +349,11 @@ int game_initialisation(game_t ** game)
     (*game)->state.print_radius = 0;
     (*game)->state.back = NULL;
 
-    for (i = 0; i < NB_RULES; ++i) {
+    for (i = 0; i < NB_PREDATOR; ++i) {
         (*game)->state.action[i] = 0;
+    }
+    
+    for (i = 0; i < NB_RULES; ++i) {
         (*game)->state.filtered_rules[i] = 0;
     }
 
@@ -456,7 +457,7 @@ int game_initialisation(game_t ** game)
     for (i = 0; i < (*game)->state.nb_predator; ++i)
     {
         //entity_initialize(&(*game)->state.predators[i], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, NULL);
-        entity_even_distribution_init(&(*game)->state.predators[i], i, NULL);
+        entity_all_centered_distribution_init(&(*game)->state.predators[i], NULL);
 
         (*game)->state.predators[i].e_sdl
             = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, PREY_SPEED);

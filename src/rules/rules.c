@@ -25,6 +25,15 @@ void rules_save_file(FILE * file, rules_t array_rules[NB_RULES])
 }
 
 
+/**
+ * @brief Save an array of rules to a file specified by the given path.
+ *
+ * This function saves an array of rules to a file specified by the given path. If the path_file is NULL, the rules will be
+ * saved to stdout instead. The rules are saved in a human-readable format.
+ *
+ * @param path_file     The path to the file where the rules should be saved. If NULL, the rules will be saved to stdout.
+ * @param array_rules   The array of rules to be saved.
+ */
 void rules_save_path_file(char * path_file, rules_t array_rules[NB_RULES])
 {
     FILE * file;
@@ -44,6 +53,19 @@ void rules_save_path_file(char * path_file, rules_t array_rules[NB_RULES])
     }
 }
 
+
+/**
+ * @brief Append an array of rules to a file specified by the given path, along with additional information.
+ *
+ * This function appends an array of rules to a file specified by the given path. If the path_file is NULL, the rules will be
+ * appended to stdout instead. The rules are saved in a human-readable format. Additionally, the function includes information about
+ * the iteration and the number of iterations in the file.
+ *
+ * @param path_file     The path to the file where the rules should be appended. If NULL, the rules will be appended to stdout.
+ * @param array_rules   The array of rules to be appended.
+ * @param iter          The current iteration.
+ * @param k             The total number of iterations.
+ */
 void rules_save_path_file_a(char * path_file, rules_t array_rules[NB_RULES],int iter,int k)
 {
     FILE * file;
@@ -119,6 +141,16 @@ void rules_read_file(FILE * file, rules_t array_rules[NB_RULES])
     }
 }
 
+
+/**
+ * @brief Copy the contents of one array of rules to another.
+ *
+ * This function copies the contents of one array of rules to another. It iterates over each rule in the source array and
+ * copies the values of the measures, action, and priority fields to the corresponding rule in the destination array.
+ *
+ * @param brainsrc   The source array of rules to be copied.
+ * @param braindest  The destination array of rules where the contents will be copied.
+ */
 void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES])
 {
     //for each rules in brain
@@ -137,6 +169,7 @@ void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES])
         braindest[i].priority = brainsrc[i].priority;
     }
 }
+
 
 /**
  * @brief Copies the contents of one rules_t structure to another.

@@ -214,6 +214,7 @@ void entity_initialize(struct entity_s * e, int x, int y, entity_sdl_t * e_sdl)
     //if (!e_sdl) zlog(stdout, WARNING, "entity_sdl set to NULL pointer", 0);
 }
 
+
 /**
  * @brief Initializes an entity with even distribution coordinates and default perceptions.
  *
@@ -230,7 +231,7 @@ void entity_initialize(struct entity_s * e, int x, int y, entity_sdl_t * e_sdl)
  */
 void entity_even_distribution_init(struct entity_s *e ,int i,entity_sdl_t * e_sdl)
 {
-    e->x=SCREEN_WIDTH*(i%2+1)/(NB_PREDATOR/2+1);
+    e->x=SCREEN_WIDTH*(i/2+1)/(NB_PREDATOR/2+1);
     e->y=SCREEN_HEIGHT*(3*(i%2)+1)/5;
 
     e->p.distance_friend = FAR;
@@ -242,6 +243,7 @@ void entity_even_distribution_init(struct entity_s *e ,int i,entity_sdl_t * e_sd
 
     e->e_sdl = e_sdl;
 }
+
 
 /**
  * @brief Initializes an entity with random distribution coordinates and default perceptions.
@@ -270,6 +272,7 @@ void entity_random_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
     e->e_sdl = e_sdl;
 }
 
+
 /**
  * @brief Initializes an entity with centered distribution coordinates and default perceptions.
  *
@@ -286,6 +289,63 @@ void enitity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e
 {
     e->x=SCREEN_WIDTH/2;
     e->y=SCREEN_HEIGHT/2;
+    
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+
+
+/**
+ * @brief Initializes an entity with horizontal distribution coordinates and default perceptions.
+ *
+ * This function initializes an entity represented by the `entity_s` structure `e` with horizontal distribution
+ * coordinates and default perceptions. The `e` parameter is assigned a random `x` coordinate within the boundaries
+ * of the screen, while the `y` coordinate is set to half of the screen height. The function sets the `distance_friend`
+ * and `cardinality_friend` perceptions to default values. It also initializes the target perceptions by setting the
+ * `distance_target` to FAR and `cardinality_target` to NOT_FOUND. The `e_sdl` parameter is assigned to the `e_sdl`
+ * member of the entity structure.
+ *
+ * @param e        A pointer to the entity structure to be initialized.
+ * @param e_sdl    A pointer to the entity's SDL structure.
+ */
+void entity_horizontal_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
+{
+    e->x=(float )(rand())/RAND_MAX*SCREEN_WIDTH;
+    e->y=SCREEN_HEIGHT*0.5;
+    
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+
+
+/**
+ * @brief Initializes an entity with vertical distribution coordinates and default perceptions.
+ *
+ * This function initializes an entity represented by the `entity_s` structure `e` with vertical distribution
+ * coordinates and default perceptions. The `x` coordinate is set to half of the screen width, while the `y` coordinate
+ * is assigned a random value within the boundaries of the screen. The function sets the `distance_friend` and `cardinality_friend`
+ * perceptions to default values. It also initializes the target perceptions by setting the `distance_target` to FAR and
+ * `cardinality_target` to NOT_FOUND. The `e_sdl` parameter is assigned to the `e_sdl` member of the entity structure.
+ *
+ * @param e        A pointer to the entity structure to be initialized.
+ * @param e_sdl    A pointer to the entity's SDL structure.
+ */
+void entity_vertical_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
+{
+    e->x=SCREEN_WIDTH*0.5;
+    e->y=SCREEN_HEIGHT*(float)(rand())/RAND_MAX;
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;

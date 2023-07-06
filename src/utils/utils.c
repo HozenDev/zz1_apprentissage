@@ -1,5 +1,12 @@
 #include "utils.h"
 
+
+/**
+ * @brief Available colors.
+ *
+ * This constant structure contains pre-defined color values represented by `SDL_Color` structures.
+ * The colors include BLACK, WHITE, RED, GREEN, BLUE, and YELLOW.
+ */
 const struct colors_s colors_available = 
 {
     .BLACK    = (SDL_Color) {30, 30, 30, 255},
@@ -9,6 +16,7 @@ const struct colors_s colors_available =
     .BLUE = (SDL_Color) {100, 100, 255, 255},
     .YELLOW = (SDL_Color) {255, 255, 100, 255}
 };
+
 
 /**
  * \fn float distance(SDL_Point pt1, SDL_Point pt2)
@@ -197,12 +205,31 @@ void utils_initlist0(int * list,int taille){
 		list[i]=0;
 	}
 }
+
+/**
+ * @brief Perform geometric descent on the temperature.
+ *
+ * This function applies a geometric descent formula to the given temperature value.
+ * It multiplies the temperature by a coefficient (0.9999 in this case) to update its value.
+ *
+ * @param temperature The initial temperature value.
+ * @return The updated temperature value after geometric descent.
+ */
 float utils_descente_geometrique(float temperature){
 	float coeff=0.9999;
 	
 	return(coeff*temperature);
-
 }
+
+/**
+ * @brief Perform linear descent on the temperature.
+ *
+ * This function applies a linear descent formula to the given temperature value.
+ * It subtracts a constant value (0.1 in this case) from the temperature to update its value.
+ *
+ * @param temperature The initial temperature value.
+ * @return The updated temperature value after linear descent.
+ */
 float utils_descente_lineaire(float temperature){
 	return(temperature-0.1);
 }

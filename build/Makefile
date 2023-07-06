@@ -33,7 +33,7 @@ DEPS = $(OBJS:.o=.d)
 CC = gcc
 
 # Flags
-CFLAGS = -Wall -Wextra -Wdeclaration-after-statement -Werror=vla -pg -g
+CFLAGS = -Wall -Wextra -Wdeclaration-after-statement -Werror=vla -pg -g -O2
 
 # For SDL FLAGS
 LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_gfx -lm
