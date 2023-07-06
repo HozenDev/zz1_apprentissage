@@ -378,7 +378,14 @@ void sdl_draw_segment(SDL_Renderer * renderer, int x1, int y1, int x2, int y2)
 }
 
 
-// appelle pas ta fonction comme celle de la SDL, tu dois lui donner un nom différent
+/**
+ * @brief Set the icon of an SDL window.
+ *
+ * This function loads an image file containing the icon and sets it as the icon for the specified SDL window.
+ *
+ * @param window   The SDL window for which to set the icon.
+ * @param icones   Pointer to the SDL surface that will hold the loaded icon image.
+ */
 void sdl_set_icon(SDL_Window*  window, SDL_Surface ** icones)
 {
     * icones = IMG_Load("data/icones.png");

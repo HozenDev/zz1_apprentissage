@@ -11,6 +11,17 @@ typedef struct thread_data_s thread_data_t;
 
 int all_time;
 
+
+/**
+ * @brief Placeholder function for parallel treatment.
+ *
+ * This function serves as a placeholder for parallel treatment when an invalid function is provided. It accepts a `parameters`
+ * input, but ignores it. The function logs an error message to the standard output indicating that it is not a valid function.
+ * It always returns 0 to indicate successful execution.
+ *
+ * @param parameters  The input parameters for the parallel treatment (ignored).
+ * @return            Always returns 0 to indicate successful execution.
+ */
 int parallel_treatment_not_a_function(void * parameters)
 {
     (void) parameters;
@@ -18,6 +29,20 @@ int parallel_treatment_not_a_function(void * parameters)
     return 0;
 }
 
+
+/**
+ * @brief Perform parallel genetic treatment.
+ *
+ * This function performs parallel genetic treatment by solving the genetic algorithm on the specified brain in a separate thread.
+ * The function expects a `thread_data_t` structure as the `parameters` input, containing the brain and iteration information.
+ * The function measures the execution time of the genetic algorithm using the `clock` function and calculates the result and
+ * elapsed time. The result is set to 0.0 since it is not explicitly calculated in the code. The elapsed time is calculated
+ * in milliseconds using the CPU clock frequency. Finally, a log message is printed to the standard output indicating the
+ * completion of the genetic solve and the elapsed time.
+ *
+ * @param parameters  The input parameters for the parallel treatment (including the brain and iteration information).
+ * @return            Always returns 0 to indicate successful execution.
+ */
 int parallel_treatment_genetique(void * parameters)
 {
     thread_data_t * tdata= (thread_data_t *) parameters;
@@ -37,6 +62,18 @@ int parallel_treatment_genetique(void * parameters)
     return 0;
 }
 
+
+/**
+ * @brief Perform parallel simulated annealing treatment.
+ *
+ * This function serves as a placeholder for parallel simulated annealing treatment. It measures the execution time using the
+ * `clock` function and calculates the result and elapsed time. The result is set to 0.0 since it is not explicitly calculated
+ * in the code. The elapsed time is calculated in milliseconds using the CPU clock frequency. Finally, a log message is printed
+ * to the standard output indicating the completion of the simulated annealing treatment and the elapsed time.
+ *
+ * @param parameters  The input parameters for the parallel treatment (ignored).
+ * @return            Always returns 0 to indicate successful execution.
+ */
 int parallel_treatment_recuis_simule(void * parameters)
 {    
     unsigned long millis;
@@ -54,6 +91,17 @@ int parallel_treatment_recuis_simule(void * parameters)
     return 0;
 }
 
+/**
+ * @brief Perform parallel random greedy treatment.
+ *
+ * This function serves as a placeholder for parallel random greedy treatment. It measures the execution time using the `clock`
+ * function and calculates the result and elapsed time. The result is set to 0.0 since it is not explicitly calculated in the
+ * code. The elapsed time is calculated in milliseconds using the CPU clock frequency. Finally, a log message is printed to the
+ * standard output indicating the completion of the random greedy treatment and the elapsed time.
+ *
+ * @param parameters  The input parameters for the parallel treatment (ignored).
+ * @return            Always returns 0 to indicate successful execution.
+ */
 int parallel_treatment_glouton_aleatoire(void * parameters)
 {
     unsigned long millis;
@@ -71,6 +119,17 @@ int parallel_treatment_glouton_aleatoire(void * parameters)
     return 0;
 }
 
+/**
+ * @brief Perform parallel loop for running different treatments.
+ *
+ * This function executes a parallel loop to run different treatments based on user input. It prompts the user to select a
+ * function (0: random greedy, 1: genetic algorithm, 2: simulated annealing) and creates threads to execute the selected
+ * function in parallel. The function waits for the threads to complete using `thrd_join` and checks the error codes of each
+ * thread. After each iteration, it prompts the user to continue or exit the loop. The loop continues until the user chooses to
+ * exit by entering 0.
+ *
+ * @return  Always returns 0 to indicate successful execution.
+ */
 int parallel_loop(void)
 {
     int i, running, i_function;
@@ -107,6 +166,20 @@ int parallel_loop(void)
     return 0;
 }
 
+
+/**
+ * @brief Perform multiple simulations in parallel and determine the minimum iteration and average iteration.
+ *
+ * This function performs multiple simulations in parallel using the genetic algorithm treatment. It creates threads to
+ * execute the simulations in parallel, each with its own copy of the brain rules. After the simulations are completed, it
+ * determines the minimum iteration and calculates the average iteration across all simulations. The minimum iteration is
+ * stored in the `min` variable, and the average iteration is stored in the `mean` variable. The function also copies the
+ * brain of the simulation with the minimum iteration back to the original brain. Finally, it logs the minimum iteration and
+ * average iteration to the standard output.
+ *
+ * @param brain          The brain rules to be used in the simulations.
+ * @param iter_average   A pointer to an integer to store the average iteration.
+ */
 void parallel_multiple_simulation(rules_t brain[NB_RULES], int * iter_average)
 {
     thrd_t threads[NB_THREADS];

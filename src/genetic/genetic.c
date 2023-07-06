@@ -204,6 +204,19 @@ void genetic_mutate(rules_t individu[NB_RULES])
 }
 
 
+/**
+ * @brief Performs an optimized genetic solving algorithm for the game.
+ *
+ * This function performs an optimized genetic solving algorithm for the game. It reads the rules from
+ * the specified file path and initializes the `brain` array with the loaded rules. The genetic solving
+ * algorithm is then applied to the `brain` array using the `genetic_solve_brain` function. The resulting
+ * best brain configuration is saved to the specified file path. The `path_brain_load` parameter specifies
+ * the file path to load the initial rules from, and the `path_best_brain` parameter specifies the file path
+ * to save the best brain configuration to.
+ *
+ * @param path_brain_load    The file path to load the initial rules from.
+ * @param path_best_brain    The file path to save the best brain configuration to.
+ */
 void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // game en parametre pour evavaluate population, puis individu 
 {
     rules_t brain[NB_RULES];
@@ -213,6 +226,22 @@ void genetic_solve_optimized(char * path_brain_load, char * path_best_brain) // 
 }
 
 
+/**
+ * @brief Performs a genetic solving algorithm for the brain rules.
+ *
+ * This function performs a genetic solving algorithm for the brain rules. It takes an array `brain` representing
+ * the initial set of rules. The function initializes a population of rules represented by a 2D array `population`.
+ * It also initializes a new population represented by another 2D array `new_population`. The algorithm iterates
+ * until the maximum number of iterations is reached. During each iteration, the population is evaluated, and the
+ * best individual is selected as the parent for generating the next population. The selection, crossover, and
+ * mutation operations are applied to generate the new population. The process alternates between updating the
+ * `population` and `new_population` arrays. At the end of the iterations, the best individual is saved back to
+ * the `brain` array. The function also calculates and updates the score of the best brain configuration in the
+ * `score_best_brain` variable.
+ *
+ * @param brain              An array representing the initial set of rules.
+ * @param score_best_brain   A pointer to the variable storing the score of the best brain configuration.
+ */
 void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // game en parametre pour evavaluate population , puis individu 
 {
     rules_t population     [POPULATION_SIZE][NB_RULES];

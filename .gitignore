@@ -26,5 +26,9 @@
 
 # data repo
 !/data
-/data/*.txt
+/data/*
 !/data/*/
+
+!/data/rules
+/data/rules/*
+!/data/rules/rules_*.txt
