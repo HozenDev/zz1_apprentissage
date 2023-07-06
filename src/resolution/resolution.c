@@ -34,6 +34,7 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     /* recuit simulé */
     while (temperature > epsilon)
     {
+	zlog(stdout, INFO, "temperature %f epsilon %f\n", temperature, epsilon);
 	/* generation voisin*/
         rules_copy_brain(brain, new_brain);
         resolution_random_change(new_brain);
@@ -48,7 +49,6 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
 	    zlog(stdout, INFO, "changement de cerveau, score %d\n", score);
             rules_copy_brain(new_brain, brain);
             score_min=score;
-	    rules_save_file(stdout, brain);
         }
         /*modification temperature*/
         temperature=pf(temperature);
@@ -56,6 +56,7 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     *res = score_min;
     rules_save_path_file(path_brain_res, brain);
 }   
+
 
 void resolution_random_change(rules_t brain[NB_RULES])
 {
