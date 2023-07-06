@@ -285,7 +285,7 @@ void entity_random_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
  * @param e        A pointer to the entity structure to be initialized.
  * @param e_sdl    A pointer to the entity's SDL structure.
  */
-void enitity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
+void entity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
 {
     e->x=SCREEN_WIDTH/2;
     e->y=SCREEN_HEIGHT/2;
@@ -329,7 +329,6 @@ void entity_horizontal_distribution_init(struct entity_s *e ,entity_sdl_t * e_sd
     e->e_sdl = e_sdl;
 }
 
-
 /**
  * @brief Initializes an entity with vertical distribution coordinates and default perceptions.
  *
@@ -346,6 +345,63 @@ void entity_vertical_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
 {
     e->x=SCREEN_WIDTH*0.5;
     e->y=SCREEN_HEIGHT*(float)(rand())/RAND_MAX;
+    
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+
+
+/**
+ * @brief Initializes the vertical even distribution of an entity.
+ *
+ * This function sets the x and y coordinates of the entity based on the index i,
+ * as well as initializes the distance and cardinality values for friend and target perceptions.
+ * Finally, it assigns the entity_sdl_t pointer to the entity.
+ *
+ * @param e Pointer to the entity structure to be initialized.
+ * @param i Index of the entity.
+ * @param e_sdl Pointer to the entity_sdl_t structure associated with the entity.
+ *
+ * @return None.
+ */
+void entity_vertical_even_distribution_init(struct entity_s *e, int i, entity_sdl_t * e_sdl)
+{
+    e->x = 0;
+    e->y = i*SCREEN_HEIGHT/NB_PREDATOR;
+    
+    e->p.distance_friend = FAR;
+    e->p.cardinality_friend = NORTH;
+
+    /* initialize target perceptions */
+    e->p.distance_target = FAR;
+    e->p.cardinality_target = NOT_FOUND;
+
+    e->e_sdl = e_sdl;
+}
+
+/**
+ * @brief Initializes the horizontal even distribution of an entity.
+ *
+ * This function sets the x and y coordinates of the entity based on the index i,
+ * as well as initializes the distance and cardinality values for friend and target perceptions.
+ * Finally, it assigns the entity_sdl_t pointer to the entity.
+ *
+ * @param e Pointer to the entity structure to be initialized.
+ * @param i Index of the entity.
+ * @param e_sdl Pointer to the entity_sdl_t structure associated with the entity.
+ *
+ * @return None.
+ */
+void entity_horizontal_even_distribution_init(struct entity_s *e, int i, entity_sdl_t * e_sdl)
+{
+    e->x = i*SCREEN_WIDTH/NB_PREDATOR;
+    e->y = 0;
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;

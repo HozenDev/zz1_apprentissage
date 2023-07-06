@@ -60,5 +60,6 @@ void entity_random_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl);
 void entity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl);
 void entity_vertical_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl);
 void entity_horizontal_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl);
+void entity_vertical_even_distribution_init(struct entity_s *e, int i, entity_sdl_t * e_sdl);
 
 #endif
