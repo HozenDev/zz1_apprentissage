@@ -211,6 +211,11 @@ void game_graphic_update(game_t game)
                              game.state.predators[i].e_sdl->r.y + game.state.predators[i].e_sdl->r.h/2,
                              COM_RADIUS,
                              (SDL_Color) {.r = 255, .g = 255, .b = 0, .a = 30});
+            sdl_draw_diamond(game.renderer,
+                             game.state.predators[i].e_sdl->r.x + game.state.predators[i].e_sdl->r.w/2,
+                             game.state.predators[i].e_sdl->r.y + game.state.predators[i].e_sdl->r.h/2,
+                             DESTROY_RADIUS,
+                             (SDL_Color) {.r = 255, .g = 0, .b = 0, .a = 30});
         }
         switch (game.state.action[i])
         {
@@ -529,7 +534,7 @@ int game_loop(rules_t brain[NB_RULES], int * iter)
                 break;
             }
         }
-        zlog(stdout,INFO,"%d,%d,%d,%d",game->state.predators[0].p.distance_friend);
+        /* zlog(stdout,INFO,"%d,%d,%d,%d",game->state.predators[0].p.distance_friend); */
         game_loop_state_update(&game->state);
         
         game_graphic_update(*game);

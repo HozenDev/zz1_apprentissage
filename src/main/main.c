@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     (void) score;
     create_seed(&seed);
 
-    rules_read_path_file("../data/rules_init.txt", brain);
+    rules_read_path_file("../data/rules_test.txt", brain);
     
     enable_log(argc, argv);
 
@@ -32,9 +32,10 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[2], "--parallel") == 0)
         {
-            rules_read_path_file("../data/rules_init.txt", brain);
+            rules_read_path_file("../data/rules_test.txt", brain);
             rules_save_file(stdout, brain);
-            //parallel_multiple_simulation(brain, &iter);
+            /* genetic_solve_brain(brain, &iter); */
+            parallel_multiple_simulation(brain, &iter);
             rules_save_path_file("../data/rules_test.txt", brain);
             rules_save_file(stdout, brain);
         }
