@@ -12,6 +12,15 @@ void init_random_brain(rules_t * brain){
     }
 }
 
+/**
+ * @brief Initializes a random brain by assigning random values to each rule.
+ *
+ * This function initializes a brain structure by assigning random values to each
+ * rule's perception and action properties. The random values are generated based on
+ * predefined constants (NB_RULES, NB_DISTANCE, NB_CARDINALITY, NB_ACTION, NB_PRIORITY).
+ *
+ * @param brain A pointer to the brain structure to be initialized.
+ */
 void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char * path_brain_res, int * res)
 {
     /* paramètres */
@@ -57,7 +66,17 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     rules_save_path_file(path_brain_res, brain);
 }   
 
-
+/**
+ * @brief Modifies a random rule in the brain by changing one of its properties randomly.
+ *
+ * This function selects a random rule from the brain and modifies one of its properties
+ * randomly. The properties that can be modified include perception distance of friend,
+ * perception distance of target, perception cardinality of friend, perception cardinality
+ * of target, action, and priority. The random property to be modified is determined by
+ * generating a random index (random_indice) based on the predefined constant NB_MEASURE.
+ *
+ * @param brain An array of rules representing the brain.
+ */
 void resolution_random_change(rules_t brain[NB_RULES])
 {
     //selecting modified rules
@@ -83,7 +102,17 @@ void resolution_random_change(rules_t brain[NB_RULES])
 
 
 
-
+/**
+ * @brief Resolves the brain using a greedy random approach by iteratively modifying rules.
+ *
+ * This function resolves the brain by iteratively modifying rules using a greedy random approach.
+ * It randomly selects a rule and one of its properties to modify. The modification is based on
+ * evaluating the performance of the brain with the modified rule using the `simulation_loop_average`
+ * function. The function repeats this process for a specified number of iterations.
+ *
+ * @param brain    An array of rules representing the brain.
+ * @param iterret  A pointer to an integer to store the minimum iteration value obtained during resolution.
+ */
 void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
 {
     //paramètres    
@@ -95,7 +124,6 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
 
     // allocation des cerveaux initial et suivant
     rules_t new[NB_RULES];
-    printf("laezkaeml\n");
 
     /* init le parcours */
     for(int i=0;i<NB_RULES*(NB_MEASURE + 2);i++) parcours[i]=i;
@@ -109,15 +137,10 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
     for (int k=0;k<10;k++)
     {
         utils_shuffle(parcours,NB_RULES*(NB_MEASURE + 2));
-
-        printf("laezkaeml\n");
     
         for(int i=0;i<NB_RULES*(NB_MEASURE + 2);i++)
         {
             rules_copy_brain(brain, new);
-
-            printf("laezkaeml\n");
-
             best_j=-2;
             indice_rule=parcours[i]/6;
             switch(parcours[i]%6)
@@ -208,7 +231,6 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                     }
                     break;
             }
-            printf("laezkaem23l\n");
             
             zlog(stdout ,INFO,"%d iter,%d i",iter,i)
             *iterret=itermin;
