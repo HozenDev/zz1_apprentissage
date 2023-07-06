@@ -64,7 +64,7 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
 	simulation_loop_average(new_brain, &score);
         /* comparaison ou proba*/
 	if (score_min > score ||
-	    ( rand() / (float)RAND_MAX < exp(-fabs((score - score_min) / temperature)) &&  score_min*1.3 > score) )
+	    rand() / (float)RAND_MAX < exp(-fabs((score - score_min) / temperature)))
 	    // to do compare time and test if score is maximal
         {
 	    zlog(stdout, INFO, "changement de cerveau, score %d\n", score);
