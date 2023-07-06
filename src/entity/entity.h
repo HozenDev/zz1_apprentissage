@@ -55,5 +55,5 @@ void entity_sdl_change_state(struct entity_sdl_s * e, enum entity_sdl_state_e e_
 void entity_sdl_free(struct entity_sdl_s * e);
 struct entity_sdl_s * entity_sdl_create(SDL_Renderer * renderer, char ** sprite_fnames, int n_of_sprites,
                                         int * n_per_sprites, float speed);
-
+void entity_even_distribution_init(struct entity_s *e ,int i,entity_sdl_t * e_sdl);
 #endif
