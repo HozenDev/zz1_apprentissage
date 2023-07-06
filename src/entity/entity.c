@@ -163,10 +163,13 @@ void entity_initialize_target(struct target_s * t)
  * @brief Initialize an entity
  *
  * @param e, entity_s to initialize
+ * @param x, coordinate x where entity begin
+ * @param y, coordinate x where entity begin
+ * @param e_sdl, entity_sdl_s of the entity
  *
- * @note e->e_sdl is NULL and need to be allocated for SDL use
+ * @note e_sdl can be NULL for simulation
  */
-void entity_initialize(struct entity_s * e, int x, int y)
+void entity_initialize(struct entity_s * e, int x, int y, entity_sdl_t * e_sdl)
 {
     /* initialize coordinates */
     /* e->x = ((float) rand()/RAND_MAX)*WORLD_WIDTH; */
@@ -183,5 +186,6 @@ void entity_initialize(struct entity_s * e, int x, int y)
     e->p.distance_target = FAR;
     e->p.cardinality_target = NOT_FOUND;
 
-    e->e_sdl = NULL;
+    e->e_sdl = e_sdl;
+    if (!e_sdl) zlog(stdout, WARNING, "entity_sdl set to NULL pointer", 0);
 }

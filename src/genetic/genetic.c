@@ -266,10 +266,10 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 	++ iteration;
     }
     
-    // saivegarde meillleur individu
+    /* sauvegarde meillleur individu */
     (iteration%2==0)?
-	rules_copy_brain(brain, population[0]):
-	rules_copy_brain(brain, new_population[0]);
+	rules_copy_brain(population[0], brain):
+	rules_copy_brain(new_population[0], brain);
 
     *score_best_brain = score[0];
 }

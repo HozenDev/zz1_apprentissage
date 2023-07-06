@@ -2,8 +2,6 @@
 #include "../log/log.h"
 #include "../genetic/genetic.h"
 
-#define NB_THREADS 10
-
 struct thread_data_s {
     int iteration; /* nombre d'itération de la simulation */
     rules_t brain[NB_RULES]; /* cerveau de la simulation */

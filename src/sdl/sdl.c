@@ -140,6 +140,76 @@ void sdl_draw_rect_coords(SDL_Renderer * renderer, int x, int y, int w, int h)
 }
 
 /**
+ * @brief Draw a filled circle
+ *
+ * @param renderer, renderer where the circle will be printed
+ * @param x, x center of the circle
+ * @param y, y center of the circle
+ * @param radius, radius of the circle
+ * @param color, color of the circle
+ */
+void sdl_draw_circle_filled(SDL_Renderer *renderer, int x, int y, int radius)
+{
+    int w, h, dx, dy;
+
+    for (w = 0; w < radius * 2; w++)
+    {
+        for (h = 0; h < radius * 2; h++)
+        {
+            dx = radius - w; // horizontal offset
+            dy = radius - h; // vertical offset
+            if ((dx*dx + dy*dy) <= (radius * radius))
+            {
+                SDL_RenderDrawPoint(renderer, x + dx, y + dy);
+            }
+        }
+    }
+}
+
+void sdl_draw_diamond(SDL_Renderer * renderer, int center_x, int center_y, int radius, SDL_Color c)
+{
+    SDL_Vertex trisup[3] =
+        {
+            {
+                {center_x-radius, center_y},
+                {c.r, c.g, c.b, c.a},
+                {0.f, 0.f}
+            },
+            {
+                {center_x, center_y+radius},
+                {c.r, c.g, c.b, c.a},
+                {0.f, 0.f}
+            },
+            {
+                {center_x+radius, center_y},
+                {c.r, c.g, c.b, c.a},
+                {0.f, 0.f}
+            }
+        };
+    SDL_Vertex triinf[3] =
+        {
+            {
+                {center_x-radius, center_y},
+                {c.r, c.g, c.b, c.a},
+                {0.f, 0.f}
+            },
+            {
+                {center_x, center_y-radius},
+                {c.r, c.g, c.b, c.a},
+                {0.f, 0.f}
+            },
+            {
+                {center_x+radius, center_y},
+                {c.r, c.g, c.b, c.a},
+                {0.f, 0.f}
+            }
+        };
+
+    if( SDL_RenderGeometry(renderer, NULL, trisup, 3, NULL, 0) < 0 ) {SDL_Log("%s\n", SDL_GetError());}
+    if( SDL_RenderGeometry(renderer, NULL, triinf, 3, NULL, 0) < 0 ) {SDL_Log("%s\n", SDL_GetError());}
+}
+
+/**
  * @brief Draw a circle based on the middle point circle algorithm
  *
  * @param SDL_Renderer, renderer where the circle will be print
@@ -159,23 +229,19 @@ void sdl_draw_circle(SDL_Renderer * renderer, int center_x, int center_y, int ra
     int dx = 1;
     int dy = 1;
     int error = dx - (radius << 1);
-    int i;
 
     while (x >= y)
     {
 	/* the loop fill every octant of the circle */
-	for (i = 0; i <= x; ++i)
-	{
-	    /* Each of the following renders an octant of the circle */
-	    SDL_RenderDrawPoint(renderer, center_x + i, center_y - y);
-	    SDL_RenderDrawPoint(renderer, center_x + i, center_y + y);
-	    SDL_RenderDrawPoint(renderer, center_x - i, center_y - y);
-	    SDL_RenderDrawPoint(renderer, center_x - i, center_y + y);
-	    SDL_RenderDrawPoint(renderer, center_x + y, center_y - i);
-	    SDL_RenderDrawPoint(renderer, center_x + y, center_y + i);
-	    SDL_RenderDrawPoint(renderer, center_x - y, center_y - i);
-	    SDL_RenderDrawPoint(renderer, center_x - y, center_y + i);
-	}
+        /* Each of the following renders an octant of the circle */
+        SDL_RenderDrawPoint(renderer, center_x + x, center_y - y);
+        SDL_RenderDrawPoint(renderer, center_x + x, center_y + y);
+        SDL_RenderDrawPoint(renderer, center_x - x, center_y - y);
+        SDL_RenderDrawPoint(renderer, center_x - x, center_y + y);
+        SDL_RenderDrawPoint(renderer, center_x + y, center_y - x);
+        SDL_RenderDrawPoint(renderer, center_x + y, center_y + x);
+        SDL_RenderDrawPoint(renderer, center_x - y, center_y - x);
+        SDL_RenderDrawPoint(renderer, center_x - y, center_y + x);
 
 	if (error <= 0)
 	{

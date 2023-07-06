@@ -3,8 +3,8 @@
 
 /* game const */
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 #define GAME_DELAY 10
 
@@ -16,7 +16,7 @@
 #define PREDATOR_DAMAGE 1
 #define PREY_SPEED 0
 
-#define COM_RADIUS 50
+#define COM_RADIUS 200
 
 /* animation const */
 
@@ -36,7 +36,7 @@
 
 /* RULES */
 #define NB_ACTION      6
-#define NB_PRIORITY    3
+#define NB_PRIORITY    5
 #define NB_DISTANCE    3
 #define NB_CARDINALITY 6
 #define NB_MEASURE     4   // size of measures

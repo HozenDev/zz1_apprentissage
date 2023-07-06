@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     int score;
     (void) score;
     create_seed(&seed);
+
+    rules_read_path_file("../data/rules_test.txt", brain);
     
     enable_log(argc, argv);
 
@@ -27,6 +29,14 @@ int main(int argc, char *argv[])
             load_seed(&seed);
             save = 0;
             zlog(stdout, INFO, "chargement de la seed: %ld", seed);
+        }
+        else if (strcmp(argv[2], "--parallel") == 0)
+        {
+            rules_read_path_file("../data/rules_test.txt", brain);
+            rules_save_file(stdout, brain);
+            parallel_multiple_simulation(brain, &iter);
+            rules_save_path_file("../data/rules_test.txt", brain);
+            rules_save_file(stdout, brain);
         }
     }
     
