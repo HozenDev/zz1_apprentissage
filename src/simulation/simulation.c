@@ -60,7 +60,7 @@ void simulation_communicate(entity_t predator, entity_t predators[NB_PREDATOR])
     {
         for (i = 0; i < NB_PREDATOR; ++i)
         {
-            if (simulation_get_distance_between_2_predator(predator, predators[i]) < 0.5*COM_RADIUS)
+            if (simulation_get_distance_between_2_predator(predator, predators[i]) < 2*COM_RADIUS)
             {
                 predators[i].p.cardinality_target = predator.p.cardinality_target;
             }
@@ -177,19 +177,19 @@ void simulation_get_closest_friend(entity_t * predators)
     for (i=0;i<NB_PREDATOR;i++){
         for(j=0;j<NB_PREDATOR;j++)
         {
+
             if(i!=j)
             {
                 dist = simulation_get_distance_between_2_predator(predators[i], predators[j]);
                 if(dist<distmin)
                 {
-                    dist=distmin;
+                    distmin=dist;
                     friend=j;
                 }
             }
         }
         predators[i].p.cardinality_friend =
             simulation_get_cardinals(predators[i].x, predators[i].y, predators[friend].x, predators[friend].y);
-
         predators[i].p.distance_friend =
             simulation_get_distance(distmin);
     }
@@ -211,9 +211,9 @@ void simulation_get_closest_friend(entity_t * predators)
  * @note The function assumes that the `distance` enum and the `COM_RADIUS` constant are
  * defined and accessible within the scope of this function.
  */
-enum distance simulation_get_distance(float dsrc)
+enum distance simulation_get_distance(int dsrc)
 {
-    enum distance dist;
+    enum distance dist=CLOSE;
     if (dsrc <= COM_RADIUS) dist=CLOSE;
     else dist=FAR;
     return dist;

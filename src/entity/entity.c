@@ -187,5 +187,5 @@ void entity_initialize(struct entity_s * e, int x, int y, entity_sdl_t * e_sdl)
     e->p.cardinality_target = NOT_FOUND;
 
     e->e_sdl = e_sdl;
-    if (!e_sdl) zlog(stdout, WARNING, "entity_sdl set to NULL pointer", 0);
+    //if (!e_sdl) zlog(stdout, WARNING, "entity_sdl set to NULL pointer", 0);
 }

@@ -27,7 +27,7 @@
 
 #define WORLD_WIDTH SCREEN_WIDTH
 #define WORLD_HEIGHT SCREEN_HEIGHT
-#define S_POWER 0.5
+#define S_POWER 2
 
 #define TARGET_PV 1000
 #define ITER_MAX 10000
@@ -40,7 +40,7 @@
 #define NB_DISTANCE    3
 #define NB_CARDINALITY 6
 #define NB_MEASURE     4   // size of measures
-#define NB_RULES       15  // number rules in brain (size of array_rules)
+#define NB_RULES       22  // number rules in brain (size of array_rules)
 
 
 /*RECUIS*/
