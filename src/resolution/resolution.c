@@ -103,19 +103,21 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
     /* melange le parcours*/
     utils_shuffle(parcours,NB_RULES*(NB_MEASURE + 2));
 
-    init_random_brain(brain);
+    //init_random_brain(brain);
     rules_save_file(stdout,brain);
     rules_copy_brain(brain, new);
     for (int k=0;k<10;k++)
     {
         utils_shuffle(parcours,NB_RULES*(NB_MEASURE + 2));
 
+        printf("laezkaeml\n");
     
         for(int i=0;i<NB_RULES*(NB_MEASURE + 2);i++)
         {
             rules_copy_brain(brain, new);
 
-        
+            printf("laezkaeml\n");
+
             best_j=-2;
             indice_rule=parcours[i]/6;
             switch(parcours[i]%6)
@@ -206,10 +208,11 @@ void resolution_gloutone_aleatoire(rules_t brain[NB_RULES],int* iterret)
                     }
                     break;
             }
+            printf("laezkaem23l\n");
             
-            zlog(stdout ,DEBUG,"%d iter,%d i",iter,i)
+            zlog(stdout ,INFO,"%d iter,%d i",iter,i)
             *iterret=itermin;
         }
-    rules_save_path_file_a("../data/rules_glouton.txt", brain,*iterret,k);
+    //rules_save_path_file_a("../data/rules_glouton.txt", brain,*iterret,k);
     }
 }

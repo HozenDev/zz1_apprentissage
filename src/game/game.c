@@ -273,6 +273,7 @@ void game_state_reset(game_state_t * g_state)
     for (i = 0; i < NB_PREDATOR; ++i) {
         entity_initialize(&g_state->predators[i], (float)(rand())/RAND_MAX*SCREEN_WIDTH, SCREEN_HEIGHT/2, g_state->predators[i].e_sdl);
         /* entity_initialize(&g_state->predators[i], 100, (float)(rand())/RAND_MAX*SCREEN_HEIGHT, g_state->predators[i].e_sdl); */
+        /* entity_initialize(&g_state->predators[i], (i/2 + 1)*SCREEN_WIDTH/((NB_PREDATOR+2)/2), (3*i%2 + 2)*SCREEN_HEIGHT/5, g_state->predators[i].e_sdl); */
         g_state->predators[i].e_sdl->is_in_animation = 0;
         entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
     }
@@ -453,7 +454,9 @@ int game_initialisation(game_t ** game)
 
     for (i = 0; i < (*game)->state.nb_predator; ++i)
     {
-        entity_initialize(&(*game)->state.predators[i], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, NULL);
+        //entity_initialize(&(*game)->state.predators[i], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, NULL);
+        entity_even_distribution_init(&(*game)->state.predators[i], i, NULL);
+
         (*game)->state.predators[i].e_sdl
             = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, PREY_SPEED);
         entity_sdl_scale((*game)->state.predators[i].e_sdl, 0.004*SCREEN_HEIGHT);

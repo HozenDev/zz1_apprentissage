@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
             rules_read_path_file("../data/rules_test.txt", brain);
             rules_save_file(stdout, brain);
             /* genetic_solve_brain(brain, &iter); */
-            parallel_multiple_simulation(brain, &iter);
+            //parallel_multiple_simulation(brain, &iter);
             rules_save_path_file("../data/rules_test.txt", brain);
             rules_save_file(stdout, brain);
         }
