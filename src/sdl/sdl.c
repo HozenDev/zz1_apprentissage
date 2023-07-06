@@ -209,6 +209,7 @@ void sdl_draw_diamond(SDL_Renderer * renderer, int center_x, int center_y, int r
     if( SDL_RenderGeometry(renderer, NULL, triinf, 3, NULL, 0) < 0 ) {SDL_Log("%s\n", SDL_GetError());}
 }
 
+
 /**
  * @brief Draw a circle based on the middle point circle algorithm
  *

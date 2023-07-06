@@ -27,12 +27,12 @@
 
 #define WORLD_WIDTH SCREEN_WIDTH
 #define WORLD_HEIGHT SCREEN_HEIGHT
-#define S_POWER 0.5
+#define S_POWER 2
 
 #define TARGET_PV 1000
 #define ITER_MAX 3000
 
-#define NB_SIMULATION_LOOP 16
+#define NB_SIMULATION_LOOP 100
 
 /* RULES */
 #define NB_ACTION      6

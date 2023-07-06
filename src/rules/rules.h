@@ -38,7 +38,7 @@ struct rules_s {
 };
 
 typedef struct rules_s rules_t;  
-
+void rules_save_path_file_a(char * path_file, rules_t array_rules[NB_RULES],int iter,int k);
 
 void rules_save_file(FILE * file, rules_t array_rules[NB_RULES]);
 void rules_save_path_file(char * path_file, rules_t array_rules[NB_RULES]);

@@ -60,7 +60,7 @@ void simulation_communicate(entity_t predator, entity_t predators[NB_PREDATOR])
     {
         for (i = 0; i < NB_PREDATOR; ++i)
         {
-            if (simulation_get_distance_between_2_predator(predator, predators[i]) < 0.5*COM_RADIUS)
+            if (simulation_get_distance_between_2_predator(predator, predators[i]) < COM_RADIUS)
             {
                 predators[i].p.cardinality_target = predator.p.cardinality_target;
             }
@@ -177,6 +177,7 @@ void simulation_get_closest_friend(entity_t * predators)
     for (i=0;i<NB_PREDATOR;i++){
         for(j=0;j<NB_PREDATOR;j++)
         {
+
             if(i!=j)
             {
                 dist = simulation_get_distance_between_2_predator(predators[i], predators[j]);
@@ -189,7 +190,6 @@ void simulation_get_closest_friend(entity_t * predators)
         }
         predators[i].p.cardinality_friend =
             simulation_get_cardinals(predators[i].x, predators[i].y, predators[friend].x, predators[friend].y);
-
         predators[i].p.distance_friend =
             simulation_get_distance(distmin);
     }
@@ -248,7 +248,7 @@ void simulation_get_perception(entity_t * predators, target_t target)
            || simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y)) == CLOSE)
         {
             predators[i].p.cardinality_target =
-                simulation_get_cardinals(predators[i].x, target.x, predators[i].y,target.y);
+                simulation_get_cardinals(predators[i].x, predators[i].y, target.x, target.y);
             predators[i].p.distance_target =
                 simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y));
         }
@@ -370,7 +370,7 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     float sum=0.0;
     float cumulativeProbability=0.0;
     float res_pow = 0.0;
-    int action=0;
+    int action=-1;
     int j;
     float p=(float) rand()/(RAND_MAX) ;
     float probability[NB_RULES]={0};

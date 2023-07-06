@@ -272,7 +272,7 @@ void game_state_reset(game_state_t * g_state)
     }
 
     for (i = 0; i < NB_PREDATOR; ++i) {
-        entity_initialize(&g_state->predators[i], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, g_state->predators[i].e_sdl);
+        entity_initialize(&g_state->predators[i], (float)(rand())/RAND_MAX*SCREEN_WIDTH, SCREEN_HEIGHT/2, g_state->predators[i].e_sdl);
         g_state->predators[i].e_sdl->is_in_animation = 0;
         entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
     }
@@ -529,7 +529,7 @@ int game_loop(rules_t brain[NB_RULES], int * iter)
                 break;
             }
         }
-        
+        zlog(stdout,INFO,"%d,%d,%d,%d",game->state.predators[0].p.distance_friend);
         game_loop_state_update(&game->state);
         
         game_graphic_update(*game);
