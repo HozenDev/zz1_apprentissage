@@ -1,20 +1,43 @@
+
+# Table of Contents
+
+1.  [Jeu par apprentissage de règles](#org50c7a60)
+    1.  [Résumé](#org73bfdbe)
+    2.  [Pour commencer](#org79532b9)
+        1.  [Pré-requis :](#org6263a46)
+    3.  [Démarrage](#org13c4b41)
+        1.  [Linux](#orgf4db39c)
+        2.  [Windows](#org3abf490)
+    4.  [Outils](#org30bd0d9)
+    5.  [Versions](#org6e70555)
+    6.  [Auteurs](#orga84cf8e)
+        1.  [Responsable de projet](#org4bb725f)
+        2.  [Equipe de développement](#org9e313f9)
+    7.  [Licence](#org49927dd)
+
+
+<a id="org50c7a60"></a>
+
 # Jeu par apprentissage de règles
 
-<a id="org2fcdf04"></a>
+
+<a id="org73bfdbe"></a>
 
 ## Résumé
 
-Le projet se décompose en deux phases, correspondant chacune approximativement à une semaine de travail. La première phase est commune à tous les groupes et met en place des outils permettant de manipuler des images et d’interagir avec l’utilisateur. Cette phase est ponctuée de petits exercices assez libres où vous devrez démontrer votre maîtrise des points abordés en individuel et se termine par la création d’un petit jeu.
+Un écosystème de type proie prédateurs est dans sa version la plus simple :
 
-La seconde phase, plus spécifique à chaque groupe, consiste à réinvestir les acquis de la première phase afin de créer un prototype de votre propre « jeu vidéo » respectant la thématique du projet.
+Un monde : par exemple une grille à maille rectangulaire, avec ou sans quelques obstacles, avec sa topologie (rectangulaire ou torique le plus souvent) des proies et des prédateurs sont placés sur le monde, le système fonctionne à temps discret : à chaque date de temps, les créatures réalisent une action les prédateurs peuvent ’manger’ les proies (dès qu’il y a contact, dès qu’au moins deux prédateurs entourent une proie, …) les proies essaient de survivre en se sauvant au mieux de leurs capacités.
+
+Dans une version à peine étendue, on retrouve le jeu PACMAN, mais on peut rentrer dans ce cadre aussi bien un jeu de raquettes (la balle est la proie, le prédateur la raquette), un shooter, … que des simulations environnementales ou économiques.
 
 
-<a id="orge391187"></a>
+<a id="org79532b9"></a>
 
 ## Pour commencer
 
 
-<a id="org4464b70"></a>
+<a id="org6263a46"></a>
 
 ### Pré-requis :
 
@@ -53,12 +76,12 @@ La seconde phase, plus spécifique à chaque groupe, consiste à réinvestir les
         sudo make install
 
 
-<a id="orgc5ddb01"></a>
+<a id="org13c4b41"></a>
 
 ## Démarrage
 
 
-<a id="orge25c5ed"></a>
+<a id="orgf4db39c"></a>
 
 ### Linux
 
@@ -80,14 +103,14 @@ La seconde phase, plus spécifique à chaque groupe, consiste à réinvestir les
     `--load` : lancer avec le chargement de la dernière seed sauvegardée
 
 
-<a id="org490d11f"></a>
+<a id="org3abf490"></a>
 
 ### Windows
 
 Aucune compabilité garantie
 
 
-<a id="orge0d928b"></a>
+<a id="org30bd0d9"></a>
 
 ## Outils
 
@@ -98,7 +121,7 @@ Aucune compabilité garantie
 -   VSCode
 
 
-<a id="orge90245f"></a>
+<a id="org6e70555"></a>
 
 ## Versions
 
@@ -109,19 +132,19 @@ Aucune compabilité garantie
 [Liste des versions](../../tags)
 
 
-<a id="org4352090"></a>
+<a id="orga84cf8e"></a>
 
 ## Auteurs
 
 
-<a id="org13ab56a"></a>
+<a id="org4bb725f"></a>
 
 ### Responsable de projet
 
 -   DANIEL Yves-Jean
 
 
-<a id="orgadd82c4"></a>
+<a id="org9e313f9"></a>
 
 ### Equipe de développement
 
@@ -130,7 +153,7 @@ Aucune compabilité garantie
 -   VILLEPREUX Thibault
 
 
-<a id="orgdbf0b69"></a>
+<a id="org49927dd"></a>
 
 ## Licence
 

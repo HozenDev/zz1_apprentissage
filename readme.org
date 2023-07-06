@@ -1,9 +1,11 @@
 * Jeu par apprentissage de règles
 ** Résumé
 
-Le projet se décompose en deux phases, correspondant chacune approximativement à une semaine de travail. La première phase est commune à tous les groupes et met en place des outils permettant de manipuler des images et d’interagir avec l’utilisateur. Cette phase est ponctuée de petits exercices assez libres où vous devrez démontrer votre maîtrise des points abordés en individuel et se termine par la création d’un petit jeu.
+Un écosystème de type proie prédateurs est dans sa version la plus simple :
 
-La seconde phase, plus spécifique à chaque groupe, consiste à réinvestir les acquis de la première phase afin de créer un prototype de votre propre « jeu vidéo » respectant la thématique du projet.
+Un monde : par exemple une grille à maille rectangulaire, avec ou sans quelques obstacles, avec sa topologie (rectangulaire ou torique le plus souvent) des proies et des prédateurs sont placés sur le monde, le système fonctionne à temps discret : à chaque date de temps, les créatures réalisent une action les prédateurs peuvent ’manger’ les proies (dès qu’il y a contact, dès qu’au moins deux prédateurs entourent une proie, …) les proies essaient de survivre en se sauvant au mieux de leurs capacités.
+
+Dans une version à peine étendue, on retrouve le jeu PACMAN, mais on peut rentrer dans ce cadre aussi bien un jeu de raquettes (la balle est la proie, le prédateur la raquette), un shooter, … que des simulations environnementales ou économiques.
 
 ** Pour commencer
 *** Pré-requis :

@@ -38,6 +38,3 @@
 /doc/*
 !/doc/Doxyfile
 !/doc/readme.md
-!/doc/html
-/doc/html/*
-!/doc/html/index.html
