@@ -180,9 +180,9 @@ void simulation_get_closest_friend(entity_t * predators)
             if(i!=j)
             {
                 dist = simulation_get_distance_between_2_predator(predators[i], predators[j]);
-                if(dist<distmin)
+                if(dist < distmin)
                 {
-                    dist=distmin;
+                    distmin=dist;
                     friend=j;
                 }
             }
@@ -211,11 +211,10 @@ void simulation_get_closest_friend(entity_t * predators)
  * @note The function assumes that the `distance` enum and the `COM_RADIUS` constant are
  * defined and accessible within the scope of this function.
  */
-enum distance simulation_get_distance(float dsrc)
+enum distance simulation_get_distance(int dsrc)
 {
-    enum distance dist;
+    enum distance dist = FAR;
     if (dsrc <= COM_RADIUS) dist=CLOSE;
-    else dist=FAR;
     return dist;
 }
 
@@ -374,8 +373,8 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     int action=0;
     int j;
     float p=(float) rand()/(RAND_MAX) ;
-
     float probability[NB_RULES]={0};
+
     utils_shuffle(filtered_rules,nb_compatible);
     for(j=0;j<nb_compatible;j++)
     {
@@ -386,7 +385,7 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
     
     for(j=0;j<nb_compatible;j++) {
             cumulativeProbability += probability[filtered_rules[j]]/sum;
-            if(p< cumulativeProbability){
+            if(p < cumulativeProbability){
                 action = brain[filtered_rules[j]].action;
                 break;
             }
@@ -494,6 +493,7 @@ void simulation_loop(rules_t brain[NB_RULES], int * iter)
             for(j=0;j<NB_RULES;j++) filtered_rules[j]=0;
             /* filter rules */
             nb_compatible=simulation_filtrage_regle(predators[i], filtered_rules, brain);
+            
             /* choisis une action */
             action[i] = simulation_choose_action(filtered_rules,brain,nb_compatible);
             

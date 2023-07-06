@@ -40,7 +40,7 @@
 #define NB_DISTANCE    3
 #define NB_CARDINALITY 6
 #define NB_MEASURE     4   // size of measures
-#define NB_RULES       10  // number rules in brain (size of array_rules)
+#define NB_RULES       22  // number rules in brain (size of array_rules)
 
 
 /*RECUIS*/

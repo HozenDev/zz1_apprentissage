@@ -11,7 +11,7 @@ void simulation_move_entity(entity_t * predator, enum cardinality c);
 
 enum cardinality simulation_get_cardinals(float xa,float ya,float xb ,float yb);
 void simulation_get_closest_friend(entity_t * predators);
-enum distance simulation_get_distance(float dsrc);
+enum distance simulation_get_distance(int dsrc);
 void simulation_get_perception(entity_t * predators, target_t target);
 int simulation_get_distance_between_2_predator(entity_t p1, entity_t p2);
 

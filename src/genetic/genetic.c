@@ -20,6 +20,7 @@ void genetic_initialize_population(char * path_brain, rules_t population[POPULAT
     {
 	rules_copy_brain(population[0],population[i]);
 	genetic_mutate(population[i]);
+        /* resolution_random_change(population[i]); */
     }
 }
 
@@ -52,9 +53,9 @@ int genetic_evaluate_population(int score[POPULATION_SIZE],rules_t population[PO
     int index_best_individu = 0;
     for (int i=0; i < POPULATION_SIZE; ++i)
     {
-	zlog(stdout, INFO, "evaluation score de l'individu %d\n", i);
+	zlog(stdout, INFO, "evaluation score de l'individu %d", i);
 	score[i] = genetic_evaluate_individu(population[i]);
-	zlog(stdout, INFO, "l'individu %d a un score de %d \n", i, score[i]);
+	zlog(stdout, INFO, "l'individu %d a un score de %d", i, score[i]);
 	if (score[i] < best_individu)
         {
             best_individu = score[i];
@@ -162,17 +163,19 @@ ch allows the function
 void genetic_mutate(rules_t individu[NB_RULES])
 {
     int i;
-    float p =(float) (rand()) / RAND_MAX;
+    float p;
     float cum_p [NB_MEASURE +2];
+
     cum_p[0] = MUTATION_RATE_DISTANCE_FRIEND;
     cum_p[1] = cum_p[0] + MUTATION_RATE_DISTANCE_TARGET;
     cum_p[2] = cum_p[1] + MUTATION_RATE_CARDINALITY_FRIEND;
     cum_p[3] = cum_p[2] + MUTATION_RATE_CARDINALITY_TARGET;
     cum_p[4] = cum_p[3] + MUTATION_RATE_ACTION;
-    cum_p[5] = cum_p[4] + MUTATION_RATE_ACTION;
+    cum_p[5] = cum_p[4] + MUTATION_RATE_PRIORITY;
     
     for (i = 0; i < NB_RULES; i++)
-    {	p =(float) (rand()) / RAND_MAX;
+    {
+        p = (float) rand() / (float) RAND_MAX;
         if ( p < cum_p[0])
 	{
 	    individu[i].perception.distance_friend = (rand()%NB_DISTANCE)-1;
@@ -218,7 +221,7 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
     
     int iteration = 0 , index_best_individu = 0, p1, p2;
 
-    zlog(stdout, INFO, "Entrez dans genetic solve brain\n", NULL);
+    zlog(stdout, INFO, "Entrez dans genetic solve brain", NULL);
 
     genetic_initialize_population_brain(brain, population);
     genetic_initialize_population_brain(brain, new_population);
@@ -232,17 +235,20 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
             // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
 	    {
-		if((float) (rand() / RAND_MAX) > -1)//MUTATION_RATE)
+		if(((float) rand()/ (float) RAND_MAX) > MUTATION_RATE)
 		{	    
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
 		    genetic_croisement_generate_child(new_population[i], population, p1, p2);
+
+                    zlog(stdout, INFO, "p1: %d, p2: %d", p1, p2);
 		}
 		else
 		{
 		    rules_copy_brain_genetic(population[0], new_population[i]);
 		    genetic_mutate(new_population[i]);
 		}
+                rules_save_file(stdout, new_population[i]);
 	    }
 	}
 	else // new_populaiton forme population
@@ -253,10 +259,15 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 	    // Sélection, croisement et mutation pour générer la nouvelle population
 	    for (int i = 1; i < POPULATION_SIZE; i++)
 	    {
-		if((float) (rand() / RAND_MAX) > MUTATION_RATE)
+                float p = ((float) rand()/ (float) RAND_MAX);
+                printf("%f\n", p);
+                
+		if(p > MUTATION_RATE)
 		{
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
+
+                    zlog(stdout, INFO, "p1: %d, p2: %d", p1, p2);
 
 		    genetic_croisement_generate_child(population[i], new_population, p1, p2);
 		}
@@ -271,6 +282,12 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
     }
 
     zlog(stdout, INFO, "best index : %d", index_best_individu);
+
+    for (int i = 0; i < POPULATION_SIZE; ++i)
+    {
+        rules_save_file(stdout, population[i]);
+        fprintf(stdout, "\n\n");
+    }
     
     /* sauvegarde meillleur individu */
     (iteration%2==0)?
