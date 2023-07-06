@@ -273,11 +273,11 @@ void game_state_reset(game_state_t * g_state)
     for (i = 0; i < NB_PREDATOR; ++i)
     {
         /* entity_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl); */
-        /* entity_all_centered_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
+        entity_all_centered_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl);
         /* entity_random_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
         /* entity_horizontal_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
         /* entity_vertical_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
-        entity_vertical_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl);
+        /* entity_vertical_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl); */
         
         g_state->predators[i].e_sdl->is_in_animation = 0;
         entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);

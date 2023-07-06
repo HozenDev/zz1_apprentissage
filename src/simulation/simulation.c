@@ -488,7 +488,7 @@ void simulation_init(entity_t predators[NB_PREDATOR], target_t * target)
 void simulation_loop(rules_t brain[NB_RULES], int * iter)
 {
     
-    int action[NB_RULES]={0};
+    int action[NB_PREDATOR]={0};
     int filtered_rules[NB_RULES] = {0};
     entity_t predators[NB_PREDATOR];
     target_t target;
