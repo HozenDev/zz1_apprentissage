@@ -192,10 +192,6 @@ void game_graphic_update(game_t game)
     animation_render_sprite(game.renderer,
                             game.state.prey.e_sdl->sprites[game.state.prey.e_sdl->state],
                             game.state.prey.e_sdl->r);
-
-    animation_render_sprite(game.renderer,
-                            game.state.predators[i].e_sdl->sprites[game.state.predators[i].e_sdl->state],
-                            game.state.predators[i].e_sdl->r);
     
     /* render predators */
     for (i = 0; i < game.state.nb_predator; ++i)
