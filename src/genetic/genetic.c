@@ -172,6 +172,7 @@ void genetic_mutate(rules_t individu[NB_RULES])
     cum_p[3] = cum_p[2] + MUTATION_RATE_CARDINALITY_TARGET;
     cum_p[4] = cum_p[3] + MUTATION_RATE_ACTION;
     cum_p[5] = cum_p[4] + MUTATION_RATE_PRIORITY;
+    cum_p[6] = cum_p[5] + MUTATION_RATE_CARDINALITY_DENSITY;
     
     for (i = 0; i < NB_RULES; i++)
     {
@@ -199,6 +200,10 @@ void genetic_mutate(rules_t individu[NB_RULES])
 	else if  (p < cum_p[5])
 	{
 	    individu[i].priority = rand()%NB_PRIORITY;
+	}
+	else if  (p < cum_p[6])
+	{
+	    individu[i].perception.cardinality_density = (rand()%(NB_CARDINALITY-1))-1;
 	}
     }
 }
@@ -289,9 +294,7 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 		{
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
-
-                    zlog(stdout, DEBUG, "p1: %d, p2: %d", p1, p2);
-
+		    
 		    genetic_croisement_generate_child(population[i], new_population, p1, p2);
 		}
 		else

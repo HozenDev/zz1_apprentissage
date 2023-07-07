@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     (void) score;
     create_seed(&seed);
 
-    rules_read_path_file("../data/rules/rules_balayage.txt", brain);
+    rules_read_path_file("../data/rules/rules_init.txt", brain);
     
     enable_log(argc, argv);
 
@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
     /* fprintf(stdout, "simulation fini: iter %d\n", iter); */
 
     /* parallel_loop(); */
+    rules_save_file(stdout, brain);
     game_loop(brain, &iter);
     /* simulation_loop(brain, &iter); */
     

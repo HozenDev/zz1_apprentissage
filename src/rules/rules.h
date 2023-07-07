@@ -27,6 +27,7 @@ struct perception_s {
     enum cardinality cardinality_friend;
     enum distance distance_target;
     enum cardinality cardinality_target;
+    enum cardinality cardinality_density;
 
 };
 typedef struct perception_s perception_t;

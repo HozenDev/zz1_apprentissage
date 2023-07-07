@@ -14,12 +14,13 @@
  */
 void init_random_brain(rules_t * brain){
     for(int i=0;i<NB_RULES;i++){
-        brain[i].perception.distance_friend=(rand()%NB_DISTANCE) - 1;
-        brain[i].perception.cardinality_friend=rand()%(NB_CARDINALITY-1) - 1;
-        brain[i].perception.distance_target=rand()%NB_DISTANCE - 1;
-        brain[i].perception.cardinality_target=rand()%NB_CARDINALITY - 1;
-        brain[i].action=rand()%NB_ACTION ;
-        brain[i].priority=rand()%NB_PRIORITY + 1 ;
+        brain[i].perception.distance_friend     = (rand()%NB_DISTANCE) - 1;
+        brain[i].perception.cardinality_friend  = rand()%(NB_CARDINALITY-1) - 1;
+        brain[i].perception.distance_target     = rand()%NB_DISTANCE - 1;
+        brain[i].perception.cardinality_target  = rand()%NB_CARDINALITY - 1;
+	brain[i].perception.cardinality_density = rand()%NB_CARDINALITY -1 ;
+        brain[i].action                         = rand()%NB_ACTION ;
+        brain[i].priority                       = rand()%NB_PRIORITY + 1 ;
 
     }
 }
@@ -78,6 +79,8 @@ void resolution_recuis_simule(float (*pf)(float), char * path_brain_load, char *
     rules_save_path_file(path_brain_res, brain);
 }   
 
+
+
 /**
  * @brief Modifies a random rule in the brain by changing one of its properties randomly.
  *
@@ -103,11 +106,12 @@ void resolution_random_change(rules_t brain[NB_RULES])
 	brain[random_rules].perception.cardinality_friend = (rand()%(NB_CARDINALITY-1))-1;
     else if (random_indice == 3)
 	brain[random_rules].perception.cardinality_target = (rand()%NB_CARDINALITY)-1;
-    else if (random_indice == 4)
-	
+    else if (random_indice == 4)	
 	brain[random_rules].action = (rand()%NB_ACTION);
     else if (random_indice == 5)
 	brain[random_rules].priority = (rand()%NB_PRIORITY + 1);
+    else if (random_indice == 6)
+	brain[random_rules].perception.cardinality_density = (rand()%(NB_CARDINALITY-1))-1;
     else
 	fprintf(stderr, "Erreur dans resolution_random_change, random_indice supérieur au nombre de champs de rules");
 }

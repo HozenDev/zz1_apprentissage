@@ -239,8 +239,10 @@ enum distance simulation_get_distance(int dsrc, int radius)
 void simulation_get_perception(entity_t * predators, target_t target)
 {
     int i;
+    int card = simulation_get_density(predators);;
     
     simulation_get_closest_friend(predators);
+    
     for(i=0;i<NB_PREDATOR;i++)
     {
         if(predators[i].p.cardinality_target != NOT_FOUND
@@ -251,6 +253,7 @@ void simulation_get_perception(entity_t * predators, target_t target)
             predators[i].p.distance_target =
                 simulation_get_distance(abs(predators[i].x - target.x) + abs(predators[i].y - target.y), DESTROY_RADIUS);
         }
+	predators[i].p.cardinality_density = card;
     }
 }
 
@@ -309,6 +312,9 @@ int simulation_verify_rules(entity_t predator,rules_t rule)
     if(rule.perception.cardinality_target != JOKER_C
        && predator.p.cardinality_target != rule.perception.cardinality_target) flag=0;
 
+    if(rule.perception.cardinality_density != JOKER_C
+       && predator.p.cardinality_density != rule.perception.cardinality_density) flag=0;
+    
     return(flag);
 }
 
@@ -415,7 +421,6 @@ int simulation_choose_action(int filtered_rules[NB_RULES], rules_t  brain[NB_RUL
  * `simulation_communicate`, and `simulation_destroy_target` functions are defined and accessible
  * within the scope of this function. It also assumes the availability of `NB_PREDATOR` constant.
  */
-
 void simulation_execute_action(entity_t * predator,
                                int action,
                                entity_t predators[NB_PREDATOR],
@@ -535,4 +540,42 @@ void simulation_loop_average(rules_t brain[NB_RULES], int * iter)
 	 sum += score;
     }
     *iter = (int) sum/NB_SIMULATION_LOOP;
+}
+
+
+/**
+ * @brief Get the density of predators in different regions of the world.
+ *
+ * This function calculates the density of predators in different regions of the world
+ * based on their positions.
+ *
+ * @param predators An array of predator entities.
+ * @return The index of the region with the highest predator density.
+ *         - 0: Top right region
+ *         - 1: Bottom right region
+ *         - 2: Bottom left region
+ *         - 3: Top left region
+ */
+int simulation_get_density(entity_t * predators)
+{
+    int CARD[4]={0};
+    int max=0;
+    int indmax=0;
+    for(int i=0;i<NB_PREDATOR;i++)
+    {
+	if(predators[i].x<WORLD_WIDTH/4) CARD[3]++;
+	else if(predators[i].x>3*WORLD_WIDTH/4) CARD[2]++;
+	else if(predators[i].x>WORLD_WIDTH/4 && predators[i].y>WORLD_HEIGHT/2) CARD[0]++;
+	else CARD[1]++;
+
+    }
+    max=CARD[0];
+    for(int i=1;i<4;i++){
+	if(CARD[i]>max){
+	    max=CARD[i];
+	    indmax=i;
+	}
+    }
+    //zlog(stdout, INFO, "card %d\n", indmax);
+    return(indmax);
 }
