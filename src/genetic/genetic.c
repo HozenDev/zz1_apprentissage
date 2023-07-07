@@ -172,6 +172,7 @@ void genetic_mutate(rules_t individu[NB_RULES])
     cum_p[3] = cum_p[2] + MUTATION_RATE_CARDINALITY_TARGET;
     cum_p[4] = cum_p[3] + MUTATION_RATE_ACTION;
     cum_p[5] = cum_p[4] + MUTATION_RATE_PRIORITY;
+    cum_p[6] = cum_p[5] + MUTATION_RATE_CARDINALITY_DENSITY;
     
     for (i = 0; i < NB_RULES; i++)
     {
@@ -199,6 +200,10 @@ void genetic_mutate(rules_t individu[NB_RULES])
 	else if  (p < cum_p[5])
 	{
 	    individu[i].priority = rand()%NB_PRIORITY;
+	}
+	else if  (p < cum_p[6])
+	{
+	    individu[i].perception.cardinality_density = (rand()%(NB_CARDINALITY-1))-1;
 	}
     }
 }
@@ -252,8 +257,8 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 
     zlog(stdout, DEBUG, "Entrez dans genetic solve brain", NULL);
 
-    genetic_initialize_population_brain(brain, population);
-    genetic_initialize_population_brain(brain, new_population);
+    genetic_initialize_population_v2(brain, population);
+    genetic_initialize_population_v2(brain, new_population);
     
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 	if(iteration%2 == 0) // population forme new_population
@@ -269,8 +274,6 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
 		    genetic_croisement_generate_child(new_population[i], population, p1, p2);
-
-                    zlog(stdout, DEBUG, "p1: %d, p2: %d", p1, p2);
 		}
 		else
 		{
@@ -291,9 +294,7 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 		{
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
-
-                    zlog(stdout, DEBUG, "p1: %d, p2: %d", p1, p2);
-
+		    
 		    genetic_croisement_generate_child(population[i], new_population, p1, p2);
 		}
 		else
@@ -314,4 +315,161 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 	rules_copy_brain(population[0], brain);
 
     *score_best_brain = score[0];
+}
+
+
+/**
+ * @brief Generates a child using crossover from two parent individuals.
+ *
+ * This function generates a child by performing crossover between two parent individuals
+ * selected from the population. The child inherits genetic information from both parents.
+ *
+ * @param children The array to store the generated child rules.
+ * @param population The population array containing the parent individuals.
+ * @param p1 The index of the first parent individual.
+ * @param p2 The index of the second parent individual.
+ */
+void genetic_croisement_generate_child_v1(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
+{
+    genetic_croisement_generate_child(children, population, p1, p2);
+}
+
+
+/**
+ * @brief Generates a child using crossover from two parent individuals.
+ *
+ * This function generates a child by performing crossover between two parent individuals
+ * selected from the population. The child inherits genetic information from both parents.
+ *
+ * @param children The array to store the generated child rules.
+ * @param population The population array containing the parent individuals.
+ * @param p1 The index of the first parent individual.
+ * @param p2 The index of the second parent individual.
+ */
+void genetic_croisement_generate_child_v2(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
+{
+    int i, k=0;
+  
+    for (i=0; i<NB_RULES ; i+=2)
+    {
+	rules_copy_rules(population[p1][i], &children[k]);
+	++k;
+    }
+
+    for(i=1; i<NB_RULES; i += 2)
+    {
+	rules_copy_rules(population[p2][i] , &children[k]);
+	++k;
+    }
+}
+
+
+/**
+ * @brief Generates a child using crossover from two parent individuals.
+ *
+ * This function generates a child by performing crossover between two parent individuals
+ * selected from the population. The child inherits genetic information from both parents.
+ * The crossover is performed by dividing the genetic information equally between the parents.
+ *
+ * @param children The array to store the generated child rules.
+ * @param population The population array containing the parent individuals.
+ * @param p1 The index of the first parent individual.
+ * @param p2 The index of the second parent individual.
+ */
+void genetic_croisement_generate_child_v3(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
+{
+    int i, k=0;
+  
+    for (i=0; i<NB_RULES/2 ; ++i)
+    {
+	rules_copy_rules(population[p1][i], &children[k]);
+	++k;
+    }
+
+    for(i=0; i<NB_RULES/2; ++i)
+    {
+	rules_copy_rules(population[p2][i] , &children[k]);
+	++k;
+    }
+}
+
+
+
+/**
+ * @brief Generates a child using crossover from two parent individuals.
+ *
+ * This function generates a child by performing crossover between two parent individuals
+ * selected from the population. The child inherits genetic information from both parents.
+ * The crossover is performed by dividing the genetic information in a reversed order, starting
+ * from the end of the genetic sequence.
+ *
+ * @param children The array to store the generated child rules.
+ * @param population The population array containing the parent individuals.
+ * @param p1 The index of the first parent individual.
+ * @param p2 The index of the second parent individual.
+ */
+void genetic_croisement_generate_child_v4(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
+{
+    int i, k=0;
+  
+    for (i=NB_RULES-1; i>NB_RULES/2 ; --i)
+    {
+	rules_copy_rules(population[p1][i], &children[k]);
+	++k;
+    }
+
+    for(i=NB_RULES-1; i>NB_RULES/2 ; --i)
+    {
+	rules_copy_rules(population[p2][i] , &children[k]);
+	++k;
+    }
+}
+
+
+/**
+ * @brief Chooses a crossover method and generates a child using crossover.
+ *
+ * This function chooses a crossover method randomly and performs crossover between
+ * two parent individuals selected from the population. The crossover method is selected
+ * based on a random probability. The child is generated by inheriting genetic information
+ * from both parents according to the chosen crossover method.
+ *
+ * @param children The array to store the generated child rules.
+ * @param population The population array containing the parent individuals.
+ * @param p1 The index of the first parent individual.
+ * @param p2 The index of the second parent individual.
+ */
+void genetic_choose_crossover(rules_t children[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES], int p1, int p2)
+{
+    float p = ((float) rand()/ (float) RAND_MAX);
+    if (p<0.25)
+	genetic_croisement_generate_child_v1(children, population, p1, p2);
+    else if (p < 0.5)
+	genetic_croisement_generate_child_v2(children, population, p1, p2);
+    else if (p < 0.75)
+	genetic_croisement_generate_child_v3(children, population, p1, p2);
+    else
+	genetic_croisement_generate_child_v4(children, population, p1, p2);
+}
+
+
+/**
+ * @brief Initializes the population by saving the rules to a file.
+ *
+ * This function initializes the population by saving the rules for each individual in the
+ * population to a file. It uses the `rules_save_file` function to save the rules of each
+ * individual in the provided `population` array to the given file.
+ *
+ * @param file Pointer to the file where the rules will be saved.
+ * @param population Array representing the population of individuals.
+ *
+ * @note The file must be opened in write mode before calling this function.
+ */
+void genetic_initialize_population_v2(rules_t * brain, rules_t population[POPULATION_SIZE][NB_RULES])
+{
+    rules_copy_brain(brain, population[0]);
+    for (int i=1; i < POPULATION_SIZE; ++i)
+    {
+	init_random_brain(population[i]);
+    }
 }

@@ -264,11 +264,13 @@ void entity_random_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
-
+    
+    e->p.cardinality_density = NORTH;
+    
     /* initialize target perceptions */
     e->p.distance_target = FAR;
     e->p.cardinality_target = NOT_FOUND;
-
+    
     e->e_sdl = e_sdl;
 }
 
@@ -292,6 +294,8 @@ void entity_all_centered_distribution_init(struct entity_s *e ,entity_sdl_t * e_
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
+
+     e->p.cardinality_density = NORTH;
 
     /* initialize target perceptions */
     e->p.distance_target = FAR;
@@ -322,6 +326,8 @@ void entity_horizontal_distribution_init(struct entity_s *e ,entity_sdl_t * e_sd
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
 
+    e->p.cardinality_density = NORTH;
+
     /* initialize target perceptions */
     e->p.distance_target = FAR;
     e->p.cardinality_target = NOT_FOUND;
@@ -348,6 +354,8 @@ void entity_vertical_distribution_init(struct entity_s *e ,entity_sdl_t * e_sdl)
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
+
+     e->p.cardinality_density = NORTH;
 
     /* initialize target perceptions */
     e->p.distance_target = FAR;
@@ -378,6 +386,8 @@ void entity_vertical_even_distribution_init(struct entity_s *e, int i, entity_sd
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
 
+    e->p.cardinality_density = NORTH;
+
     /* initialize target perceptions */
     e->p.distance_target = FAR;
     e->p.cardinality_target = NOT_FOUND;
@@ -405,6 +415,8 @@ void entity_horizontal_even_distribution_init(struct entity_s *e, int i, entity_
     
     e->p.distance_friend = FAR;
     e->p.cardinality_friend = NORTH;
+
+    e->p.cardinality_density = NORTH;
 
     /* initialize target perceptions */
     e->p.distance_target = FAR;

@@ -158,6 +158,7 @@ void utils_matrix_copy(float ** srxmatrix,float ** destmatrix,int n)
         }
     }
 }
+
 /**
  *@brief swaps values of the two int pointers
  */
@@ -166,8 +167,8 @@ void utils_swap(int*a,int*b){
 	tmp=*a;
 	*a=*b;
 	*b=tmp;
-
 }
+
 /**
  *@brief shuffles the list by swapping random values in the said list  as often as there is of numbers in this list
  */

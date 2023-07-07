@@ -19,6 +19,7 @@ void rules_save_file(FILE * file, rules_t array_rules[NB_RULES])
         fprintf(file, "%d ", array_rules[i].perception.cardinality_friend);
         fprintf(file, "%d ", array_rules[i].perception.distance_target);
         fprintf(file, "%d ", array_rules[i].perception.cardinality_target);
+	fprintf(file, "%d ", array_rules[i].perception.cardinality_density);
         /* print action and priority */
         fprintf(file, "%d %d \n", array_rules[i].action, array_rules[i].priority);
     }
@@ -118,11 +119,12 @@ void rules_read_file(FILE * file, rules_t array_rules[NB_RULES])
     {
 	for (int i = 0; i < NB_RULES; ++i)
 	{
-            if (fscanf(file,"%d %d %d %d ",
+            if (fscanf(file,"%d %d %d %d %d",
                        &array_rules[i].perception.distance_friend,
                        &array_rules[i].perception.cardinality_friend,
                        &array_rules[i].perception.distance_target,
-                       &array_rules[i].perception.cardinality_target) < 4)
+                       &array_rules[i].perception.cardinality_target,
+		       &array_rules[i].perception.cardinality_density) < 5)
             {
                 zlog(stderr, ERROR, "Erreur lors de la lecture 1 des mesures à partir du fichier.\n", NULL); 
                 return;
@@ -157,10 +159,11 @@ void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES])
     for (int i =0; i<NB_RULES; i++)
     {
         //copy measure
-        braindest[i].perception.distance_friend = brainsrc[i].perception.distance_friend;
-        braindest[i].perception.cardinality_friend = brainsrc[i].perception.cardinality_friend;
-        braindest[i].perception.distance_target = brainsrc[i].perception.distance_target;
-        braindest[i].perception.cardinality_target = brainsrc[i].perception.cardinality_target;
+        braindest[i].perception.distance_friend     = brainsrc[i].perception.distance_friend;
+        braindest[i].perception.cardinality_friend  = brainsrc[i].perception.cardinality_friend;
+        braindest[i].perception.distance_target     = brainsrc[i].perception.distance_target;
+        braindest[i].perception.cardinality_target  = brainsrc[i].perception.cardinality_target;
+	braindest[i].perception.cardinality_density = brainsrc[i].perception.cardinality_density;
 
         //copy action
         braindest[i].action = brainsrc[i].action;
@@ -187,10 +190,11 @@ void rules_copy_brain(rules_t brainsrc[NB_RULES], rules_t braindest[NB_RULES])
 void rules_copy_rules(rules_t rules_src, rules_t * rules_dest)
 {
     //copy measure
-    (*rules_dest).perception.distance_friend    = rules_src.perception.distance_friend;
-    (*rules_dest).perception.cardinality_friend = rules_src.perception.cardinality_friend;
-    (*rules_dest).perception.distance_target    = rules_src.perception.distance_target;
-    (*rules_dest).perception.cardinality_target = rules_src.perception.cardinality_target;
+    (*rules_dest).perception.distance_friend     = rules_src.perception.distance_friend;
+    (*rules_dest).perception.cardinality_friend  = rules_src.perception.cardinality_friend;
+    (*rules_dest).perception.distance_target     = rules_src.perception.distance_target;
+    (*rules_dest).perception.cardinality_target  = rules_src.perception.cardinality_target;
+    (*rules_dest).perception.cardinality_density = rules_src.perception.cardinality_density;
 
     //copy action
     rules_dest->action = rules_src.action;

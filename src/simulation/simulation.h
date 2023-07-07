@@ -29,5 +29,6 @@ void simulation_free(void);
 void simulation_loop(rules_t brain[NB_RULES], int * iter);
 void simulation_loop_average(rules_t brain[NB_RULES], int * iter);
 void simulation_init(entity_t predators[NB_PREDATOR], target_t target[NB_PREY]);
+int simulation_get_density(entity_t * predators);
 
 #endif
