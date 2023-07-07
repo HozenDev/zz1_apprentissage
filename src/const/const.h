@@ -9,7 +9,7 @@
 #define GAME_DELAY 10
 
 #define NB_PREDATOR 8
-#define NB_PREY 1
+#define NB_PREY 20
 #define NB_GAME_BACKGROUNDS 3
 
 #define PREDATOR_SPEED 6
@@ -41,9 +41,9 @@
 #define NB_DISTANCE    3
 #define NB_CARDINALITY 6
 #define NB_MEASURE     4   // size of measures
-#define NB_RULES       11  // number rules in brain (size of array_rules)
+#define NB_RULES       22  // number rules in brain (size of array_rules)
 
-/*RECUIS*/
+/* RECUIS */
 #define EPSILON  0.001
 
 #endif

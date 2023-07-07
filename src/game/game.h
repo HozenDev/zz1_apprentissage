@@ -34,11 +34,13 @@ struct game_state_s {
     /* game simulation state */
     int nb_predator;
     struct entity_s predators[NB_PREDATOR];
+    int nb_prey;
+    struct target_s prey[NB_PREY];
+
     int action[NB_PREDATOR];
     int filtered_rules[NB_RULES];
     rules_t brain[NB_RULES];
 
-    struct target_s prey;
 
     /* game parameters */
     float score;

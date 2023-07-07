@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     (void) score;
     create_seed(&seed);
 
-    rules_read_path_file("../data/rules/rules_balayage.txt", brain);
+    rules_read_path_file("../data/rules/rules_test.txt", brain);
     
     enable_log(argc, argv);
 

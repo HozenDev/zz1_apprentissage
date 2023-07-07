@@ -48,14 +48,21 @@ void game_loop_state_update(game_state_t * g_state)
     unsigned long millis;
     clock_t begin;
     clock_t end;
-    int old_prey_pv;
+    int old_prey_pv[NB_PREY] = {TARGET_PV};
+    int all_prey_pv = 0;
 
     /* update prey animation */
-    entity_sdl_update_animation(g_state->prey.e_sdl, 0.1);
+    for (i = 0; i < g_state->nb_prey; ++i) {
+        entity_sdl_update_animation(g_state->prey[i].e_sdl, 0.1);
+    }
     
     if (!g_state->end && !g_state->stop) /* if it is not the end of the game */
     {
-        old_prey_pv = g_state->prey.pv;
+        for (i = 0; i < g_state->nb_prey; ++i) {
+            old_prey_pv[i] = g_state->prey[i].pv;
+            all_prey_pv += g_state->prey[i].pv;
+        }
+
         begin = clock();
     
         simulation_get_perception(g_state->predators, g_state->prey);
@@ -73,8 +80,7 @@ void game_loop_state_update(game_state_t * g_state)
             g_state->action[i] = simulation_choose_action(g_state->filtered_rules, g_state->brain,nb_compatible);
 
             /* execute action */
-            simulation_execute_action(&g_state->predators[i], g_state->action[i], g_state->predators, &g_state->prey);
-
+            simulation_execute_action(&g_state->predators[i], g_state->action[i], g_state->predators, g_state->prey);
             /* update sdl coordinates */
             g_state->predators[i].e_sdl->r.x = g_state->predators[i].x - g_state->predators[i].e_sdl->r.w/2;
             g_state->predators[i].e_sdl->r.y = g_state->predators[i].y - g_state->predators[i].e_sdl->r.h/2;
@@ -82,7 +88,7 @@ void game_loop_state_update(game_state_t * g_state)
                 g_state->predators[i].e_sdl->r.x = SCREEN_WIDTH-g_state->predators[i].e_sdl->r.w;
             if (g_state->predators[i].e_sdl->r.y > SCREEN_HEIGHT-g_state->predators[i].e_sdl->r.h)
                 g_state->predators[i].e_sdl->r.y = SCREEN_HEIGHT-g_state->predators[i].e_sdl->r.h;
-
+            
             /* update predators animations */
             entity_sdl_update_animation(g_state->predators[i].e_sdl, 0.2);
 
@@ -95,26 +101,56 @@ void game_loop_state_update(game_state_t * g_state)
                 break;
             default:
                 g_state->predators[i].e_sdl->is_in_animation = 0;
-                if (!g_state->prey.e_sdl->is_in_animation) entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
+                if (!g_state->predators[i].e_sdl->is_in_animation)
+                    entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
                 /* do nothing */
                 break;
+            }
+        }
+
+        for (i = 0; i < NB_PREY; ++i)
+        {
+            if (g_state->prey[i].pv > 0)
+            {
+                all_prey_pv += g_state->prey[i].pv;
+            }
+            else {
+                g_state->prey[i].x = 3*SCREEN_WIDTH;
+                g_state->prey[i].y = 3*SCREEN_HEIGHT;
+                for (j = 0; j < NB_PREDATOR; ++j)
+                {
+                    g_state->predators[j].p.distance_target = FAR;
+                    g_state->predators[j].p.cardinality_target = NOT_FOUND;
+                    
+                }
             }
         }
 
         /* mise à jour parallax background */
         for (i = 0; i < g_state->nb_background; ++i)
             g_state->back[i]->r.x -= (i+1);
-    
-        if (g_state->prey.pv <= 0)
+
+        for (i = 0; i < g_state->nb_prey; ++i)
         {
-            g_state->prey.e_sdl->is_in_animation = 0;
-            entity_sdl_change_state(g_state->prey.e_sdl, DEATH);
-            g_state->prey.e_sdl->sprites[(int) DEATH]->a->loop = 0;
+            if (g_state->prey[i].pv <= 0)
+            {
+                g_state->prey[i].e_sdl->is_in_animation = 0;
+                entity_sdl_change_state(g_state->prey[i].e_sdl, DEATH);
+                g_state->prey[i].e_sdl->sprites[(int) DEATH]->a->loop = 0;
+                /* g_state->end = 1; */
+            } else if (g_state->prey[i].pv < old_prey_pv[i])
+            {
+                g_state->prey[i].e_sdl->is_in_animation = 0;
+                entity_sdl_change_state(g_state->prey[i].e_sdl, HURT);
+            }
+            else {
+                g_state->prey[i].e_sdl->is_in_animation = 0;
+                entity_sdl_change_state(g_state->prey[i].e_sdl, WALK);
+            }
+        }
+
+        if (all_prey_pv <= 0) {
             g_state->end = 1;
-        } else if (g_state->prey.pv < old_prey_pv)
-        {
-            g_state->prey.e_sdl->is_in_animation = 0;
-            entity_sdl_change_state(g_state->prey.e_sdl, HURT);
         }
 
         end = clock();
@@ -145,10 +181,13 @@ void game_free_game(game_t * game)
         game->state.mx = 0;
         game->state.my = 0;
 
-        if (game->state.prey.e_sdl)
+        for (i = 0; i < game->state.nb_prey; ++i)
         {
-            entity_sdl_free(game->state.prey.e_sdl);
-            game->state.prey.e_sdl = NULL;
+            if (game->state.prey[i].e_sdl)
+            {
+                entity_sdl_free(game->state.prey[i].e_sdl);
+                game->state.prey[i].e_sdl = NULL;
+            }   
         }
         
         for (i = 0; i < game->state.nb_predator; ++i)
@@ -189,9 +228,12 @@ void game_graphic_update(game_t game)
     }
 
     /* render prey */
-    animation_render_sprite(game.renderer,
-                            game.state.prey.e_sdl->sprites[game.state.prey.e_sdl->state],
-                            game.state.prey.e_sdl->r);
+    for (i = 0; i < game.state.nb_prey; ++i)
+    {
+        animation_render_sprite(game.renderer,
+                                game.state.prey[i].e_sdl->sprites[game.state.prey[i].e_sdl->state],
+                                game.state.prey[i].e_sdl->r);
+    }
     
     /* render predators */
     for (i = 0; i < game.state.nb_predator; ++i)
@@ -270,24 +312,27 @@ void game_state_reset(game_state_t * g_state)
     for (i = 0; i < NB_PREDATOR; ++i) g_state->action[i] = 0;
     for (i = 0; i < NB_RULES; ++i) g_state->filtered_rules[i] = 0;
 
-    for (i = 0; i < NB_PREDATOR; ++i)
+    for (i = 0; i < g_state->nb_predator; ++i)
     {
-        /* entity_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl); */
+        entity_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl);
         /* entity_all_centered_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
         /* entity_random_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
         /* entity_horizontal_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
         /* entity_vertical_distribution_init(&g_state->predators[i], g_state->predators[i].e_sdl); */
-        entity_vertical_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl);
+        /* entity_vertical_even_distribution_init(&g_state->predators[i], i, g_state->predators[i].e_sdl); */
         
         g_state->predators[i].e_sdl->is_in_animation = 0;
         entity_sdl_change_state(g_state->predators[i].e_sdl, WALK);
     }
 
-    entity_initialize_target(&g_state->prey);
-    g_state->prey.e_sdl->r.x = g_state->prey.x - g_state->prey.e_sdl->r.w/2;
-    g_state->prey.e_sdl->r.y = g_state->prey.y - g_state->prey.e_sdl->r.h/2;
-    g_state->prey.e_sdl->is_in_animation = 0;
-    entity_sdl_change_state(g_state->prey.e_sdl, WALK);
+    for (i = 0; i < g_state->nb_prey; ++i)
+    {
+        entity_initialize_target(&g_state->prey[i]);
+        g_state->prey[i].e_sdl->r.x = g_state->prey[i].x - g_state->prey[i].e_sdl->r.w/2;
+        g_state->prey[i].e_sdl->r.y = g_state->prey[i].y - g_state->prey[i].e_sdl->r.h/2;
+        g_state->prey[i].e_sdl->is_in_animation = 0;
+        entity_sdl_change_state(g_state->prey[i].e_sdl, WALK);
+    }
 }
 
 /**
@@ -438,12 +483,17 @@ int game_initialisation(game_t ** game)
     strncpy(e_fnames[3], "../data/sprites/jellyfish/Hurt.png", 99);
     strncpy(e_fnames[4], "../data/sprites/jellyfish/Death.png", 99);
 
-    entity_initialize_target(&(*game)->state.prey);
-    (*game)->state.prey.e_sdl
-        = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, (float) PREY_SPEED);
-    entity_sdl_scale((*game)->state.prey.e_sdl, 0.004*SCREEN_HEIGHT);
-    (*game)->state.prey.e_sdl->r.x = (*game)->state.prey.x - (*game)->state.prey.e_sdl->r.w/2;
-    (*game)->state.prey.e_sdl->r.y = (*game)->state.prey.y - (*game)->state.prey.e_sdl->r.h/2;
+    (*game)->state.nb_prey = NB_PREY;
+    
+    for (i = 0; i < (*game)->state.nb_prey; ++i)
+    {
+        entity_initialize_target(&(*game)->state.prey[i]);
+        (*game)->state.prey[i].e_sdl
+            = entity_sdl_create((*game)->renderer, e_fnames, n_sp, tab, (float) PREY_SPEED);
+        entity_sdl_scale((*game)->state.prey[i].e_sdl, 0.004*SCREEN_HEIGHT);
+        (*game)->state.prey[i].e_sdl->r.x = (*game)->state.prey[i].x - (*game)->state.prey[i].e_sdl->r.w/2;
+        (*game)->state.prey[i].e_sdl->r.y = (*game)->state.prey[i].y - (*game)->state.prey[i].e_sdl->r.h/2;
+    }
 
     zlog(stdout, INFO, "OK '%s'", "Prey is loaded");
 
