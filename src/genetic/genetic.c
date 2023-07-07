@@ -252,8 +252,8 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 
     zlog(stdout, DEBUG, "Entrez dans genetic solve brain", NULL);
 
-    genetic_initialize_population_brain(brain, population);
-    genetic_initialize_population_brain(brain, new_population);
+    genetic_initialize_population_v2(brain, population);
+    genetic_initialize_population_v2(brain, new_population);
     
     while (iteration < MAX_ITERATIONS) { // MAX_ITERATIONS
 	if(iteration%2 == 0) // population forme new_population
@@ -269,8 +269,6 @@ void genetic_solve_brain(rules_t brain[NB_RULES], int * score_best_brain) // gam
 		    p1 = genetic_tournament_parent(score);
 		    p2 = genetic_tournament_parent(score);
 		    genetic_croisement_generate_child(new_population[i], population, p1, p2);
-
-                    zlog(stdout, DEBUG, "p1: %d, p2: %d", p1, p2);
 		}
 		else
 		{
@@ -449,4 +447,26 @@ void genetic_choose_crossover(rules_t children[NB_RULES], rules_t population[POP
 	genetic_croisement_generate_child_v3(children, population, p1, p2);
     else
 	genetic_croisement_generate_child_v4(children, population, p1, p2);
+}
+
+
+/**
+ * @brief Initializes the population by saving the rules to a file.
+ *
+ * This function initializes the population by saving the rules for each individual in the
+ * population to a file. It uses the `rules_save_file` function to save the rules of each
+ * individual in the provided `population` array to the given file.
+ *
+ * @param file Pointer to the file where the rules will be saved.
+ * @param population Array representing the population of individuals.
+ *
+ * @note The file must be opened in write mode before calling this function.
+ */
+void genetic_initialize_population_v2(rules_t * brain, rules_t population[POPULATION_SIZE][NB_RULES])
+{
+    rules_copy_brain(brain, population[0]);
+    for (int i=1; i < POPULATION_SIZE; ++i)
+    {
+	init_random_brain(population[i]);
+    }
 }

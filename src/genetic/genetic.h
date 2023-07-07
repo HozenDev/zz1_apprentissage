@@ -27,12 +27,13 @@
 
 #define NB_PARTICIPATION_TOURNOI 5 // doit etre > 1
 
-rules_t * genetic_create_individu();
+void genetic_create_individu(rules_t * rules);
 
 void genetic_destroy_individu(rules_t * individu);
 
 void genetic_initialize_population(char * path_brain, rules_t population[POPULATION_SIZE][NB_RULES]);
 void genetic_initialize_population_brain(rules_t brain[NB_RULES], rules_t population[POPULATION_SIZE][NB_RULES]);
+void genetic_initialize_population_v2(rules_t * brain, rules_t population[POPULATION_SIZE][NB_RULES]);
 
 
 int genetic_evaluate_population_(int score[POPULATION_SIZE],rules_t population[POPULATION_SIZE][NB_RULES]);
